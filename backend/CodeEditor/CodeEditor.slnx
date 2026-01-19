@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CodeEditor.Api/CodeEditor.Api.csproj" />
+  <Project Path="CodeEditor.Domain/CodeEditor.Domain.csproj" />
+</Solution>
