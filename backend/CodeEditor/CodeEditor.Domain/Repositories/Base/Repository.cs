@@ -1,9 +1,5 @@
-﻿using Arch.EntityFrameworkCore.UnitOfWork;
-using CodeEditor.Domain.Specifications;
+﻿using CodeEditor.Domain.Specifications;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Domain.Repositories.Base
 {

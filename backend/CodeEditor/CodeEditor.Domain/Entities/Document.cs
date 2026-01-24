@@ -2,9 +2,9 @@
 {
     public class Document
     {
-        long Id { get; set; }
-        long UserId { get; set; }
-        string Name { get; set; }
-        string Path { get; set; }
+        public long Id { get; set; }
+        public long UserId { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
     }
 }

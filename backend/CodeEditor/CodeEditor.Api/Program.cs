@@ -5,8 +5,9 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
     .CreateLogger();
+
+builder.AddConfiguration();
 
 builder.Services.AddCors(options =>
 {
