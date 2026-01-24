@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="CodeEditor.Api/CodeEditor.Api.csproj" />
   <Project Path="CodeEditor.Domain/CodeEditor.Domain.csproj" />
+  <Project Path="CodeEditor.Infrastructure/CodeEditor.Infrastructure.csproj" Id="74744ce7-5755-4e5f-9b01-34eb313fde79" />
 </Solution>

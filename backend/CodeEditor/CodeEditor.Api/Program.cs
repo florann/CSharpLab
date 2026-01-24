@@ -20,6 +20,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Logging.AddConsole();
+
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
 builder.Host.UseSerilog();

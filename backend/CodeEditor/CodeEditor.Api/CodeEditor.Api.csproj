@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeEditor.Domain\CodeEditor.Domain.csproj" />
+    <ProjectReference Include="..\CodeEditor.Infrastructure\CodeEditor.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
