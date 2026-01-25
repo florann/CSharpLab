@@ -22,7 +22,7 @@ namespace CodeEditor.Api.Hubs
             _logger.LogInformation("SendCursorData function");
             await this.Clients.Others.SendAsync("IncomingCursorData", new CursorData
             {
-                UserName = username,
+                UserName = username, 
                 Column = column,
                 Line = line
             });
