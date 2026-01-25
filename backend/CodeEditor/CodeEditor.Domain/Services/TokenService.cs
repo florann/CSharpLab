@@ -1,4 +1,5 @@
-﻿using CodeEditor.Domain.Repositories.Base;
+﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services.Interfaces;
@@ -23,6 +24,17 @@ namespace CodeEditor.Domain.Services
             var spec = new FindUserByUserNameSpecification(loginRequest.UserName);
             var user = await _userService.GetAsync(spec);
 
+            if(!CheckPassword(loginRequest.Password, user!.Password))
+            {
+                return new LoginResponse
+                {
+                    AccessToken = "",
+                    RefreshToken = ""
+                };
+            }
+
+
+
             return new LoginResponse
             {
                 AccessToken = "",
@@ -32,8 +44,7 @@ namespace CodeEditor.Domain.Services
 
         private bool CheckPassword(string requestPassword, string dbPassword)
         {
-
-            return false;
+            return BCrypt.Net.BCrypt.Verify(requestPassword, dbPassword);
         }
     }
 }
