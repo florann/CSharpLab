@@ -1,0 +1,12 @@
+﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Requests.AuthRequests;
+using CodeEditor.Domain.Responses.AuthResponses;
+
+namespace CodeEditor.Domain.Services.Interfaces
+{
+    public interface IAuthService
+    {
+        Task<LoginResponse> Login(LoginRequest loginRequest);
+        string GenerateToken(User user);
+    }
+}

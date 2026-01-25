@@ -13,12 +13,10 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
             RuleFor(request => request.UserName)
                 .NotEmpty()
                 .NotNull()
-                .MustAsync(async (userName, cancellation) =>
-                {
-                    var user = await userService.GetAsync(new FindUserByUserNameSpecification(userName));
-                    return user != null;
-                })
-                .WithMessage("User does not exist.");
+                .DbCheck(
+                    userService,
+                    username => new FindUserByUserNameSpecification(username)
+                    );
 
             RuleFor(request => request.Password)
                .NotEmpty()
