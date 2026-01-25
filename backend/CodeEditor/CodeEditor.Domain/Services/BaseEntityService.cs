@@ -1,6 +1,6 @@
 ﻿using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services.Interfaces;
-using CodeEditor.Domain.Specifications;
+using CodeEditor.Domain.Specifications.Interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System;
 using System.Collections.Generic;

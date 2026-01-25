@@ -1,4 +1,4 @@
-﻿using CodeEditor.Domain.Specifications;
+﻿using CodeEditor.Domain.Specifications.Interfaces;
 
 namespace CodeEditor.Domain.Repositories.Base
 {
