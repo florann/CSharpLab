@@ -33,6 +33,11 @@ namespace CodeEditor.Domain.Repositories.Base
             _context.Set<T>().Entry(entity).State = EntityState.Modified;
         }
 
+        public void AddAsync(T entity)
+        {
+            _context.Set<T>().Entry(entity).State = EntityState.Added;
+        }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

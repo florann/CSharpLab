@@ -1,7 +1,4 @@
 ﻿using CodeEditor.Domain.Specifications;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Domain.Repositories.Base
 {
@@ -11,6 +8,7 @@ namespace CodeEditor.Domain.Repositories.Base
         Task<T?> FindOneAsync(ISpecification<T> spec);
         void DeleteAsync(T entity);
         void UpdateAsync(T entity);
+        void AddAsync(T entity);
         Task SaveChangesAsync();
     }
 }
