@@ -50,6 +50,19 @@ namespace CodeEditor.Domain.Services
             };
         }
 
+        public async Task<bool> CreateAccount(CreateAccountRequest loginRequest)
+        {
+            User user = new()
+            {
+                UserName = loginRequest.UserName,
+                Password = HashPassword(loginRequest.Password),
+                Guid = Guid.NewGuid()
+            };
+
+            var result = await _userService.AddAsync(user);
+            return result != null;
+        }
+
         public string GenerateToken(User user)
         {
             var claims = new List<Claim>
@@ -86,6 +99,11 @@ namespace CodeEditor.Domain.Services
         private bool CheckPassword(string requestPassword, string dbPassword)
         {
             return BCrypt.Net.BCrypt.Verify(requestPassword, dbPassword);
+        }
+    
+        private string HashPassword(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 5);
         }
     }
 }

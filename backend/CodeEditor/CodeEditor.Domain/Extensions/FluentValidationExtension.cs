@@ -10,7 +10,8 @@ namespace CodeEditor.Domain.Extensions
         public static IRuleBuilderOptions<T, TProperty> DbCheck<T, TProperty, TEntity>(
             this IRuleBuilder<T, TProperty> ruleBuilder,
             IBaseEntityService<TEntity> service,
-            Func<TProperty, ISpecification<TEntity>> specification)
+            Func<TProperty, ISpecification<TEntity>> specification,
+            bool specFindSomething = true)
             where TEntity : class
         {
             return ruleBuilder.MustAsync(async (property, cancellationToken) =>
@@ -18,7 +19,7 @@ namespace CodeEditor.Domain.Extensions
                 try
                 {
                     var result = await service.GetAsync(specification(property));
-                    return result != null;
+                    return (specFindSomething) ? result != null : result == null;
                 }
                 catch(Exception ex)
                 {

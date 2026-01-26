@@ -1,5 +1,6 @@
 ﻿using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
+using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,20 +12,36 @@ namespace CodeEditor.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController(
-        IAuthService tokenService,
-        LoginRequestValidator loginRequestValidator) : ControllerBase
+        IAuthService authService,
+        LoginRequestValidator loginRequestValidator,
+        CreateAccountRequestValidator createAccountRequestValidator
+        ) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult> login(LoginRequest request)
+        public async Task<ActionResult<LoginResponse>> login(LoginRequest request)
         {
             var validationResult = await loginRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var response = await tokenService.Login(request);
+            var response = await authService.Login(request);
             return Ok(response);
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("createAccount")]
+        public async Task<ActionResult> createAccount(CreateAccountRequest request)
+        {
+            var validationResult = await createAccountRequestValidator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            var response = await authService.CreateAccount(request);
+            return NoContent();
+        }
+
     }
 }

@@ -7,6 +7,7 @@ namespace CodeEditor.Domain.Services.Interfaces
     public interface IAuthService
     {
         Task<LoginResponse> Login(LoginRequest loginRequest);
+        Task<bool> CreateAccount(CreateAccountRequest loginRequest);
         string GenerateToken(User user);
     }
 }
