@@ -18,7 +18,7 @@ namespace CodeEditor.Domain.Repositories.Base
                 .Set<T>()
                 .Where(spec.Criteria);
 
-            if(spec.Includes.Any())
+            if(spec.Includes != null && spec.Includes.Any())
             {
                 foreach(var include in spec.Includes)
                 {
@@ -33,7 +33,7 @@ namespace CodeEditor.Domain.Repositories.Base
             var query =  _context.Set<T>()
                     .Where(spec.Criteria);
 
-            if (spec.Includes.Any())
+            if (spec.Includes != null && spec.Includes.Any())
             {
                 foreach (var include in spec.Includes)
                 {

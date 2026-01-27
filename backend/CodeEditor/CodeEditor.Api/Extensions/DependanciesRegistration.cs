@@ -4,6 +4,7 @@ using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Infrastructure;
 using CodeEditor.Infrastructure.Services;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -32,6 +33,7 @@ namespace CodeEditor.Api.Extensions
                 services.AddScoped<IStoreDocumentService, RedisStoreDocumentService>();
                 services.AddScoped<IAuthService, AuthService>();
                 services.AddScoped<IBaseEntityService<Domain.Entities.User>, UserService>();
+                services.AddScoped<IBaseEntityService<Domain.Entities.Token>, TokenService>();
 
                 // Repositories
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();

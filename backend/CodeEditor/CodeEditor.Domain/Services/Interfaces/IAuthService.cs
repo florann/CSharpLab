@@ -9,6 +9,7 @@ namespace CodeEditor.Domain.Services.Interfaces
         Task<LoginResponse> Login(LoginRequest loginRequest);
         Task<bool> CreateAccount(CreateAccountRequest loginRequest);
         string GenerateAccessToken(User user);
+        Task<string> GenerateRefreshToken(User user);
         Task<LoginResponse> RefreshToken(RefreshTokensRequest refreshRequest);
     }
 }

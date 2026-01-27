@@ -9,14 +9,14 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
     {
         public LoginRequestValidator(IBaseEntityService<Entities.User> userService)
         {
-
             RuleFor(request => request.UserName)
                 .NotEmpty()
                 .NotNull()
                 .DbCheck(
                     userService,
                     username => new FindUserByUserNameSpecification(username)
-                    );
+                    )
+                .WithMessage("User does not exist in db");
 
             RuleFor(request => request.Password)
                .NotEmpty()

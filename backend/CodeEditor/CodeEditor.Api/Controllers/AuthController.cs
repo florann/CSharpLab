@@ -4,6 +4,7 @@ using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
+using CodeEditor.Domain.Specifications.UserSpecification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,13 +30,20 @@ namespace CodeEditor.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var response = await authService.Login(request);
-
-            if (string.IsNullOrEmpty(response.AccessToken)
-                && string.IsNullOrEmpty(response.RefreshToken))
+            try
+            {
+                var response = await authService.Login(request);
+                return Ok(response);
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Message);
+            }
+            catch(Exception ex )
+            {
+                logger.LogError("Exception : {Ex}", ex.Message);
                 return StatusCode(500, "Internal server error");
-
-            return Ok(response);
+            }
         }
 
         [AllowAnonymous]

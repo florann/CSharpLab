@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using LoginRequest = CodeEditor.Domain.Requests.AuthRequests.LoginRequest;
@@ -42,19 +43,13 @@ namespace CodeEditor.Domain.Services
 
             if(!CheckPassword(loginRequest.Password, user!.Password))
             {
-                return new LoginResponse
-                {
-                    AccessToken = "",
-                    RefreshToken = ""
-                };
+                throw new HttpResponseException(HttpStatusCode.Unauthorized, "Login or password incorrect");
             }
-
-            var token = GenerateAccessToken(user);
 
             return new LoginResponse
             {
-                AccessToken = token,
-                RefreshToken = ""
+                AccessToken = GenerateAccessToken(user),
+                RefreshToken = await GenerateRefreshToken(user) 
             };
         }
 
@@ -104,7 +99,7 @@ namespace CodeEditor.Domain.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public string GenerateRefreshToken()
+        public async Task<string> GenerateRefreshToken(User user)
         {
             var expiration = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpirationInMinutes);
 
@@ -114,7 +109,23 @@ namespace CodeEditor.Domain.Services
             );
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
+            var serializedToken = tokenHandler.WriteToken(token);
+
+            var spec = new FindTokenByUserIdSpecification(user.Id);
+            var tokenEntity = await _tokenService.GetAsync(spec);
+
+            if(tokenEntity != null)
+            {
+                await _tokenService.DeleteAsync(tokenEntity);
+            }
+
+            _ = await _tokenService.AddAsync(new Token
+            {
+                RefreshToken = serializedToken, 
+                UserId = user.Id
+            });
+
+            return serializedToken;
         }
 
         private bool CheckPassword(string requestPassword, string dbPassword)
@@ -152,7 +163,7 @@ namespace CodeEditor.Domain.Services
             return new LoginResponse
             {
                 AccessToken = GenerateAccessToken(token.User),
-                RefreshToken = GenerateRefreshToken()
+                RefreshToken = await GenerateRefreshToken(token.User)
             };
 
         }
