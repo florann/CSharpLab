@@ -24,6 +24,10 @@ namespace CodeEditor.Infrastructure.Configurations
             builder.Property(entity => entity.UserId)
                 .HasColumnName("user_id")
                 .IsRequired();
+
+            builder.HasOne(tokenEntity => tokenEntity.User)
+                .WithOne(userEntity => userEntity.Token)
+                .HasForeignKey<Token>(tokenEntity => tokenEntity.UserId);
         }
     }
 }

@@ -14,13 +14,34 @@ namespace CodeEditor.Domain.Repositories.Base
 
         public async Task<T?> FindOneAsync(ISpecification<T> spec)
         {
-            var result = await _context.Set<T>().Where(spec.Criteria).FirstOrDefaultAsync();
-            return result;
+            var query = _context
+                .Set<T>()
+                .Where(spec.Criteria);
+
+            if(spec.Includes.Any())
+            {
+                foreach(var include in spec.Includes)
+                {
+                    query.Include(include);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec)
         {
-            var result = await _context.Set<T>().Where(spec.Criteria).ToListAsync();
-            return result;
+            var query =  _context.Set<T>()
+                    .Where(spec.Criteria);
+
+            if (spec.Includes.Any())
+            {
+                foreach (var include in spec.Includes)
+                {
+                    query.Include(include);
+                }
+            }
+
+            return await query.ToListAsync();
         }
 
         public void DeleteAsync(T entity)

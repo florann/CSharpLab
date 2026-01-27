@@ -22,11 +22,19 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
                             return new FindUserByUserNameSpecification(userName);
                         },
                     false
-                );
+                )
+                .WithMessage("The username is already used");
 
             RuleFor(request => request.Password)
                 .NotNull()
-                .NotEmpty();
+                .NotEmpty()
+                .Matches(@"^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?"":{}|<>]).{8,}$")
+                .WithMessage("Password must be at least 8 characters long, contain at least one uppercase letter and one special character");
+
+            RuleFor(request => request.ConfirmPassword)
+                .NotNull()
+                .NotEmpty()
+                .Equal(request => request.Password);
         }
     }
 }

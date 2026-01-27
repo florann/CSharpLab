@@ -1,4 +1,5 @@
-﻿using CodeEditor.Domain.Requests.AuthRequests;
+﻿using CodeEditor.Api.Exceptions;
+using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services;
@@ -12,9 +13,11 @@ namespace CodeEditor.Api.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class AuthController(
+        ILogger<AuthController> logger,
         IAuthService authService,
         LoginRequestValidator loginRequestValidator,
-        CreateAccountRequestValidator createAccountRequestValidator
+        CreateAccountRequestValidator createAccountRequestValidator,
+        RefreshTokensRequestValidator refreshTokenRequestValidator
         ) : ControllerBase
     {
         [AllowAnonymous]
@@ -27,6 +30,11 @@ namespace CodeEditor.Api.Controllers
                 return BadRequest(validationResult.Errors);
 
             var response = await authService.Login(request);
+
+            if (string.IsNullOrEmpty(response.AccessToken)
+                && string.IsNullOrEmpty(response.RefreshToken))
+                return StatusCode(500, "Internal server error");
+
             return Ok(response);
         }
 
@@ -41,6 +49,31 @@ namespace CodeEditor.Api.Controllers
 
             var response = await authService.CreateAccount(request);
             return NoContent();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("refresh")]
+        public async Task<ActionResult> refresh(RefreshTokensRequest request)
+        {
+            var validationResult = await refreshTokenRequestValidator.ValidateAsync(request);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            try
+            {
+                var response = await authService.RefreshToken(request);
+                return Ok(response);
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode((int)ex.StatusCode, ex.Message);
+            }
+            catch(Exception ex)
+            {
+                logger.LogError("Exception : {Ex}", ex.Message);
+                return StatusCode(500, "Internal server error");
+            }
         }
 
     }

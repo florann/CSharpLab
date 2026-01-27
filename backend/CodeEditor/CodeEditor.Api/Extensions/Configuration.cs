@@ -14,6 +14,9 @@ namespace CodeEditor.Api.Extensions
         {
             public WebApplicationBuilder AddConfiguration()
             {
+                builder.Services.Configure<JwtSettings>(
+                    builder.Configuration.GetSection("JwtSettings"));
+
                 var jwtSettings = builder.Configuration
                     .GetSection("JwtSettings")
                     .Get<JwtSettings>()! ?? throw new ApplicationException("JwtSettings is null");

@@ -1,15 +1,20 @@
-﻿using CodeEditor.Domain.Entities;
+﻿using CodeEditor.Api.Exceptions;
+using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications;
+using CodeEditor.Domain.Specifications.TokenSpecification;
 using CodeEditor.Domain.Specifications.UserSpecification;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using LoginRequest = CodeEditor.Domain.Requests.AuthRequests.LoginRequest;
 
 namespace CodeEditor.Domain.Services
 {
@@ -17,13 +22,16 @@ namespace CodeEditor.Domain.Services
     {
 
         private readonly IBaseEntityService<Entities.User> _userService;
+        private readonly IBaseEntityService<Entities.Token> _tokenService;
         private readonly JwtSettings _jwtSettings;
 
         public AuthService( 
             IBaseEntityService<Entities.User> userService,
-            IOptions<JwtSettings> jwtSettings) 
+            IBaseEntityService<Entities.Token> tokenService,
+            IOptionsSnapshot<JwtSettings> jwtSettings) 
         {
             _userService = userService;
+            _tokenService = tokenService;
             _jwtSettings = jwtSettings.Value;
         }
 
@@ -41,7 +49,7 @@ namespace CodeEditor.Domain.Services
                 };
             }
 
-            var token = GenerateToken(user);
+            var token = GenerateAccessToken(user);
 
             return new LoginResponse
             {
@@ -63,7 +71,7 @@ namespace CodeEditor.Domain.Services
             return result != null;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateAccessToken(User user)
         {
             var claims = new List<Claim>
             {
@@ -81,7 +89,7 @@ namespace CodeEditor.Domain.Services
                 SecurityAlgorithms.HmacSha256
             );
 
-            var expiration = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationInMinutes);
+            var expiration = DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationInMinutes);
 
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
@@ -96,6 +104,19 @@ namespace CodeEditor.Domain.Services
             return tokenHandler.WriteToken(token);
         }
 
+        public string GenerateRefreshToken()
+        {
+            var expiration = DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpirationInMinutes);
+
+            var token = new JwtSecurityToken(
+                notBefore: DateTime.UtcNow,
+                expires: expiration
+            );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(token);
+        }
+
         private bool CheckPassword(string requestPassword, string dbPassword)
         {
             return BCrypt.Net.BCrypt.Verify(requestPassword, dbPassword);
@@ -104,6 +125,50 @@ namespace CodeEditor.Domain.Services
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 5);
+        }
+
+        public async Task<LoginResponse> RefreshToken(RefreshTokensRequest refreshRequest)
+        {
+            var expirationDate = GetExpirationDateFromJwtToken(refreshRequest.RefreshToken);
+            if(expirationDate == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest, "Unable to find token expiration date");
+            }
+
+            if(expirationDate < DateTime.UtcNow)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized, "Token is expired");
+            }
+
+            var spec = new FindTokenByUserIdAndTokenSpecification(refreshRequest.UserId, refreshRequest.RefreshToken);
+            spec.AddInclude((entity) => entity.User); 
+            var token = await _tokenService.GetAsync(spec);
+
+            if(token == null)
+            {
+                throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized, "Token or user does not exist");
+            }
+
+            return new LoginResponse
+            {
+                AccessToken = GenerateAccessToken(token.User),
+                RefreshToken = GenerateRefreshToken()
+            };
+
+        }
+
+        private DateTime? GetExpirationDateFromJwtToken(string refreshToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(refreshToken);
+
+            var expirationClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Exp);
+            if (expirationClaim != null && long.TryParse(expirationClaim.Value, out long exp))
+            {
+                return DateTimeOffset.FromUnixTimeSeconds(exp).UtcDateTime;
+            }
+
+            return null;
         }
     }
 }
