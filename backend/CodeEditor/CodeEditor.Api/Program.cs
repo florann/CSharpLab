@@ -1,10 +1,13 @@
 using CodeEditor.Api.Extensions;
 using CodeEditor.Api.Hubs;
+using CodeEditor.Domain.Requests.AuthRequests.Validators;
+using FluentValidation;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
     .CreateLogger();
 
 builder.AddConfiguration();
@@ -16,9 +19,11 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();  
+              .AllowCredentials();
     });
 });
+
+builder.Services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>();
 
 builder.Logging.AddConsole();
 
@@ -42,6 +47,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

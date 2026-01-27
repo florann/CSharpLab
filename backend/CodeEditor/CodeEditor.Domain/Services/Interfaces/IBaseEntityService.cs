@@ -1,4 +1,4 @@
-﻿using CodeEditor.Domain.Specifications;
+﻿using CodeEditor.Domain.Specifications.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
