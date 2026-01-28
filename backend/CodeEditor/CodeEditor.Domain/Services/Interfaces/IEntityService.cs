@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
-    public interface IBaseEntityService<T>
+    public interface IEntityService<T>
     {
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);

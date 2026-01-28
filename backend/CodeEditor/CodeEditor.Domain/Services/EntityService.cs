@@ -4,11 +4,11 @@ using CodeEditor.Domain.Specifications.Interfaces;
 
 namespace CodeEditor.Domain.Services
 {
-    public class BaseEntityService<T> : IBaseEntityService<T> where T : class
+    public class EntityService<T> : IEntityService<T> where T : class
     {
         private readonly IRepository<T> _repository;
 
-        public BaseEntityService(IRepository<T> repository)
+        public EntityService(IRepository<T> repository)
         {
             _repository = repository;
         }

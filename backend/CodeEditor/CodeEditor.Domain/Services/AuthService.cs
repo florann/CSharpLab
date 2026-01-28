@@ -22,13 +22,13 @@ namespace CodeEditor.Domain.Services
     public class AuthService : IAuthService
     {
 
-        private readonly IBaseEntityService<Entities.User> _userService;
-        private readonly IBaseEntityService<Entities.Token> _tokenService;
+        private readonly IEntityService<Entities.User> _userService;
+        private readonly IEntityService<Entities.Token> _tokenService;
         private readonly JwtSettings _jwtSettings;
 
         public AuthService( 
-            IBaseEntityService<Entities.User> userService,
-            IBaseEntityService<Entities.Token> tokenService,
+            IEntityService<Entities.User> userService,
+            IEntityService<Entities.Token> tokenService,
             IOptionsSnapshot<JwtSettings> jwtSettings) 
         {
             _userService = userService;
