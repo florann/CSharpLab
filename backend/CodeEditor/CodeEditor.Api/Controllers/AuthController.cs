@@ -1,4 +1,5 @@
 ﻿using CodeEditor.Api.Exceptions;
+using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using CodeEditor.Domain.Responses.AuthResponses;
@@ -7,6 +8,7 @@ using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.UserSpecification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace CodeEditor.Api.Controllers
 {
@@ -18,13 +20,14 @@ namespace CodeEditor.Api.Controllers
         IAuthService authService,
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
-        RefreshTokensRequestValidator refreshTokenRequestValidator
+        RefreshTokensRequestValidator refreshTokenRequestValidator,
+        IOptions<JwtSettings> jwtSettings
         ) : ControllerBase
     {
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<LoginResponse>> login(LoginRequest request)
+        public async Task<IActionResult> login(LoginRequest request)
         {
             var validationResult = await loginRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
@@ -33,7 +36,22 @@ namespace CodeEditor.Api.Controllers
             try
             {
                 var response = await authService.Login(request);
-                return Ok(response);
+
+                Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.AccessTokenExpirationInMinutes)
+                });
+
+                Response.Cookies.Append("refreshToken", response.RefreshToken   , new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
+                });
+
+                return Ok("Login successful");
             }
             catch(HttpResponseException ex)
             {
