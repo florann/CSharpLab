@@ -2,6 +2,7 @@ using CodeEditor.Api.Extensions;
 using CodeEditor.Api.Hubs;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using FluentValidation;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,8 @@ builder.Services.AddServices();
 
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -44,9 +47,12 @@ app.UseCors("AllowAngular");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
-
-app.UseHttpsRedirection();
+else if (app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 
