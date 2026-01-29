@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import * as monaco from 'monaco-editor';
-import { CursorData } from '../../shared/interfaces/cursor-data.interface';
+import { CursorData } from '../../models/cursor-data.interface';
 
 (self as any).MonacoEnvironment = {
   getWorker(_: any, label: string) {

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { Landing } from './components/landing/landing';
-import { NotFound } from './components/not-found/not-found';
+import { Landing } from './features/components/landing/landing';
+import { NotFound } from './features/components/not-found/not-found';
 
 export const routes: Routes = [
   { 
