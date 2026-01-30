@@ -1,6 +1,6 @@
-import { Injectable, inject } from '@angular/core';
-import { Observable, map, catchError, throwError } from 'rxjs';
-import { AuthService, LoginRequest, LoginResponse } from '../';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, map, catchError, throwError, tap } from 'rxjs';
+import { AuthService, LoginRequest } from '../';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +8,25 @@ import { AuthService, LoginRequest, LoginResponse } from '../';
 export class Authentication {
   private authService = inject(AuthService);
 
+  // ✅ Declare the signal
+  isAuthenticated = signal<boolean>(false);
+
+  apiAuthLoginPost(request: LoginRequest): Observable<Boolean> {
+    return this.authService.apiAuthLoginPost(request).pipe(
+      tap(() => {
+        this.isAuthenticated.set(true);
+      }),
+      catchError(this.handleError)
+    );
+  }
+
   /**
-   * Get all products
+   * Logout user
    */
-  apiAuthLoginPost(request: LoginRequest): Observable<LoginResponse> {
-    return this.authService.apiAuthLoginPost(request);
+  logout(): void {
+    this.isAuthenticated.set(false);
+    // Call logout endpoint to clear cookies
+    //this.authService.apiAuthLogoutPost().subscribe();
   }
 
   /**
