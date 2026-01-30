@@ -70,7 +70,7 @@ namespace CodeEditor.Api.Controllers
             var validationResult = await createAccountRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
-
+ 
             var response = await authService.CreateAccount(request);
             return NoContent();
         }

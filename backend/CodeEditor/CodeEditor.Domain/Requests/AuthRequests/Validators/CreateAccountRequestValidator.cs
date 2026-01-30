@@ -28,7 +28,7 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
             RuleFor(request => request.Password)
                 .NotNull()
                 .NotEmpty()
-                .Matches(@"^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?"":{}|<>]).{8,}$")
+                //.Matches(@"^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?"":{}|<>]).{8,}$")
                 .WithMessage("Password must be at least 8 characters long, contain at least one uppercase letter and one special character");
 
             RuleFor(request => request.ConfirmPassword)

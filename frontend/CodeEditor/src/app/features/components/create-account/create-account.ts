@@ -33,10 +33,13 @@ export class CreateAccount {
     this.errorMessage.set(null);
 
     const createAccountRequest: CreateAccountRequest = {
-      userName: this.createAccountForm.value.userName,
+      userName: this.createAccountForm.value.username,
       password: this.createAccountForm.value.password,
       confirmPassword: this.createAccountForm.value.confirmPassword
     };
+
+    console.log("Dump request");
+    console.log(createAccountRequest);
 
     this.authService.ApiCreateAccount(createAccountRequest).subscribe({
       next: (success) => {

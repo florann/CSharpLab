@@ -37,7 +37,8 @@ export class AuthenticationService {
   ApiCreateAccount(request: CreateAccountRequest): Observable<boolean> {
     return from(Auth.postApiAuthCreateAccount({ body: request })).pipe(
       map(response => {
-        return true;
+          console.log(response.data);
+          return response.response.ok; 
       }),
       catchError(this.handleError)
     )
