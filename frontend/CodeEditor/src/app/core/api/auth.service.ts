@@ -21,8 +21,6 @@ import { CreateAccountRequest } from '../model/createAccountRequest';
 // @ts-ignore
 import { LoginRequest } from '../model/loginRequest';
 // @ts-ignore
-import { LoginResponse } from '../model/loginResponse';
-// @ts-ignore
 import { RefreshTokensRequest } from '../model/refreshTokensRequest';
 
 // @ts-ignore
@@ -114,10 +112,10 @@ export class AuthService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<LoginResponse>;
-    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LoginResponse>>;
-    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<LoginResponse>>;
-    public apiAuthLoginPost(loginRequest: LoginRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public apiAuthLoginPost(loginRequest: LoginRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public apiAuthLoginPost(loginRequest: LoginRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (loginRequest === null || loginRequest === undefined) {
             throw new Error('Required parameter loginRequest was null or undefined when calling apiAuthLoginPost.');
         }
@@ -125,9 +123,6 @@ export class AuthService extends BaseService {
         let localVarHeaders = this.defaultHeaders;
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            'text/plain',
-            'application/json',
-            'text/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -162,7 +157,7 @@ export class AuthService extends BaseService {
 
         let localVarPath = `/api/Auth/login`;
         const { basePath, withCredentials } = this.configuration;
-        return this.httpClient.request<LoginResponse>('post', `${basePath}${localVarPath}`,
+        return this.httpClient.request<any>('post', `${basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: loginRequest,

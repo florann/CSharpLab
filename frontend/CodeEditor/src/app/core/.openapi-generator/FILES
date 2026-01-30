@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 README.md
 api.base.service.ts
 api.module.ts
@@ -11,7 +10,6 @@ git_push.sh
 index.ts
 model/createAccountRequest.ts
 model/loginRequest.ts
-model/loginResponse.ts
 model/models.ts
 model/refreshTokensRequest.ts
 model/refreshTokensRequestUserId.ts

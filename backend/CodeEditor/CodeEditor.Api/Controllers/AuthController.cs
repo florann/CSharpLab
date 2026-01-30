@@ -51,7 +51,7 @@ namespace CodeEditor.Api.Controllers
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
                 });
 
-                return Ok("Login successful");
+                return Ok(true);
             }
             catch(HttpResponseException ex)
             {
