@@ -4,7 +4,7 @@ import { CodeEditor } from './features/components/code-editor/code-editor';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CodeEditor],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

@@ -1,6 +1,6 @@
 <div>
-     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <!-- Username Field -->
+    <form [formGroup]="createAccountForm" (ngSubmit)="onSubmit()">
+         
     <div class="form-group">
       <label for="username">Username</label>
       <input 
@@ -46,6 +46,30 @@
       }
     </div>
 
+     <!-- Confirm Password Field -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm password</label>
+      <input 
+        id="confirmPassword"
+        type="password" 
+        formControlName="confirmPassword"
+        placeholder="Enter password"
+        [class.error]="confirmPasswordControl?.invalid && passwordControl?.touched"
+      />
+      
+      @if (passwordControl?.invalid && passwordControl?.touched) {
+        <div class="error-message">
+          @if (passwordControl?.errors?.['required']) {
+            <span>Password is required</span>
+          }
+          @if (passwordControl?.errors?.['minlength']) {
+            <span>Password must be at least 6 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+
     <!-- Error Message -->
     @if (errorMessage()) {
       <div class="alert alert-error">
@@ -60,12 +84,13 @@
       class="btn-primary"
     >
       @if (isLoading()) {
-        <span>Logging in...</span>
+        <span>Creating account...</span>
       } @else {
-        <span>Login</span>
+        <span>Create account</span>
       }
     </button>
-  </form>
+
+    </form>
     <button routerLink="/landing">Lading page</button>
-    <button routerLink="/createaccount">Create account page</button>
+    <button routerLink="/login">Login page</button>
 </div>

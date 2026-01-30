@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
-import { Auth, LoginRequest, PostApiAuthLoginData } from '../api/index';
+import { Auth, CreateAccountRequest, LoginRequest, PostApiAuthLoginData, UserResponse } from '../api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +30,17 @@ export class AuthenticationService {
         tap((isSuccess) => {
           if (isSuccess) this.isAuthenticated.set(true);
         }),
-        catchError(this.handleError)
+        
       );
+  }
+
+  ApiCreateAccount(request: CreateAccountRequest): Observable<boolean> {
+    return from(Auth.postApiAuthCreateAccount({ body: request })).pipe(
+      map(response => {
+        return true;
+      }),
+      catchError(this.handleError)
+    )
   }
 
   /**
