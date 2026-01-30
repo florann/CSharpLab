@@ -7,7 +7,7 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
 {
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
-        public LoginRequestValidator(IEntityService<Entities.User> userService)
+        public LoginRequestValidator(IService<Entities.User> userService)
         {
             RuleFor(request => request.UserName)
                 .NotEmpty()

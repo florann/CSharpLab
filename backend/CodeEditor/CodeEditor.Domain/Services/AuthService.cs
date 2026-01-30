@@ -1,14 +1,10 @@
 ﻿using CodeEditor.Api.Exceptions;
 using CodeEditor.Domain.Entities;
-using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Services.Interfaces;
-using CodeEditor.Domain.Specifications;
 using CodeEditor.Domain.Specifications.TokenSpecification;
 using CodeEditor.Domain.Specifications.UserSpecification;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,14 +18,14 @@ namespace CodeEditor.Domain.Services
     public class AuthService : IAuthService
     {
 
-        private readonly IEntityService<Entities.User> _userService;
-        private readonly IEntityService<Entities.Token> _tokenService;
+        private readonly Interfaces.IService<User> _userService;
+        private readonly Interfaces.IService<Token> _tokenService;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService( 
-            IEntityService<Entities.User> userService,
-            IEntityService<Entities.Token> tokenService,
-            IOptionsSnapshot<JwtSettings> jwtSettings) 
+        public AuthService(
+            Interfaces.IService<User> userService,
+            Interfaces.IService<Token> tokenService,
+            IOptionsSnapshot<JwtSettings> jwtSettings)
         {
             _userService = userService;
             _tokenService = tokenService;
@@ -41,7 +37,7 @@ namespace CodeEditor.Domain.Services
             var spec = new FindUserByUserNameSpecification(loginRequest.UserName);
             var user = await _userService.GetAsync(spec);
 
-            if(!CheckPassword(loginRequest.Password, user!.Password))
+            if (!CheckPassword(loginRequest.Password, user!.Password))
             {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized, "Login or password incorrect");
             }
@@ -49,7 +45,7 @@ namespace CodeEditor.Domain.Services
             return new LoginResponse
             {
                 AccessToken = GenerateAccessToken(user),
-                RefreshToken = await GenerateRefreshToken(user) 
+                RefreshToken = await GenerateRefreshToken(user)
             };
         }
 
@@ -114,14 +110,14 @@ namespace CodeEditor.Domain.Services
             var spec = new FindTokenByUserIdSpecification(user.Id);
             var tokenEntity = await _tokenService.GetAsync(spec);
 
-            if(tokenEntity != null)
+            if (tokenEntity != null)
             {
                 await _tokenService.DeleteAsync(tokenEntity);
             }
 
             _ = await _tokenService.AddAsync(new Token
             {
-                RefreshToken = serializedToken, 
+                RefreshToken = serializedToken,
                 UserId = user.Id
             });
 
@@ -132,30 +128,30 @@ namespace CodeEditor.Domain.Services
         {
             return BCrypt.Net.BCrypt.Verify(requestPassword, dbPassword);
         }
-    
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password, workFactor: 5);
         }
 
-        public async Task<LoginResponse> RefreshToken(RefreshTokensRequest refreshRequest)
+        public async Task<LoginResponse> RefreshToken(string refreshToken)
         {
-            var expirationDate = GetExpirationDateFromJwtToken(refreshRequest.RefreshToken);
-            if(expirationDate == null)
+            var expirationDate = GetExpirationDateFromJwtToken(refreshToken);
+            if (expirationDate == null)
             {
                 throw new HttpResponseException(System.Net.HttpStatusCode.BadRequest, "Unable to find token expiration date");
             }
 
-            if(expirationDate < DateTime.UtcNow)
+            if (expirationDate < DateTime.UtcNow)
             {
                 throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized, "Token is expired");
             }
 
-            var spec = new FindTokenByUserIdAndTokenSpecification(refreshRequest.UserId, refreshRequest.RefreshToken);
-            spec.AddInclude((entity) => entity.User); 
+            var spec = new FindTokenByRefreshTokenSpecification(refreshToken);
+            spec.AddInclude((entity) => entity.User);
             var token = await _tokenService.GetAsync(spec);
 
-            if(token == null)
+            if (token == null)
             {
                 throw new HttpResponseException(System.Net.HttpStatusCode.Unauthorized, "Token or user does not exist");
             }

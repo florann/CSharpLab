@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Landing } from './features/components/landing/landing';
 import { NotFound } from './features/components/not-found/not-found';
+import { Login } from './features/components/login/login';
 
 export const routes: Routes = [
   { 
@@ -12,7 +13,10 @@ export const routes: Routes = [
     path: 'landing', 
     component: Landing 
   },
-  // Not found page 
+  { 
+    path: 'login', 
+    component: Login 
+  },
   { 
     path: '**', 
     component: NotFound

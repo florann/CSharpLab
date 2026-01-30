@@ -4,6 +4,7 @@ api.base.service.ts
 api.module.ts
 api/api.ts
 api/auth.service.ts
+api/user.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -11,8 +12,8 @@ index.ts
 model/createAccountRequest.ts
 model/loginRequest.ts
 model/models.ts
-model/refreshTokensRequest.ts
-model/refreshTokensRequestUserId.ts
+model/userResponse.ts
+model/userResponseId.ts
 param.ts
 provide-api.ts
 query.params.ts

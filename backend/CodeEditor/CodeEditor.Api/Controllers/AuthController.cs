@@ -9,6 +9,7 @@ using CodeEditor.Domain.Specifications.UserSpecification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Data.SqlTypes;
 
 namespace CodeEditor.Api.Controllers
 {
@@ -27,7 +28,7 @@ namespace CodeEditor.Api.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> login(LoginRequest request)
+        public async Task<ActionResult<bool>> Login(LoginRequest request)
         {
             var validationResult = await loginRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
@@ -67,7 +68,7 @@ namespace CodeEditor.Api.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("createAccount")]
-        public async Task<ActionResult> createAccount(CreateAccountRequest request)
+        public async Task<ActionResult> CreateAccount(CreateAccountRequest request)
         {
             var validationResult = await createAccountRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
@@ -80,22 +81,38 @@ namespace CodeEditor.Api.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("refresh")]
-        public async Task<ActionResult> refresh(RefreshTokensRequest request)
+        public async Task<ActionResult<bool>> Refresh()
         {
-            var validationResult = await refreshTokenRequestValidator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(refreshToken))
+                return Unauthorized();
 
             try
             {
-                var response = await authService.RefreshToken(request);
-                return Ok(response);
+                var response = await authService.RefreshToken(refreshToken);
+
+                Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.AccessTokenExpirationInMinutes)
+                });
+
+                Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
+                });
+
+                return Ok(true);
             }
-            catch(HttpResponseException ex)
+            catch (HttpResponseException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 logger.LogError("Exception : {Ex}", ex.Message);
                 return StatusCode(500, "Internal server error");

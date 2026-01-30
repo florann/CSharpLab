@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
-    public interface IEntityService<T>
+    public interface IService<T>
     {
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
@@ -14,3 +14,4 @@ namespace CodeEditor.Domain.Services.Interfaces
         Task DeleteAsync(T entity);
     }
 }
+

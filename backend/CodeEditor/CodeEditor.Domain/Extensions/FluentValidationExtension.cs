@@ -9,7 +9,7 @@ namespace CodeEditor.Domain.Extensions
     {
         public static IRuleBuilderOptions<T, TProperty> DbCheck<T, TProperty, TEntity>(
             this IRuleBuilder<T, TProperty> ruleBuilder,
-            IEntityService<TEntity> service,
+            IService<TEntity> service,
             Func<TProperty, ISpecification<TEntity>> specification,
             bool specFindSomething = true)
             where TEntity : class

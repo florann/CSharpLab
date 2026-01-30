@@ -8,8 +8,8 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
     public class RefreshTokensRequestValidator : AbstractValidator<RefreshTokensRequest>
     {
         public RefreshTokensRequestValidator(
-            IEntityService<Entities.User> userService,
-            IEntityService<Entities.Token> tokenService
+            IService<Entities.User> userService,
+            IService<Entities.Token> tokenService
             )
         {
             RuleFor(request => request.RefreshToken)

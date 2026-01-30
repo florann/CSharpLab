@@ -2,7 +2,7 @@
 
 namespace CodeEditor.Domain.Services
 {
-    public class TokenService(IRepository<Entities.Token> repository) : EntityService<Entities.Token>(repository)
+    public class TokenService(IRepository<Entities.Token> repository) : Service<Entities.Token>(repository)
     {
     }
 }

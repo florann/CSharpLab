@@ -5,13 +5,13 @@ import { AuthService, LoginRequest } from '../';
 @Injectable({
   providedIn: 'root'
 })
-export class Authentication {
+export class AuthenticationService {
   private authService = inject(AuthService);
 
   // ✅ Declare the signal
   isAuthenticated = signal<boolean>(false);
 
-  apiAuthLoginPost(request: LoginRequest): Observable<Boolean> {
+  ApiAuthLoginPost(request: LoginRequest): Observable<Boolean> {
     return this.authService.apiAuthLoginPost(request).pipe(
       tap(() => {
         this.isAuthenticated.set(true);
@@ -20,13 +20,20 @@ export class Authentication {
     );
   }
 
+  ApiAuthRefresh(): Observable<boolean> {
+    return this.authService.apiAuthRefreshPost().pipe(
+      tap(() => {
+        this.isAuthenticated.set(true);
+      }),
+      catchError(this.handleError)
+    )
+  }
+
   /**
    * Logout user
    */
   logout(): void {
     this.isAuthenticated.set(false);
-    // Call logout endpoint to clear cookies
-    //this.authService.apiAuthLogoutPost().subscribe();
   }
 
   /**
