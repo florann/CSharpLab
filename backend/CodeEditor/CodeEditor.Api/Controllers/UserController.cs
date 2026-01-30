@@ -8,6 +8,7 @@ namespace CodeEditor.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Tags("User")]
     public class UserController
         (
             GetUserBydIdValidator getUserByIdValidator,

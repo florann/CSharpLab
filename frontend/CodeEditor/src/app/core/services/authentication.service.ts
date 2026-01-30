@@ -1,32 +1,37 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, map, catchError, throwError, tap } from 'rxjs';
-import { AuthService, LoginRequest } from '../';
+import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
+import { Auth, LoginRequest, PostApiAuthLoginData } from '../api/index';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private authService = inject(AuthService);
-
   // ✅ Declare the signal
   isAuthenticated = signal<boolean>(false);
 
-  ApiAuthLoginPost(request: LoginRequest): Observable<Boolean> {
-    return this.authService.apiAuthLoginPost(request).pipe(
-      tap(() => {
-        this.isAuthenticated.set(true);
-      }),
-      catchError(this.handleError)
-    );
+  ApiAuthLoginPost(request: LoginRequest): Observable<boolean> {
+
+      return from(Auth.postApiAuthLogin({ body: request })).pipe(
+        map(response => {
+          return !!response.data; 
+        }),
+        tap((isSuccess) => {
+          if (isSuccess) this.isAuthenticated.set(true);
+        }),
+        catchError(this.handleError)
+      );
   }
 
   ApiAuthRefresh(): Observable<boolean> {
-    return this.authService.apiAuthRefreshPost().pipe(
-      tap(() => {
-        this.isAuthenticated.set(true);
-      }),
-      catchError(this.handleError)
-    )
+     return from(Auth.postApiAuthRefresh()).pipe(
+        map(response => {
+          return !!response.data; 
+        }),
+        tap((isSuccess) => {
+          if (isSuccess) this.isAuthenticated.set(true);
+        }),
+        catchError(this.handleError)
+      );
   }
 
   /**

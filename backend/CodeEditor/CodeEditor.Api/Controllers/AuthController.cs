@@ -2,20 +2,17 @@
 using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
-using CodeEditor.Domain.Responses.AuthResponses;
-using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
-using CodeEditor.Domain.Specifications.UserSpecification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Data.SqlTypes;
 
 namespace CodeEditor.Api.Controllers
 {
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+    [Tags("Auth")]
     public class AuthController(
         ILogger<AuthController> logger,
         IAuthService authService,
@@ -45,7 +42,7 @@ namespace CodeEditor.Api.Controllers
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.AccessTokenExpirationInMinutes)
                 });
 
-                Response.Cookies.Append("refreshToken", response.RefreshToken   , new CookieOptions
+                Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -54,11 +51,11 @@ namespace CodeEditor.Api.Controllers
 
                 return Ok(true);
             }
-            catch(HttpResponseException ex)
+            catch (HttpResponseException ex)
             {
                 return StatusCode((int)ex.StatusCode, ex.Message);
             }
-            catch(Exception ex )
+            catch (Exception ex)
             {
                 logger.LogError("Exception : {Ex}", ex.Message);
                 return StatusCode(500, "Internal server error");
