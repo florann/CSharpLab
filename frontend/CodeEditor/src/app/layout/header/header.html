@@ -1,1 +1,28 @@
-<p>header works!</p>
+<mat-toolbar color="primary">
+  <button mat-icon-button class="mobile-menu" (click)="toggleMenu()">
+    <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
+  </button>
+ 
+  <!-- Desktop navigation -->
+  <div class="nav-left desktop-only">
+    <button mat-button routerLink="/home">Home</button>
+    <button mat-button routerLink="/about">About</button>
+    <button mat-button routerLink="/services">Services</button>
+    <button mat-button routerLink="/contact">Contact</button>
+  </div>
+  
+  <span class="spacer"></span>
+  
+  <div class="nav-right">
+    <app-header-login></app-header-login>
+  </div>
+</mat-toolbar>
+
+<div class="mobile-nav" [class.open]="isMenuOpen">
+  <a mat-button routerLink="/home" (click)="closeMenu()">
+    <mat-icon>home</mat-icon> Home
+  </a>
+  <a mat-button routerLink="/about" (click)="closeMenu()">About</a>
+  <a mat-button routerLink="/services" (click)="closeMenu()">Services</a>
+  <a mat-button routerLink="/contact" (click)="closeMenu()">Contact</a>
+</div>
