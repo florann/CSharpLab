@@ -10,7 +10,7 @@ import { LoginRequest } from '../../../core/api/types.gen';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
+  styleUrl: './login.scss',
 })
 export class Login {
   private fb = inject(FormBuilder);
