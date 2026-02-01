@@ -1,0 +1,61 @@
+@use '@angular/material' as mat;
+@use '../../../material-theme.scss' as theme;
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-left {
+  display: flex;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.nav-right {
+  display: flex;
+  gap: 8px;
+}
+
+// Responsive
+.mobile-menu {
+  display: none;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background-color: var(--mat-sys-surface-container);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  a {
+    width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-menu {
+    display: block;
+  }
+
+  .mobile-nav {
+    display: flex;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+    &.open {
+      max-height: 400px; // Adjust based on number of menu items
+    }
+  }
+}

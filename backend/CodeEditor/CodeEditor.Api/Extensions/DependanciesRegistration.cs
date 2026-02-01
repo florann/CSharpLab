@@ -32,8 +32,8 @@ namespace CodeEditor.Api.Extensions
                 services.AddScoped<IDocumentService, DocumentService>();
                 services.AddScoped<IStoreDocumentService, RedisStoreDocumentService>();
                 services.AddScoped<IAuthService, AuthService>();
-                services.AddScoped<IBaseEntityService<Domain.Entities.User>, UserService>();
-                services.AddScoped<IBaseEntityService<Domain.Entities.Token>, TokenService>();
+                services.AddScoped<Domain.Services.Interfaces.IService<Domain.Entities.User>, UserService>();
+                services.AddScoped<Domain.Services.Interfaces.IService<Domain.Entities.Token>, TokenService>();
 
                 // Repositories
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();

@@ -1,0 +1,69 @@
+<div class="login-content">
+     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <!-- Username Field -->
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input 
+        id="username"
+        type="text" 
+        formControlName="username"
+        placeholder="Enter username"
+        [class.error]="usernameControl?.invalid && usernameControl?.touched"
+      />
+      
+      @if (usernameControl?.invalid && usernameControl?.touched) {
+        <div class="error-message">
+          @if (usernameControl?.errors?.['required']) {
+            <span>Username is required</span>
+          }
+          @if (usernameControl?.errors?.['minlength']) {
+            <span>Username must be at least 3 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Password Field -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input 
+        id="password"
+        type="password" 
+        formControlName="password"
+        placeholder="Enter password"
+        [class.error]="passwordControl?.invalid && passwordControl?.touched"
+      />
+      
+      @if (passwordControl?.invalid && passwordControl?.touched) {
+        <div class="error-message">
+          @if (passwordControl?.errors?.['required']) {
+            <span>Password is required</span>
+          }
+          @if (passwordControl?.errors?.['minlength']) {
+            <span>Password must be at least 6 characters</span>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Submit Button -->
+    <button 
+      type="submit" 
+      [disabled]="isLoading()"
+      class="btn-primary"
+    >
+      @if (isLoading()) {
+        <span>Logging in...</span>
+      } @else {
+        <span>Login</span>
+      }
+    </button>
+  </form>
+</div>

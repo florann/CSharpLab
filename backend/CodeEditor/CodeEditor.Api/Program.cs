@@ -2,6 +2,7 @@ using CodeEditor.Api.Extensions;
 using CodeEditor.Api.Hubs;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using FluentValidation;
+using Scalar.AspNetCore;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,9 +34,18 @@ builder.Host.UseSerilog();
 
 builder.Services.AddServices();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+     .AddJsonOptions(options =>
+     {
+         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+     });
 
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddOpenApi((options) =>
+{
+    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+});
 
 var app = builder.Build();
 
@@ -44,9 +54,12 @@ app.UseCors("AllowAngular");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
-
-app.UseHttpsRedirection();
+else if (app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 
