@@ -116,5 +116,12 @@ namespace CodeEditor.Api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("status")]
+        public async Task<IActionResult> CheckStatus()
+        {
+            return Ok();
+        }
+    
     }
 }

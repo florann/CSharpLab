@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiUserByIdData, GetApiUserByIdResponses, PostApiAuthCreateAccountData, PostApiAuthCreateAccountResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses } from './types.gen';
+import type { GetApiAuthStatusData, GetApiAuthStatusResponses, GetApiUserByIdData, GetApiUserByIdResponses, PostApiAuthCreateAccountData, PostApiAuthCreateAccountResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -43,6 +43,10 @@ export class Auth {
     
     public static postApiAuthRefresh<ThrowOnError extends boolean = false>(options?: Options<PostApiAuthRefreshData, ThrowOnError>) {
         return (options?.client ?? client).post<PostApiAuthRefreshResponses, unknown, ThrowOnError>({ url: '/api/Auth/refresh', ...options });
+    }
+    
+    public static getApiAuthStatus<ThrowOnError extends boolean = false>(options?: Options<GetApiAuthStatusData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiAuthStatusResponses, unknown, ThrowOnError>({ url: '/api/Auth/status', ...options });
     }
 }
 

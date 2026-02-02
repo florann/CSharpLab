@@ -1,12 +1,15 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
-import { Auth, CreateAccountRequest, LoginRequest, PostApiAuthLoginData, UserResponse } from '../api/index';
+import { Auth, CreateAccountRequest, LoginRequest } from '../api/index';
+import { Router } from '@angular/router';
+import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  // ✅ Declare the signal
+  
+  private router = inject(Router);
   isAuthenticated = signal<boolean>(false);
 
   ApiAuthLoginPost(request: LoginRequest): Observable<boolean> {
@@ -42,6 +45,23 @@ export class AuthenticationService {
       }),
       catchError(this.handleError)
     )
+  }
+
+  ApiCheckStatus(): Observable<void> {
+    return from(Auth.getApiAuthStatus())
+    .pipe(
+      map(response => {
+        if(response.response.status != 200)
+        {
+          this.router.navigate(['/login']);
+        }
+        return;
+      }),
+      catchError(err => {
+        this.router.navigate(['/login']);
+        return throwError(() => new Error(err));
+      })
+    );
   }
 
   /**

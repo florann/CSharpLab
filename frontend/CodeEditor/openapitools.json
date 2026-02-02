@@ -5,7 +5,7 @@
       "typescript-angular": {
         "generatorName": "typescript-angular",
         "output": "./src/app/core/api",
-        "inputSpec": "http://localhost:5242/openapi/v1.json",
+        "inputSpec": "https://localhost:7127/openapi/v1.json",
         "additionalProperties": {
           "ngVersion": "18.0.0",
           "npmName": "code-editor-api",

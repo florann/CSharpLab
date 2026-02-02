@@ -30,7 +30,7 @@ export class CodeEditor implements AfterViewInit {
   
    ngOnInit() {
       this.connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5242/cursorhub")
+        .withUrl("https://localhost:7127/cursorhub")
         .build();
       
       // Function to load remote cursors
