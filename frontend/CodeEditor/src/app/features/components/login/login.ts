@@ -4,11 +4,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '../../../core/api/types.gen';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

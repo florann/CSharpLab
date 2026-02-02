@@ -7,9 +7,18 @@ import { Injectable, signal } from '@angular/core';
 export class ThemeService {
   isDarkTheme = signal(false);
 
-  toggleTheme() {
-    this.isDarkTheme.update(darkTheme => !darkTheme);
+  initTheme(): void {
+    this.isDarkTheme.set(localStorage.getItem("isDarkTheme") === "true");
+    this.changeDomClass();
+  }
 
+  toggleTheme(): void {
+    this.isDarkTheme.update(darkTheme => !darkTheme);
+    localStorage.setItem("isDarkTheme", this.isDarkTheme().toString());
+    this.changeDomClass();
+  }
+
+  changeDomClass(): void {
     if(this.isDarkTheme()){
       document.documentElement.classList.add("dark-theme");
     } else {
