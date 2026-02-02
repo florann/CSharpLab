@@ -6,11 +6,12 @@ import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '../../../core/api/types.gen';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatAnchor, MatButton } from "@angular/material/button";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatAnchor, MatButton],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })

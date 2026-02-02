@@ -1,68 +1,50 @@
 <div class="login-content">
-     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Username Field -->
-      <div class="form-group">
-        <input 
-          id="username"
-          type="text" 
-          formControlName="username"
-          placeholder="Username"
-          [class.error]="usernameControl?.invalid && usernameControl?.touched"
-        />
+    <form [formGroup]="loginForm">
+      <div>
+        <mat-form-field>
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username">
+          @if (loginForm.get("username")?.hasError('required'))
+          {
+            <mat-error>
+              Username is required
+            </mat-error>
+          }
+          @if (loginForm.get("username")?.hasError('minlength'))
+          {
+            <mat-error>
+              Minimum length is {{ loginForm.get("username")?.errors?.['minlength'].requiredLength }}
+            </mat-error>
+          }
+        </mat-form-field>
       </div>
 
-    <!-- Password Field -->
-    <div class="form-group">
-      <input 
-        id="password"
-        type="password" 
-        formControlName="password"
-        placeholder="Password"
-        [class.error]="passwordControl?.invalid && passwordControl?.touched"
-      />
-      
-    </div>
-
-      @if (usernameControl?.invalid && usernameControl?.touched) {
-        <div class="error-message">
-          @if (usernameControl?.errors?.['required']) {
-            <span>Username is required</span>
+      <div>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input type="password" matInput formControlName="password">
+          @if (loginForm.get("password")?.hasError('required'))
+          {
+            <mat-error>
+              Password is required
+            </mat-error>
           }
-          @if (usernameControl?.errors?.['minlength']) {
-            <span>Username must be at least 3 characters</span>
+          @if (loginForm.get("password")?.hasError('minlength'))
+          {
+            <mat-error>
+              Minimum length is {{ loginForm.get("password")?.errors?.['minlength'].requiredLength }}
+            </mat-error>
           }
-        </div>
-      }
-      @if (passwordControl?.invalid && passwordControl?.touched) {
-        <div class="error-message">
-          @if (passwordControl?.errors?.['required']) {
-            <span>Password is required</span>
-          }
-          @if (passwordControl?.errors?.['minlength']) {
-            <span>Password must be at least 6 characters</span>
-          }
-        </div>
-      }
-
-    <!-- Error Message -->
-    @if (errorMessage()) {
-      <div class="alert alert-error">
-        {{ errorMessage() }}
+        </mat-form-field>
       </div>
-    }
-    <div>
-      <!-- Submit Button -->
-      <button 
-        type="submit" 
-        [disabled]="isLoading()"
-        class="btn-primary"
-      >
-        @if (isLoading()) {
-          <span>Logging in...</span>
-        } @else {
-          <span>Login</span>
-        }
-      </button>
-    </div>
-  </form>
+
+      <div class="login-btn">
+        <button 
+          matButton="filled"
+        >
+        Login
+        </button>
+      </div>
+    </form>
+    
 </div>

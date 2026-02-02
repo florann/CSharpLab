@@ -2,9 +2,11 @@
 @use '../../../material-theme.scss' as theme;
 
 mat-toolbar {
+   @include mat.elevation(6);
   display: flex;
   align-items: center;
   gap: 16px;
+  background-color: var(--mat-sys-on-primary);
 }
 
 .nav-left {
@@ -29,7 +31,7 @@ mat-toolbar {
 .mobile-nav {
   display: none;
   flex-direction: column;
-  background-color: var(--mat-sys-surface-container);
+  background-color: var(--mat-sys-on-primary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   
   a {

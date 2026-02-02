@@ -1,0 +1,6 @@
+@use '@angular/material' as mat;
+
+.footer {
+    background-color: var(--mat-sys-on-primary);
+    @include mat.elevation(8);
+}
