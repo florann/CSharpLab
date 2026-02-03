@@ -14,7 +14,11 @@ export class AuthenticationService {
 
   ApiAuthLoginPost(request: LoginRequest): Observable<boolean> {
 
-      return from(Auth.postApiAuthLogin({ body: request })).pipe(
+      return from(Auth.postApiAuthLogin(
+        { 
+          credentials: 'include',
+          body: request 
+        })).pipe(
         map(response => {
           return !!response.data; 
         }),
@@ -26,7 +30,9 @@ export class AuthenticationService {
   }
 
   ApiAuthRefresh(): Observable<boolean> {
-     return from(Auth.postApiAuthRefresh()).pipe(
+     return from(Auth.postApiAuthRefresh({
+          credentials: 'include',
+     })).pipe(
         map(response => {
           return !!response.data; 
         }),
@@ -48,7 +54,9 @@ export class AuthenticationService {
   }
 
   ApiCheckStatus(): Observable<void> {
-    return from(Auth.getApiAuthStatus())
+    return from(Auth.getApiAuthStatus({
+          credentials: 'include',
+    }))
     .pipe(
       map(response => {
         if(response.response.status != 200)

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/authentication.service';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { LoginRequest } from '../../../core/api/types.gen';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -25,18 +25,11 @@ export class Login {
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-    // Signals for UI state
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
-
-  onSubmit(): void {
+  login(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
-
-    this.isLoading.set(true);
-    this.errorMessage.set(null);
 
     const loginRequest: LoginRequest = {
       userName: this.loginForm.value.username,
@@ -45,24 +38,13 @@ export class Login {
 
     this.authService.ApiAuthLoginPost(loginRequest).subscribe({
       next: (success) => {
-        this.isLoading.set(false);
         if (success) {
           this.router.navigate(['/codeeditor']);
         }
       },
       error: (error) => {
-        this.isLoading.set(false);
-        this.errorMessage.set('Invalid username or password');
         console.error('Login failed:', error);
       }
     });
-  }
-
-  get usernameControl() {
-    return this.loginForm.get('username');
-  }
-
-  get passwordControl() {
-    return this.loginForm.get('password');
   }
 }

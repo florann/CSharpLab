@@ -43,7 +43,26 @@ namespace CodeEditor.Api.Extensions
                             Encoding.UTF8.GetBytes(jwtSettings.Secret)
                         ),
                         ValidateLifetime = true,
+                        ValidAudience = "CodeEditorFrontEnd",
+                        ValidIssuer = "CodeEditorApi",
                         ClockSkew = TimeSpan.Zero
+                    };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var token = context.Request.Cookies["accessToken"];
+                            Console.WriteLine($"Cookie 'accessToken' found: {!string.IsNullOrEmpty(token)}");
+                            Console.WriteLine($"Token value: {token?.Substring(0, Math.Min(20, token?.Length ?? 0))}...");
+                            context.Token = token;
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = context =>
+                        {
+                            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 

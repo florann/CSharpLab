@@ -38,6 +38,7 @@ namespace CodeEditor.Api.Controllers
                 {
                     HttpOnly = true,
                     Secure = true,
+                    SameSite = SameSiteMode.None,
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.AccessTokenExpirationInMinutes)
                 });
 
@@ -45,6 +46,7 @@ namespace CodeEditor.Api.Controllers
                 {
                     HttpOnly = true,
                     Secure = true,
+                    SameSite = SameSiteMode.None,
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
                 });
 
