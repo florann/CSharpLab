@@ -1,6 +1,5 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../core/services/authentication.service';
-import { interval, Subscription, switchMap } from 'rxjs';
+import { Component, inject, OnInit} from '@angular/core';
+import { IdleService } from '../../core/services/idle/idle';
 
 @Component({
   selector: 'app-footer',
@@ -8,20 +7,12 @@ import { interval, Subscription, switchMap } from 'rxjs';
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
 })
-export class Footer implements OnInit, OnDestroy {
-  authenticationService = inject(AuthenticationService);
-  private intervalFunctionSubscription?: Subscription;
+
+export class Footer implements OnInit {
+  
+  idleService = inject(IdleService);
 
   ngOnInit(): void {
-    this.intervalFunctionSubscription = interval(5000).pipe(
-      switchMap(() => this.authenticationService.ApiCheckStatus())
-    ).subscribe({
-      next: () => console.log('Check successful'), // Todo toast, must be loggin
-      error: (err) => console.log('Check failed:', err)
-    });
-  }
-
-  ngOnDestroy() {
-    this.intervalFunctionSubscription?.unsubscribe();
+    this.idleService.startWatching();  
   }
 }

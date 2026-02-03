@@ -18,7 +18,6 @@ namespace CodeEditor.Api.Controllers
         IAuthService authService,
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
-        RefreshTokensRequestValidator refreshTokenRequestValidator,
         IOptions<JwtSettings> jwtSettings
         ) : ControllerBase
     {
