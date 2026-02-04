@@ -45,7 +45,8 @@ namespace CodeEditor.Domain.Services
             return new LoginResponse
             {
                 AccessToken = GenerateAccessToken(user),
-                RefreshToken = await GenerateRefreshToken(user)
+                RefreshToken = await GenerateRefreshToken(user),
+                UserId = user.Id
             };
         }
 
@@ -159,7 +160,8 @@ namespace CodeEditor.Domain.Services
             return new LoginResponse
             {
                 AccessToken = GenerateAccessToken(token.User),
-                RefreshToken = await GenerateRefreshToken(token.User)
+                RefreshToken = await GenerateRefreshToken(token.User),
+                UserId = token.UserId
             };
 
         }

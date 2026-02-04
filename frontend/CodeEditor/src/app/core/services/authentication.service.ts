@@ -1,8 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
-import { Auth, CreateAccountRequest, LoginRequest } from '../api/index';
+import { Auth, CreateAccountRequest, LoginRequest, UserResponse } from '../api/index';
 import { Router } from '@angular/router';
-import { response } from 'express';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +11,17 @@ export class AuthenticationService {
   private router = inject(Router);
   isAuthenticated = signal<boolean>(false);
 
-  ApiAuthLoginPost(request: LoginRequest): Observable<boolean> {
-
+  ApiAuthLoginPost(request: LoginRequest): Observable<UserResponse> {
       return from(Auth.postApiAuthLogin(
         { 
           credentials: 'include',
           body: request 
         })).pipe(
         map(response => {
-          return !!response.data; 
+          if(!response.data)
+            throw new Error("UserResponse is empty");
+
+          return response.data; 
         }),
         tap((isSuccess) => {
           if (isSuccess) this.isAuthenticated.set(true);

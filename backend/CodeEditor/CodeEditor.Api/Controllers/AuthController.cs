@@ -2,6 +2,9 @@
 using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
+using CodeEditor.Domain.Responses.AuthResponses;
+using CodeEditor.Domain.Responses.UserResponses;
+using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +19,7 @@ namespace CodeEditor.Api.Controllers
     public class AuthController(
         ILogger<AuthController> logger,
         IAuthService authService,
+        UserService userService,
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
         IOptions<JwtSettings> jwtSettings
@@ -24,7 +28,7 @@ namespace CodeEditor.Api.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<bool>> Login(LoginRequest request)
+        public async Task<ActionResult<UserResponse>> Login(LoginRequest request)
         {
             var validationResult = await loginRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
@@ -32,9 +36,8 @@ namespace CodeEditor.Api.Controllers
 
             try
             {
-                var response = await authService.Login(request);
-
-                Response.Cookies.Append("accessToken", response.AccessToken, new CookieOptions
+                var loginResponse = await authService.Login(request);
+                Response.Cookies.Append("accessToken", loginResponse.AccessToken, new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -42,7 +45,7 @@ namespace CodeEditor.Api.Controllers
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.AccessTokenExpirationInMinutes)
                 });
 
-                Response.Cookies.Append("refreshToken", response.RefreshToken, new CookieOptions
+                Response.Cookies.Append("refreshToken", loginResponse.RefreshToken, new CookieOptions
                 {
                     HttpOnly = true,
                     Secure = true,
@@ -50,7 +53,8 @@ namespace CodeEditor.Api.Controllers
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
                 });
 
-                return Ok(true);
+                var response = await userService.GetUserById(loginResponse.UserId);
+                return Ok(response);
             }
             catch (HttpResponseException ex)
             {

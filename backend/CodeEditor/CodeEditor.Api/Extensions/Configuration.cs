@@ -1,9 +1,9 @@
 ﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Mapper;
 using CodeEditor.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
 namespace CodeEditor.Api.Extensions
@@ -66,6 +66,7 @@ namespace CodeEditor.Api.Extensions
                     };
                 });
 
+                builder.Services.AddAutoMapper(typeof(ProfileConfiguration).Assembly);
 
                 return builder;
             }

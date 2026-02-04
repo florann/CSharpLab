@@ -32,7 +32,7 @@ export type PostApiAuthLoginResponses = {
     /**
      * OK
      */
-    200: boolean;
+    200: UserResponse;
 };
 
 export type PostApiAuthLoginResponse = PostApiAuthLoginResponses[keyof PostApiAuthLoginResponses];

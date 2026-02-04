@@ -37,8 +37,8 @@ export class Login {
     };
 
     this.authService.ApiAuthLoginPost(loginRequest).subscribe({
-      next: (success) => {
-        if (success) {
+      next: (userResponse) => {
+        if (userResponse) {
           this.router.navigate(['/codeeditor']);
         }
       },

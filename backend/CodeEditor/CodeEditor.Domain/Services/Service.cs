@@ -1,4 +1,5 @@
-﻿using CodeEditor.Domain.Repositories.Base;
+﻿using AutoMapper;
+using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.Interfaces;
 
@@ -6,11 +7,14 @@ namespace CodeEditor.Domain.Services
 {
     public class Service<T> : Interfaces.IService<T> where T : class
     {
-        private readonly IRepository<T> _repository;
+        protected readonly IRepository<T> _repository;
+        protected readonly IMapper _mapper;
 
-        public Service(IRepository<T> repository)
+        public Service(IRepository<T> repository, 
+            IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public async Task<T> AddAsync(T entity)

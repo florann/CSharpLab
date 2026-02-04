@@ -1,7 +1,4 @@
 ﻿using CodeEditor.Domain.Specifications.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
