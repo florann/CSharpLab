@@ -7,13 +7,13 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
 {
     public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
-        public LoginRequestValidator(IService<Entities.User> userService)
+        public LoginRequestValidator(IUserService userService)
         {
             RuleFor(request => request.UserName)
                 .NotEmpty()
                 .NotNull()
                 .DbCheck(
-                    userService,
+                    (IService<Entities.User>)userService,
                     username => new FindUserByUserNameSpecification(username)
                     )
                 .WithMessage("User does not exist in db");

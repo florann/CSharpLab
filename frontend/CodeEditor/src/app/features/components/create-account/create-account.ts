@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../../core/services/authentication.service';
+import { AuthenticationService } from '../../../core/services/authentication/authentication.service';
 import { Router, RouterLink } from '@angular/router';
 import { confirmPasswordValidator } from '../../validators/password-match.validator';
 import { CreateAccountRequest } from '../../../core/api';

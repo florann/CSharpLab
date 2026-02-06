@@ -16,7 +16,7 @@ export type LoginRequest = {
 };
 
 export type UserResponse = {
-    id?: unknown;
+    id?: number;
     userName?: string;
     guid?: string;
 };

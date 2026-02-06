@@ -7,7 +7,7 @@ namespace CodeEditor.Domain.Requests.UserRequests.Validators
 {
     public class GetUserBydIdValidator : AbstractValidator<long>
     {
-        public GetUserBydIdValidator(IService<Entities.User> userService)
+        public GetUserBydIdValidator(IUserService userService)
         {
             RuleFor(userId => userId)
                 .DbCheck(userService,

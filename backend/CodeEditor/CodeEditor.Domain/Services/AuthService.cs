@@ -18,13 +18,13 @@ namespace CodeEditor.Domain.Services
     public class AuthService : IAuthService
     {
 
-        private readonly Interfaces.IService<User> _userService;
-        private readonly Interfaces.IService<Token> _tokenService;
+        private readonly IUserService _userService;
+        private readonly IService<Token> _tokenService;
         private readonly JwtSettings _jwtSettings;
 
         public AuthService(
-            Interfaces.IService<User> userService,
-            Interfaces.IService<Token> tokenService,
+            IUserService userService,
+            IService<Token> tokenService,
             IOptionsSnapshot<JwtSettings> jwtSettings)
         {
             _userService = userService;

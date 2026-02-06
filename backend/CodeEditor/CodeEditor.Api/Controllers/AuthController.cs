@@ -19,7 +19,7 @@ namespace CodeEditor.Api.Controllers
     public class AuthController(
         ILogger<AuthController> logger,
         IAuthService authService,
-        UserService userService,
+        IUserService userService,
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
         IOptions<JwtSettings> jwtSettings

@@ -5,7 +5,7 @@ using CodeEditor.Domain.Specifications.Interfaces;
 
 namespace CodeEditor.Domain.Services
 {
-    public class Service<T> : Interfaces.IService<T> where T : class
+    public class Service<T> : IService<T> where T : class
     {
         protected readonly IRepository<T> _repository;
         protected readonly IMapper _mapper;

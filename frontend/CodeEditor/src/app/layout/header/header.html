@@ -16,10 +16,15 @@
   <span class="spacer"></span>
   
   <div class="nav-right">
+    @if(userService.user())
+    {
+      <div>{{ userService.user()?.userName }} - {{ userService.user()?.guid }}</div>
+    } @else {
+      <app-header-login></app-header-login>
+    }
     <button matIconButton (click)="toggleTheme()">
       <mat-icon>{{isDarkTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
     </button>
-    <app-header-login></app-header-login>
   </div>
 </mat-toolbar>
 

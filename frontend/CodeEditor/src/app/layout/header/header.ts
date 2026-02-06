@@ -5,6 +5,7 @@ import { MatIcon } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { HeaderLogin } from '../../components/layout/header-login/header-login';
 import { ThemeService } from '../../core/services/theme/theme.service';
+import { UserService } from '../../features/services/user/user.service';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,8 @@ import { ThemeService } from '../../core/services/theme/theme.service';
 })
 export class Header {
   themeService = inject(ThemeService);
+  userService = inject(UserService);
+
   isMenuOpen = false;
   isConnected = false;
 

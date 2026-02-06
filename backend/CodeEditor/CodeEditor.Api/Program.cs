@@ -2,6 +2,7 @@ using CodeEditor.Api.Extensions;
 using CodeEditor.Api.Hubs;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using FluentValidation;
+using Microsoft.OpenApi;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -44,7 +45,18 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi((options) =>
 {
-    options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+    options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
+    options.AddSchemaTransformer((schema, context, cancellationToken) =>
+    {
+        // Map long to int64
+        if (context.JsonTypeInfo.Type == typeof(long) ||
+            context.JsonTypeInfo.Type == typeof(long?))
+        {
+            schema.Type = JsonSchemaType.Integer;
+            schema.Format = "int64";
+        }
+        return Task.CompletedTask;
+    });
 });
 
 var app = builder.Build();

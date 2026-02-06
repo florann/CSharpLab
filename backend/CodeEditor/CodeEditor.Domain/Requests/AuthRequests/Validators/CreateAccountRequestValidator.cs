@@ -10,13 +10,13 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
 {
     public class CreateAccountRequestValidator : AbstractValidator<CreateAccountRequest>
     {
-        public CreateAccountRequestValidator(IService<Entities.User> userService)
+        public CreateAccountRequestValidator(IUserService userService)
         {
             RuleFor(request => request.UserName)
                 .NotEmpty()
                 .NotNull()
                 .DbCheck(
-                    userService,
+                    (IService<Entities.User>)userService,
                     (userName) => 
                         {
                             return new FindUserByUserNameSpecification(userName);

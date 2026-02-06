@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
-import { Auth, CreateAccountRequest, LoginRequest, UserResponse } from '../api/index';
+import { Auth, CreateAccountRequest, LoginRequest, UserResponse } from '../../api/index';
 import { Router } from '@angular/router';
 
 @Injectable({

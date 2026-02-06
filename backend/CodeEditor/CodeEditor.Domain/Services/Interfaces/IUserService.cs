@@ -2,7 +2,7 @@
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
-    public interface IUserService
+    public interface IUserService : IService<Entities.User>
     {
         Task<UserResponse> GetUserById(long userId);
     }
