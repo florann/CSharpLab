@@ -1,15 +1,7 @@
 <mat-toolbar color="primary">
   @if(isConnected()){
-    <button mat-icon-button class="mobile-menu" (click)="toggleMenu()">
-      <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
-    </button>
-  
-
-    <div class="nav-left desktop-only">
-      <button mat-button routerLink="/home">Home</button>
-      <button mat-button routerLink="/about">About</button>
-      <button mat-button routerLink="/services">Services</button>
-      <button mat-button routerLink="/contact">Contact</button>
+    <div class="nav-left">
+      <app-header-button [variant]="'icon'" [icon]="'dashboard'" (clicked)="dashboardPage()"></app-header-button>
     </div>
   }
   
@@ -18,7 +10,13 @@
   <div class="nav-right">
     @if(userService.user())
     {
-      <div>{{ userService.user()?.userName }}</div>
+      <app-header-button [variant]="'icon'" [icon]="'account_box'" (mouseenter)="isProfilButtonHover.set(true)" (mouseleave)="isProfilButtonHover.set(false)"></app-header-button>
+      @if(isProfilButtonHover()) {
+        <app-header-account></app-header-account>
+      }
+      @else {
+
+      }
     } @else {
       <!-- <app-header-login></app-header-login> -->
        <app-header-button [variant]="'icon'" [icon]="'token'" (clicked)="pageLogin()" ></app-header-button>
@@ -28,14 +26,3 @@
     </button>
   </div>
 </mat-toolbar>
-
-@if(isConnected()){
-  <div class="mobile-nav" [class.open]="isMenuOpen">
-    <a mat-button routerLink="/home" (click)="closeMenu()">
-      <mat-icon>home</mat-icon> Home
-    </a>
-    <a mat-button routerLink="/about" (click)="closeMenu()">About</a>
-    <a mat-button routerLink="/services" (click)="closeMenu()">Services</a>
-    <a mat-button routerLink="/contact" (click)="closeMenu()">Contact</a>
-  </div>
-}

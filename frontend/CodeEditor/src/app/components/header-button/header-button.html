@@ -5,7 +5,10 @@
       [type]="type()"
       [color]="color()"
       [disabled]="disabled()"
-      (click)="handleClick($event)">
+      (click)="handleClick($event)"
+      (mouseenter)="handleMouseEnter($event)"
+      (mouseleave)="handleMouseLeave($event)"
+      >
       @if (icon()) {
         <mat-icon>{{ icon() }}</mat-icon>
       }
@@ -18,7 +21,10 @@
       [type]="type()"
       [color]="color()"
       [disabled]="disabled()"
-      (click)="handleClick($event)">
+      (click)="handleClick($event)"
+      (mouseenter)="handleMouseEnter($event)"
+      (mouseleave)="handleMouseLeave($event)"
+      >
       @if (icon()) {
         <mat-icon>{{ icon() }}</mat-icon>
       }
@@ -31,7 +37,10 @@
       [type]="type()"
       [color]="color()"
       [disabled]="disabled()"
-      (click)="handleClick($event)">
+      (click)="handleClick($event)"
+      (mouseenter)="handleMouseEnter($event)"
+      (mouseleave)="handleMouseLeave($event)"
+      >
       @if (icon()) {
         <mat-icon>{{ icon() }}</mat-icon>
       }
@@ -44,7 +53,9 @@
       [type]="type()"
       [color]="color()"
       [disabled]="disabled()"
-      (click)="handleClick($event)">
+      (click)="handleClick($event)"      
+      (mouseenter)="handleMouseEnter($event)"
+      (mouseleave)="handleMouseLeave($event)">
       @if (icon()) {
         <mat-icon>{{ icon() }}</mat-icon>
       }
@@ -57,7 +68,9 @@
       [type]="type()"
       [color]="color()"
       [disabled]="disabled()"
-      (click)="handleClick($event)">
+      (click)="handleClick($event)"       
+      (mouseenter)="handleMouseEnter($event)"
+      (mouseleave)="handleMouseLeave($event)">
       @if (icon()) {
         <mat-icon>{{ icon() }}</mat-icon>
       }

@@ -9,7 +9,6 @@ export class UserService {
   user = signal<User | null>(null);
 
   setUser(user: User) {
-    console.log("SetUser called");
     this.user.set(user);
   }
 

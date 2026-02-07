@@ -53,7 +53,7 @@ export class Login {
           }
 
           this.userService.setUser(user);
-          this.router.navigate(['/codeeditor']);
+          this.router.navigate(['/dashboard']);
         }
       },
       error: (error) => {

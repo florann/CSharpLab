@@ -16,10 +16,26 @@ export class HeaderButton {
   icon = input<string>('');
 
   clicked = output<MouseEvent>();
+  mouseEnter = output<MouseEvent>();
+  mouseLeave = output<MouseEvent>();
   
   handleClick(event: MouseEvent) {
     if (!this.disabled()) {
       this.clicked.emit(event);
+    }
+  }
+
+  handleMouseEnter(event: MouseEvent){
+    if(!this.disabled) {
+      console.log("mouse enter emit");
+      this.mouseEnter.emit(event);
+    }
+  }
+
+  handleMouseLeave(event: MouseEvent){
+    if(!this.disabled){
+       console.log("mouse enter emit");
+      this.mouseLeave.emit(event);
     }
   }
 }

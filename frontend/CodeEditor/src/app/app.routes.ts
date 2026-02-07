@@ -4,6 +4,8 @@ import { NotFound } from './features/components/not-found/not-found';
 import { Login } from './features/components/login/login';
 import { CodeEditor } from './features/components/code-editor/code-editor';
 import { CreateAccount } from './features/components/create-account/create-account';
+import { authGuard } from './guard/auth.guard';
+import { Dashboard } from './features/components/dashboard/dashboard';
 
 export const routes: Routes = [
   { 
@@ -21,11 +23,17 @@ export const routes: Routes = [
   },
   { 
     path: 'createaccount', 
-    component: CreateAccount 
+    component: CreateAccount, 
+  },
+  { 
+    path: 'dashboard', 
+    component: Dashboard,
+    canActivate: [authGuard]
   },
   { 
     path: 'codeeditor', 
-    component: CodeEditor 
+    component: CodeEditor,
+    canActivate: [authGuard]
   },
   { 
     path: '**', 

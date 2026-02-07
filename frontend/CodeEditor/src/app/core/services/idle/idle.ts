@@ -32,7 +32,6 @@ export class IdleService {
     });
 
     activity$.subscribe(() => {
-      console.log("Non Idle");
       this.isIdle.set(false);
     });
   }
