@@ -1,16 +1,16 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
-import { HeaderLogin } from '../../components/layout/header-login/header-login';
+import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/services/theme/theme.service';
 import { UserService } from '../../features/services/user/user.service';
+import { HeaderButton } from '../../components/header-button/header-button';
 
 @Component({
   selector: 'app-header',
   imports: [
-    HeaderLogin, 
+    HeaderButton,
     MatToolbarModule, 
     RouterLink, 
     MatButtonModule,
@@ -23,9 +23,12 @@ import { UserService } from '../../features/services/user/user.service';
 export class Header {
   themeService = inject(ThemeService);
   userService = inject(UserService);
+  router = inject(Router);
 
   isMenuOpen = false;
-  isConnected = false;
+  isConnected = computed(() => {
+    return this.userService.user != null;
+  });
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -42,4 +45,9 @@ export class Header {
   toggleTheme() {
     this.themeService.toggleTheme();
   }
+
+  pageLogin() {
+    this.router.navigate(["/login"]);
+  }
+
 }

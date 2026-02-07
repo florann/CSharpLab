@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  @if(isConnected){
+  @if(isConnected()){
     <button mat-icon-button class="mobile-menu" (click)="toggleMenu()">
       <mat-icon>{{ isMenuOpen ? 'close' : 'menu' }}</mat-icon>
     </button>
@@ -18,9 +18,10 @@
   <div class="nav-right">
     @if(userService.user())
     {
-      <div>{{ userService.user()?.userName }} - {{ userService.user()?.guid }}</div>
+      <div>{{ userService.user()?.userName }}</div>
     } @else {
-      <app-header-login></app-header-login>
+      <!-- <app-header-login></app-header-login> -->
+       <app-header-button [variant]="'icon'" [icon]="'token'" (clicked)="pageLogin()" ></app-header-button>
     }
     <button matIconButton (click)="toggleTheme()">
       <mat-icon>{{isDarkTheme() ? 'light_mode' : 'dark_mode' }}</mat-icon>
@@ -28,7 +29,7 @@
   </div>
 </mat-toolbar>
 
-@if(isConnected){
+@if(isConnected()){
   <div class="mobile-nav" [class.open]="isMenuOpen">
     <a mat-button routerLink="/home" (click)="closeMenu()">
       <mat-icon>home</mat-icon> Home

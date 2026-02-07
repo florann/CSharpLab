@@ -1,0 +1,67 @@
+@switch (variant()) {
+  @case ('icon') {
+    <button 
+      mat-icon-button
+      [type]="type()"
+      [color]="color()"
+      [disabled]="disabled()"
+      (click)="handleClick($event)">
+      @if (icon()) {
+        <mat-icon>{{ icon() }}</mat-icon>
+      }
+      <ng-content></ng-content>
+    </button>
+  }
+  @case ('raised') {
+    <button 
+      mat-raised-button
+      [type]="type()"
+      [color]="color()"
+      [disabled]="disabled()"
+      (click)="handleClick($event)">
+      @if (icon()) {
+        <mat-icon>{{ icon() }}</mat-icon>
+      }
+      <ng-content></ng-content>
+    </button>
+  }
+  @case ('flat') {
+    <button 
+      mat-flat-button
+      [type]="type()"
+      [color]="color()"
+      [disabled]="disabled()"
+      (click)="handleClick($event)">
+      @if (icon()) {
+        <mat-icon>{{ icon() }}</mat-icon>
+      }
+      <ng-content></ng-content>
+    </button>
+  }
+  @case ('stroked') {
+    <button 
+      mat-stroked-button
+      [type]="type()"
+      [color]="color()"
+      [disabled]="disabled()"
+      (click)="handleClick($event)">
+      @if (icon()) {
+        <mat-icon>{{ icon() }}</mat-icon>
+      }
+      <ng-content></ng-content>
+    </button>
+  }
+  @default {
+    <button 
+      mat-button
+      [type]="type()"
+      [color]="color()"
+      [disabled]="disabled()"
+      (click)="handleClick($event)">
+      @if (icon()) {
+        <mat-icon>{{ icon() }}</mat-icon>
+      }
+      <ng-content></ng-content>
+    </button>
+  }
+}
