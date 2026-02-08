@@ -22,7 +22,7 @@ namespace CodeEditor.Domain.Services
         private readonly IService<Token> _tokenService;
         private readonly JwtSettings _jwtSettings;
 
-        public AuthService(
+        public AuthService( 
             IUserService userService,
             IService<Token> tokenService,
             IOptionsSnapshot<JwtSettings> jwtSettings)

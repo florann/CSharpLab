@@ -10,13 +10,10 @@
   <div class="nav-right">
     @if(userService.user())
     {
-      <app-header-button [variant]="'icon'" [icon]="'account_box'" (mouseenter)="isProfilButtonHover.set(true)" (mouseleave)="isProfilButtonHover.set(false)"></app-header-button>
-      @if(isProfilButtonHover()) {
-        <app-header-account></app-header-account>
-      }
-      @else {
-
-      }
+      <div class="container-user-account">
+        <app-header-button [variant]="'icon'" [icon]="'account_box'" [matMenuTriggerFor]="accountMenu.menu()" ></app-header-button>
+        <app-header-account #accountMenu></app-header-account>
+      </div>
     } @else {
       <!-- <app-header-login></app-header-login> -->
        <app-header-button [variant]="'icon'" [icon]="'token'" (clicked)="pageLogin()" ></app-header-button>

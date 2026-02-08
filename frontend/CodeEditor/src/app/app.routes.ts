@@ -6,6 +6,7 @@ import { CodeEditor } from './features/components/code-editor/code-editor';
 import { CreateAccount } from './features/components/create-account/create-account';
 import { authGuard } from './guard/auth.guard';
 import { Dashboard } from './features/components/dashboard/dashboard';
+import { UserAccount } from './features/components/user-account/user-account';
 
 export const routes: Routes = [
   { 
@@ -33,6 +34,11 @@ export const routes: Routes = [
   { 
     path: 'codeeditor', 
     component: CodeEditor,
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'useraccount', 
+    component: UserAccount,
     canActivate: [authGuard]
   },
   { 

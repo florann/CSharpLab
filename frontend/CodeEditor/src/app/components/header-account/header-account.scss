@@ -3,6 +3,6 @@
 :host {
     @include mat.elevation(6);
     position: absolute;
+    top: 45px;
     background-color: var(--mat-sys-surface);
-    top: 100px;
 }

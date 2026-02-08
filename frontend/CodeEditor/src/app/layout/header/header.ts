@@ -7,6 +7,7 @@ import { ThemeService } from '../../core/services/theme/theme.service';
 import { UserService } from '../../features/services/user/user.service';
 import { HeaderButton } from '../../components/header-button/header-button';
 import { HeaderAccount } from "../../components/header-account/header-account";
+import { MatMenu, MatMenuModule } from "@angular/material/menu";
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,8 @@ import { HeaderAccount } from "../../components/header-account/header-account";
     MatToolbarModule,
     MatButtonModule,
     MatIcon,
-    HeaderAccount
+    HeaderAccount,
+    MatMenuModule
 ],
   standalone: true,
   templateUrl: './header.html',
@@ -31,8 +33,6 @@ export class Header {
   isConnected = computed(() => {
     return this.userService.user() != null;
   });
-
-  isProfilButtonHover = signal(false);
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -57,5 +57,4 @@ export class Header {
   dashboardPage() {
     this.router.navigate(["/dashboard"]);
   }
-
 }
