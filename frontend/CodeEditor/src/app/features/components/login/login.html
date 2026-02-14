@@ -39,12 +39,21 @@
         </mat-form-field>
       </div>
 
-      <div class="login-btn">
+      <div class="login-page-btn">
         <button 
           matButton="filled"
           (click)="login()"
         >
         Login
+        </button>
+      </div>
+
+      <div class="login-page-btn">
+        <button 
+          matButton="filled"
+          (click)="navigateToCreateAccount()"
+        >
+        Sign in
         </button>
       </div>
     </form>

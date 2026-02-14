@@ -61,4 +61,8 @@ export class Login {
       }
     });
   }
+
+  navigateToCreateAccount(): void {
+    this.router.navigate(['createaccount']);
+  }
 }
