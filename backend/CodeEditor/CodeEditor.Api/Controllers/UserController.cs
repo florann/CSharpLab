@@ -12,7 +12,7 @@ namespace CodeEditor.Api.Controllers
     public class UserController
         (
             GetUserBydIdValidator getUserByIdValidator,
-            IService<Domain.Entities.User> userService
+            IUserService userService
         ) : ControllerBase
     {
 
@@ -24,8 +24,7 @@ namespace CodeEditor.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var spec = new FindUserByIdSpecification(id);
-            var result = await userService.GetAsync(spec);
+            var result = await userService.GetUserById(id);
 
             return Ok(result);
         }

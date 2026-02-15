@@ -1,6 +1,12 @@
+using CodeEditor.Worker.Configuration;
+using CodeEditor.Worker.Helpers;
+using Microsoft.Extensions.Options;
+
 namespace CodeEditor.Worker;
 
-public class GitSeekerWorker(ILogger<GitSeekerWorker> logger) : BackgroundService
+public class GitSeekerWorker(
+    ILogger<GitSeekerWorker> logger,
+    IOptions<GitSeekerConfiguration> configuration) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -10,7 +16,8 @@ public class GitSeekerWorker(ILogger<GitSeekerWorker> logger) : BackgroundServic
             {
                 logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             }
-            await Task.Delay(1000, stoppingToken);
+
+            await Task.Delay(CronHelper.CronToMilliseconds(configuration.Value.Schedule), stoppingToken);
         }
     }
 }
