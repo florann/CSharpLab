@@ -16,6 +16,8 @@ public class GitSeekerWorker(
             {
                 logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             }
+               
+
 
             await Task.Delay(CronHelper.CronToMilliseconds(configuration.Value.Schedule), stoppingToken);
         }

@@ -6,7 +6,9 @@ using CodeEditor.Domain.Specifications.UserSpecification;
 
 namespace CodeEditor.Domain.Services
 {
-    public class UserService(IRepository<Entities.User> repository, IMapper mapper) : Service<Entities.User>(repository, mapper), IUserService
+    public class UserService(
+        IRepository<Entities.User> repository, 
+        IMapper mapper) : Service<Entities.User>(repository, mapper), IUserService
     {
         public async Task<UserResponse> GetUserById(long userId)
         {
