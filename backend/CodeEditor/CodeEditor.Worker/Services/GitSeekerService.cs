@@ -15,25 +15,33 @@ namespace CodeEditor.Worker.Services
 
         private readonly HttpClient _httpClient;
 
-        private readonly IRepository<Domain.Entities.GitFeed> _gitFeedRepository;
-        private readonly IRepository<Domain.Entities.GitFeedEntry> _gitFeedEntryRepository;
+        private readonly IRepository<GitFeed> _gitFeedRepository;
+        private readonly IRepository<GitFeedEntry> _gitFeedEntryRepository;
 
         public GitSeekerService(
             IOptions<GitSeekerConfiguration> configuration,
-            ILogger<GitSeekerService> logger)
+            ILogger<GitSeekerService> logger,
+            IRepository<GitFeed> gitFeedRepository, 
+            IRepository<GitFeedEntry> gitFeedEntryRepository)
         {
             _configuration = configuration.Value;
-
+             _logger = logger;
+            
             _httpClient = new HttpClient
             {
                 BaseAddress = new Uri(_configuration.GitUrl)
             };
-            _logger = logger;
+
+            _gitFeedRepository = gitFeedRepository;
+            _gitFeedEntryRepository = gitFeedEntryRepository;
         }
 
         public async Task<bool> HealthCheck()
         {
             var result = await _httpClient.GetAsync("");
+            if (!result.IsSuccessStatusCode)
+                _logger.LogWarning("HealthCheck return a none success status code");
+
             return result.IsSuccessStatusCode;
         }
 

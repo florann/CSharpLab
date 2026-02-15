@@ -6,5 +6,6 @@ namespace CodeEditor.Worker.Services.Interfaces
     {
         Task<bool> HealthCheck();
         Task<bool> Seek(GitRepo gitRepository);
+        Task<bool> GetGitRepoToPull();
     }
 }
