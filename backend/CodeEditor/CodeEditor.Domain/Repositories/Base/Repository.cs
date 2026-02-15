@@ -6,12 +6,33 @@ namespace CodeEditor.Domain.Repositories.Base
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly DbContext _context;
-
         public Repository(DbContext context)
         {
             _context = context;
         }
+        public async Task<IEnumerable<T>?> GetAllAsync(ISpecification<T> spec)
+        {
+            var query = _context
+                .Set<T>()
+                .AsQueryable();
 
+            if (spec.IsDesc)
+            {
+                query = query.OrderByDescending(spec.OrderBy);
+            }
+            else
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if(spec.Take > 0)
+            {
+                query = query.Take(spec.Take);
+            }
+
+            var result = query.ToList();
+            return result;
+        }
         public async Task<T?> FindOneAsync(ISpecification<T> spec)
         {
             var query = _context
@@ -43,22 +64,18 @@ namespace CodeEditor.Domain.Repositories.Base
 
             return await query.ToListAsync();
         }
-
         public void Delete(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Deleted;
         }
-
         public void Update(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Modified;
         }
-
         public void Add(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Added;
         }
-
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
