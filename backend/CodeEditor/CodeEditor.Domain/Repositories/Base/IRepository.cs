@@ -6,9 +6,9 @@ namespace CodeEditor.Domain.Repositories.Base
     {
         Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec);
         Task<T?> FindOneAsync(ISpecification<T> spec);
-        void DeleteAsync(T entity);
-        void UpdateAsync(T entity);
-        void AddAsync(T entity);
-        Task SaveChangesAsync();
+        void Delete(T entity);
+        void Update(T entity);
+        void Add(T entity);
+        Task<int> SaveChangesAsync();
     }
 }

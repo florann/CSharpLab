@@ -44,24 +44,24 @@ namespace CodeEditor.Domain.Repositories.Base
             return await query.ToListAsync();
         }
 
-        public void DeleteAsync(T entity)
+        public void Delete(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Deleted;
         }
 
-        public void UpdateAsync(T entity)
+        public void Update(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Modified;
         }
 
-        public void AddAsync(T entity)
+        public void Add(T entity)
         {
             _context.Set<T>().Entry(entity).State = EntityState.Added;
         }
 
-        public async Task SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync();
         }
     }
 }

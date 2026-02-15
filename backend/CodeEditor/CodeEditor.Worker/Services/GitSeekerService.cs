@@ -1,4 +1,6 @@
 ﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Repositories;
+using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -10,10 +12,14 @@ namespace CodeEditor.Worker.Services
     {
         private readonly ILogger<GitSeekerService> _logger;
         private readonly GitSeekerConfiguration _configuration;
+
         private readonly HttpClient _httpClient;
 
+        private readonly IRepository<Domain.Entities.GitFeed> _gitFeedRepository;
+        private readonly IRepository<Domain.Entities.GitFeedEntry> _gitFeedEntryRepository;
+
         public GitSeekerService(
-            IOptions<GitSeekerConfiguration> configuration, 
+            IOptions<GitSeekerConfiguration> configuration,
             ILogger<GitSeekerService> logger)
         {
             _configuration = configuration.Value;
@@ -53,12 +59,48 @@ namespace CodeEditor.Worker.Services
 
             var root = document.Root;
 
-            var GitFeed = new GitFeed
+            var gitFeed = new GitFeed
             {
-                Title = root.Element("title")?.Value
+                IdGitRepo = gitRepository.Id,
+                Title = root.Element("title")?.Value ?? string.Empty,
+                Date = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue,
             };
 
-            throw new NotImplementedException();
+            _gitFeedRepository.Add(gitFeed);
+
+            var documentGitFeedEntries = root.Descendants("entry");
+            if (documentGitFeedEntries == null)
+            {
+                _logger.LogWarning("gitFeedEntries is null {GitRepository}", gitRepository);
+                return false;
+            }
+
+            var feedEntries = new List<GitFeedEntry>();
+
+            foreach (var documentGitFeedEntry in documentGitFeedEntries)
+            {
+                _gitFeedEntryRepository.Add(new GitFeedEntry
+                {
+                    IdTag = documentGitFeedEntry.Element("id")?.Value ?? string.Empty,
+                    AuthorName = documentGitFeedEntry.Element("author")?.Element("name")?.Value ?? string.Empty,
+                    Date = documentGitFeedEntry.Element("updated") != null ? DateTimeOffset.Parse(documentGitFeedEntry.Element("updated")!.Value) : DateTimeOffset.MinValue,
+                    Title = documentGitFeedEntry.Element("title")?.Value ?? string.Empty,
+                    Link = documentGitFeedEntry.Element("link")?.Value ?? string.Empty,
+                    Content = documentGitFeedEntry.Element("content")?.Value ?? string.Empty,
+                    GitFeed = gitFeed,
+                    GitFeedId = gitFeed.Id
+                }); 
+            }
+
+            var saveResult = await _gitFeedRepository.SaveChangesAsync();
+
+            if (saveResult <= 0)
+            {
+                _logger.LogWarning("Not entities were saved");
+                return false;
+            }
+
+            return true;
         }
 
         private string PrepareAtomReleaseNoteUrl(GitRepo gitRepository)
@@ -66,7 +108,7 @@ namespace CodeEditor.Worker.Services
             var urlTemplate = _configuration.GitAtomReleaseNoteUrl;
             if (string.IsNullOrEmpty(urlTemplate))
                 throw new ApplicationException("UrlTemplate is null or empty");
-            
+
             var url = urlTemplate.Replace("{GIT_OWNER}", gitRepository.OwnerName);
             url = url.Replace("{GIT_REPO}", gitRepository.Name);
 

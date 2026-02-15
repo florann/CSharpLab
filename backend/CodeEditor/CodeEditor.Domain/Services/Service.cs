@@ -19,14 +19,14 @@ namespace CodeEditor.Domain.Services
 
         public async Task<T> AddAsync(T entity)
         {
-            _repository.AddAsync(entity);
+            _repository.Add(entity);
             await _repository.SaveChangesAsync();
             return entity;
         }
 
         public async Task DeleteAsync(T entity)
         {
-            _repository.DeleteAsync(entity);
+            _repository.Delete(entity);
             await _repository.SaveChangesAsync();
         }
 
@@ -44,7 +44,7 @@ namespace CodeEditor.Domain.Services
 
         public async Task<T> UpdateAsync(T entity)
         {
-            _repository.UpdateAsync(entity);
+            _repository.Update(entity);
             await _repository.SaveChangesAsync();
             return entity;
         }
