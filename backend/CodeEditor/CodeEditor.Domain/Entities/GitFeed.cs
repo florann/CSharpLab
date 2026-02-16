@@ -8,7 +8,7 @@
 
         public string Title { get; set; }
 
-        public DateTimeOffset Date { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
 
         public IEnumerable<GitFeedEntry> GitFeedEntries { get; set; }
 

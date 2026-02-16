@@ -8,7 +8,7 @@
 
         public string IdTag { get; set; }
 
-        public DateTimeOffset Date { get; set; }
+        public DateTimeOffset LastUpdateDate { get; set; }
 
         public string Link { get; set; }
 

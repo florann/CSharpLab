@@ -23,8 +23,19 @@ public class GitSeekerWorker(
             if (!await gitSeekerService.HealthCheck())
                 return;
 
+            var gitRepositories = await gitSeekerService.GetGitRepoToPull();
 
-            await gitSeekerService.Seek()
+            foreach(var gitRepo in gitRepositories)
+            {
+                if(await gitSeekerService.Seek(gitRepo))
+                {
+                    logger.LogInformation("Success seeking repository - {GitRepo}", gitRepo.ToString());
+                }
+                else
+                {
+                    logger.LogError("Error during seeking repository - {GitRepo}", gitRepo.ToString());
+                }
+            }
 
             await Task.Delay(CronHelper.CronToMilliseconds(configuration.Value.Schedule), stoppingToken);
         }

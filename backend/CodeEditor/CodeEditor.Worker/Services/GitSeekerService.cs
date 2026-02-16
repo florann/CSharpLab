@@ -1,6 +1,7 @@
 ﻿using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Repositories.Base;
+using CodeEditor.Domain.Specifications.GitRepoSpecification;
 using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -15,18 +16,20 @@ namespace CodeEditor.Worker.Services
 
         private readonly HttpClient _httpClient;
 
+        private readonly IRepository<GitRepo> _gitRepoRepository;
         private readonly IRepository<GitFeed> _gitFeedRepository;
         private readonly IRepository<GitFeedEntry> _gitFeedEntryRepository;
 
         public GitSeekerService(
             IOptions<GitSeekerConfiguration> configuration,
             ILogger<GitSeekerService> logger,
-            IRepository<GitFeed> gitFeedRepository, 
+            IRepository<GitRepo> gitRepoRepository,
+            IRepository<GitFeed> gitFeedRepository,
             IRepository<GitFeedEntry> gitFeedEntryRepository)
         {
             _configuration = configuration.Value;
-             _logger = logger;
-            
+            _logger = logger;
+
             _httpClient = new HttpClient
             {
                 BaseAddress = new Uri(_configuration.GitUrl)
@@ -70,10 +73,10 @@ namespace CodeEditor.Worker.Services
             var gitFeed = new GitFeed
             {
                 IdGitRepo = gitRepository.Id,
+                GitRepository = gitRepository,
                 Title = root.Element("title")?.Value ?? string.Empty,
-                Date = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue,
+                LastUpdateDate = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue,
             };
-
             _gitFeedRepository.Add(gitFeed);
 
             var documentGitFeedEntries = root.Descendants("entry");
@@ -91,13 +94,13 @@ namespace CodeEditor.Worker.Services
                 {
                     IdTag = documentGitFeedEntry.Element("id")?.Value ?? string.Empty,
                     AuthorName = documentGitFeedEntry.Element("author")?.Element("name")?.Value ?? string.Empty,
-                    Date = documentGitFeedEntry.Element("updated") != null ? DateTimeOffset.Parse(documentGitFeedEntry.Element("updated")!.Value) : DateTimeOffset.MinValue,
+                    LastUpdateDate = documentGitFeedEntry.Element("updated") != null ? DateTimeOffset.Parse(documentGitFeedEntry.Element("updated")!.Value) : DateTimeOffset.MinValue,
                     Title = documentGitFeedEntry.Element("title")?.Value ?? string.Empty,
                     Link = documentGitFeedEntry.Element("link")?.Value ?? string.Empty,
                     Content = documentGitFeedEntry.Element("content")?.Value ?? string.Empty,
                     GitFeed = gitFeed,
                     GitFeedId = gitFeed.Id
-                }); 
+                });
             }
 
             var saveResult = await _gitFeedRepository.SaveChangesAsync();
@@ -111,6 +114,12 @@ namespace CodeEditor.Worker.Services
             return true;
         }
 
+        public async Task<IEnumerable<GitRepo>> GetGitRepoToPull()
+        {
+            var spec = new FindLast10GitRepoOrderByUpdateDateDescSpecification();
+            return await _gitRepoRepository.FindAllAsync(spec) ?? [];
+        }
+
         private string PrepareAtomReleaseNoteUrl(GitRepo gitRepository)
         {
             var urlTemplate = _configuration.GitAtomReleaseNoteUrl;
@@ -122,5 +131,6 @@ namespace CodeEditor.Worker.Services
 
             return url;
         }
+   
     }
 }
