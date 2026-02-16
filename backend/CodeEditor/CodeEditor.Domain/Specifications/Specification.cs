@@ -16,7 +16,7 @@ namespace CodeEditor.Domain.Specifications
         public IEnumerable<Expression<Func<T, object>>> Includes { get; set; }
         public void AddInclude(Expression<Func<T, object>> include)
         {
-            _ = Includes.Append(include);
+            Includes = Includes.Append(include);
         }
     }
 }
