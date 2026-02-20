@@ -1,6 +1,8 @@
 ﻿using CodeEditor.Domain.Entities;
-using CodeEditor.Domain.Repositories;
+using CodeEditor.Domain.Extensions;
+using CodeEditor.Domain.Helpers;
 using CodeEditor.Domain.Repositories.Base;
+using CodeEditor.Domain.Specifications.GitFeedEntrySpecification;
 using CodeEditor.Domain.Specifications.GitRepoSpecification;
 using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Services.Interfaces;
@@ -48,15 +50,45 @@ namespace CodeEditor.Worker.Services
             return result.IsSuccessStatusCode;
         }
 
-        public async Task<bool> Seek(GitRepo gitRepository)
+        public async Task SeekUpate(GitRepo gitRepo)
         {
-            var url = PrepareAtomReleaseNoteUrl(gitRepository);
+            var root = await FetchAtomGitReleaseNote(gitRepo);
+
+            gitRepo.GitFeed.Title = root.Element("title")?.Value ?? string.Empty;
+            gitRepo.GitFeed.LastUpdateDate = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue;
+            _gitFeedRepository.Update(gitRepo.GitFeed);
+
+            var documentGitFeedEntries = root.Descendants("entry");
+            if (documentGitFeedEntries == null)
+            {
+                throw new EnhancedException("git feed entries are null", [gitRepo.ToString() ?? "cannot convert"]);
+            }
+
+            await RefreshFeedEntries(documentGitFeedEntries, gitRepo.GitFeed);
+
+            var saveResult = await _gitFeedRepository.SaveChangesAsync();
+
+            if (saveResult <= 0)
+            {
+                throw new EnhancedException("No entities were saved", [gitRepo.ToString() ?? "cannot convert"]);
+            }
+        }
+
+        public async Task<IEnumerable<GitRepo>> GetGitRepoToPull()
+        {
+            var spec = new FindLast10GitRepoOrderByUpdateDateDescSpecification();
+            return await _gitRepoRepository.FindAllAsync(spec) ?? [];
+        }
+
+        private async Task<XElement> FetchAtomGitReleaseNote(GitRepo gitRepo)
+        {
+            var url = gitRepo.PrepareAtomReleaseNoteUrl(_configuration.GitAtomReleaseNoteUrl);
             var result = await _httpClient.GetAsync(url);
 
             if (!result.IsSuccessStatusCode)
             {
-                _logger.LogWarning("IsSuccessStatusCode false Seek method - {GitRepository}", gitRepository.ToString());
-                return false;
+                _logger.LogWarning("IsSuccessStatusCode false Seek method - {GitRepository}", gitRepo.ToString());
+                throw new EnhancedException("Error fetching atom release note", [gitRepo.ToString() ?? "cannot convert"]);
             }
 
             using var stream = await result.Content.ReadAsStreamAsync();
@@ -64,29 +96,22 @@ namespace CodeEditor.Worker.Services
 
             if (document?.Root == null)
             {
-                _logger.LogWarning("Invalid XML document for {GitRepository}", gitRepository);
-                return false;
+                _logger.LogWarning("Invalid XML document for {GitRepository}", gitRepo);
+                throw new EnhancedException("Invalid XML document", [gitRepo.ToString() ?? "cannot convert"]);
             }
 
-            var root = document.Root;
+            return document!.Root!;
+        }
 
-            var gitFeed = new GitFeed
+        private async Task RefreshFeedEntries(IEnumerable<XElement> documentGitFeedEntries, GitFeed gitFeed)
+        {
+            var spec = new FindGitEntryByIdGitFeedSpecification(gitFeed.Id);
+            var feedEntries = await _gitFeedEntryRepository.FindAllAsync(spec);
+
+            feedEntries?.ToList().ForEach(el =>
             {
-                IdGitRepo = gitRepository.Id,
-                GitRepository = gitRepository,
-                Title = root.Element("title")?.Value ?? string.Empty,
-                LastUpdateDate = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue,
-            };
-            _gitFeedRepository.Add(gitFeed);
-
-            var documentGitFeedEntries = root.Descendants("entry");
-            if (documentGitFeedEntries == null)
-            {
-                _logger.LogWarning("gitFeedEntries is null {GitRepository}", gitRepository);
-                return false;
-            }
-
-            var feedEntries = new List<GitFeedEntry>();
+                _gitFeedEntryRepository.Delete(el);
+            });
 
             foreach (var documentGitFeedEntry in documentGitFeedEntries)
             {
@@ -102,35 +127,6 @@ namespace CodeEditor.Worker.Services
                     GitFeedId = gitFeed.Id
                 });
             }
-
-            var saveResult = await _gitFeedRepository.SaveChangesAsync();
-
-            if (saveResult <= 0)
-            {
-                _logger.LogWarning("Not entities were saved");
-                return false;
-            }
-
-            return true;
         }
-
-        public async Task<IEnumerable<GitRepo>> GetGitRepoToPull()
-        {
-            var spec = new FindLast10GitRepoOrderByUpdateDateDescSpecification();
-            return await _gitRepoRepository.FindAllAsync(spec) ?? [];
-        }
-
-        private string PrepareAtomReleaseNoteUrl(GitRepo gitRepository)
-        {
-            var urlTemplate = _configuration.GitAtomReleaseNoteUrl;
-            if (string.IsNullOrEmpty(urlTemplate))
-                throw new ApplicationException("UrlTemplate is null or empty");
-
-            var url = urlTemplate.Replace("{GIT_OWNER}", gitRepository.OwnerName);
-            url = url.Replace("{GIT_REPO}", gitRepository.Name);
-
-            return url;
-        }
-   
     }
 }

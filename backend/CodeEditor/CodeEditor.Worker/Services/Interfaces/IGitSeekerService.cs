@@ -5,7 +5,7 @@ namespace CodeEditor.Worker.Services.Interfaces
     public interface IGitSeekerService
     {
         Task<bool> HealthCheck();
-        Task<bool> Seek(GitRepo gitRepository);
+        Task SeekUpate(GitRepo gitRepo);
         Task<IEnumerable<GitRepo>> GetGitRepoToPull();
     }
 }
