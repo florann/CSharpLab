@@ -1,5 +1,4 @@
-﻿using CodeEditor.Domain.Entities.SignalR;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace CodeEditor.Api.Hubs
 {
@@ -20,12 +19,6 @@ namespace CodeEditor.Api.Hubs
         public async Task SendCursorData(string username, long column, long line)
         {
             _logger.LogInformation("SendCursorData function");
-            await this.Clients.Others.SendAsync("IncomingCursorData", new CursorData
-            {
-                UserName = username, 
-                Column = column,
-                Line = line
-            });
         }
     }
 }

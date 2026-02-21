@@ -66,6 +66,8 @@ namespace CodeEditor.Worker.Services
 
             await RefreshFeedEntries(documentGitFeedEntries, gitRepo.GitFeed);
 
+            gitRepo.LastUpdateDate = DateTime.UtcNow;
+
             var saveResult = await _gitFeedRepository.SaveChangesAsync();
 
             if (saveResult <= 0)

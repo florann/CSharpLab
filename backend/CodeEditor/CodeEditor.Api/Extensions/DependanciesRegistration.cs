@@ -16,11 +16,6 @@ namespace CodeEditor.Api.Extensions
         {
             public IServiceCollection AddServices()
             {
-                services.AddSignalR(options =>
-                {
-                    options.EnableDetailedErrors = true;
-                });
-
                 services.AddSingleton<IConnectionMultiplexer>(sp =>
                 {
                     var configuration = ConfigurationOptions.Parse("localhost:6379");
