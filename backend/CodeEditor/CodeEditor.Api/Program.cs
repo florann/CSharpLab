@@ -1,5 +1,4 @@
 using CodeEditor.Api.Extensions;
-using CodeEditor.Api.Hubs;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using FluentValidation;
 using Microsoft.OpenApi;

@@ -37,6 +37,7 @@ namespace CodeEditor.Worker.Services
                 BaseAddress = new Uri(_configuration.GitUrl)
             };
 
+            _gitRepoRepository = gitRepoRepository;
             _gitFeedRepository = gitFeedRepository;
             _gitFeedEntryRepository = gitFeedEntryRepository;
         }

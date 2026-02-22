@@ -10,7 +10,7 @@ using StackExchange.Redis;
 
 namespace CodeEditor.Api.Extensions
 {
-    public static class DependanciesRegistration
+    public static class DependenciesRegistration
     {
         extension(IServiceCollection services)
         {
