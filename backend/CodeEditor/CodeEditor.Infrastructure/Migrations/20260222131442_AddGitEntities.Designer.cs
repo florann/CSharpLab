@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CodeEditor.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20260221164219_AddGitEntities")]
+    [Migration("20260222131442_AddGitEntities")]
     partial class AddGitEntities
     {
         /// <inheritdoc />
@@ -34,10 +34,6 @@ namespace CodeEditor.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("IdGitRepo")
-                        .HasColumnType("bigint")
-                        .HasColumnName("id_git_repo");
-
                     b.Property<DateTimeOffset>("LastUpdateDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_update_date");
@@ -49,9 +45,6 @@ namespace CodeEditor.Infrastructure.Migrations
                         .HasColumnName("title");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdGitRepo")
-                        .IsUnique();
 
                     b.ToTable("git_feeds", (string)null);
                 });
@@ -145,6 +138,9 @@ namespace CodeEditor.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("IdGitFeed")
+                        .IsUnique();
+
                     b.ToTable("git_repos", (string)null);
                 });
 
@@ -198,22 +194,22 @@ namespace CodeEditor.Infrastructure.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("CodeEditor.Domain.Entities.GitFeed", b =>
-                {
-                    b.HasOne("CodeEditor.Domain.Entities.GitRepo", "GitRepository")
-                        .WithOne("GitFeed")
-                        .HasForeignKey("CodeEditor.Domain.Entities.GitFeed", "IdGitRepo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GitRepository");
-                });
-
             modelBuilder.Entity("CodeEditor.Domain.Entities.GitFeedEntry", b =>
                 {
                     b.HasOne("CodeEditor.Domain.Entities.GitFeed", "GitFeed")
                         .WithMany("GitFeedEntries")
                         .HasForeignKey("GitFeedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GitFeed");
+                });
+
+            modelBuilder.Entity("CodeEditor.Domain.Entities.GitRepo", b =>
+                {
+                    b.HasOne("CodeEditor.Domain.Entities.GitFeed", "GitFeed")
+                        .WithOne("GitRepository")
+                        .HasForeignKey("CodeEditor.Domain.Entities.GitRepo", "IdGitFeed")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -234,11 +230,8 @@ namespace CodeEditor.Infrastructure.Migrations
             modelBuilder.Entity("CodeEditor.Domain.Entities.GitFeed", b =>
                 {
                     b.Navigation("GitFeedEntries");
-                });
 
-            modelBuilder.Entity("CodeEditor.Domain.Entities.GitRepo", b =>
-                {
-                    b.Navigation("GitFeed")
+                    b.Navigation("GitRepository")
                         .IsRequired();
                 });
 

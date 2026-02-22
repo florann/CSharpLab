@@ -4,7 +4,7 @@ using CodeEditor.Domain.Services.Interfaces;
 
 namespace CodeEditor.Domain.Services
 {
-    internal class GitFeedService(
+    public class GitFeedService(
         IRepository<Entities.GitFeed> repository,
         IMapper mapper) : Service<Entities.GitFeed>(repository, mapper), IGitFeedService
     {

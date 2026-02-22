@@ -4,8 +4,6 @@
     {
         public long Id { get; set; }
 
-        public long IdGitRepo { get; set; }
-
         public string Title { get; set; }
 
         public DateTimeOffset LastUpdateDate { get; set; }

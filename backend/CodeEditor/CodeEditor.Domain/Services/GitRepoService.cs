@@ -19,22 +19,20 @@ namespace CodeEditor.Domain.Services
                 Url = request.Url,
                 OwnerName = request.OwnerName,
                 Name = request.Name,
-                LastUpdateDate = DateTime.UtcNow
+                LastUpdateDate = DateTime.UtcNow,
             };
 
             var gitFeed = new GitFeed
             {
-                GitRepository = gitRepo,
-                IdGitRepo = gitRepo.Id,
-                LastUpdateDate = DateTime.MinValue,
+                LastUpdateDate = DateTime.UtcNow,
                 Title = "",
+                GitRepository = gitRepo
             };
 
             gitRepo.GitFeed = gitFeed;
-            gitRepo.IdGitFeed = gitFeed.Id;
 
-            gitRepoRepository.Add(gitRepo);
             gitFeedRepository.Add(gitFeed);
+            gitRepoRepository.Add(gitRepo);
 
             await gitRepoRepository.SaveChangesAsync();
 

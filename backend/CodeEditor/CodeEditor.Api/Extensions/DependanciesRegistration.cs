@@ -26,13 +26,21 @@ namespace CodeEditor.Api.Extensions
                 // Services
                 services.AddScoped<IDocumentService, DocumentService>();
                 services.AddScoped<IStoreDocumentService, RedisStoreDocumentService>();
+                
+                services.AddScoped<IService<Domain.Entities.Token>, TokenService>();
+                
                 services.AddScoped<IAuthService, AuthService>();
                 services.AddScoped<IUserService, UserService>();
-                services.AddScoped<IService<Domain.Entities.Token>, TokenService>();
+                services.AddScoped<IGitRepoService, GitRepoService>();
+                services.AddScoped<IGitFeedService, GitFeedService>();
+                services.AddScoped<IGitFeedEntryService, GitFeedEntryService>();
 
                 // Repositories
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();
                 services.AddScoped<IRepository<Domain.Entities.Token>, TokenRepository>();
+                services.AddScoped<IRepository<Domain.Entities.GitFeed>, GitFeedRepository>();
+                services.AddScoped<IRepository<Domain.Entities.GitFeedEntry>, GitFeedEntryRepository>();
+                services.AddScoped<IRepository<Domain.Entities.GitRepo>, GitRepoRepository>();
 
                 return services;
             }

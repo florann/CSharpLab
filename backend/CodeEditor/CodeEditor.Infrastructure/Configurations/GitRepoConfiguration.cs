@@ -42,7 +42,7 @@ namespace CodeEditor.Infrastructure.Configurations
 
             builder.HasOne(entity => entity.GitFeed)
                 .WithOne(gitFeedEntity => gitFeedEntity.GitRepository)
-                .HasForeignKey<GitFeed>(gitFeedEntity => gitFeedEntity.IdGitRepo);
+                .HasForeignKey<GitRepo>(entity => entity.IdGitFeed);
         }
     }
 }

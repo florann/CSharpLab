@@ -17,10 +17,6 @@ namespace CodeEditor.Infrastructure.Configurations
               .ValueGeneratedOnAdd()
               .IsRequired();
 
-            builder.Property(entity => entity.IdGitRepo)
-              .HasColumnName("id_git_repo")
-              .IsRequired();
-
             builder.Property(entity => entity.Title)
              .IsRequired()
              .HasColumnName("title")

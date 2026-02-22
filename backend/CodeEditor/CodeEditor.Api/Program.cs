@@ -79,8 +79,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapHub<ChatHub>("/chathub");
-
-app.MapHub<CursorHub>("/cursorhub");
-
 app.Run();

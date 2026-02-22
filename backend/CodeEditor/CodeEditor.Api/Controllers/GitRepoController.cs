@@ -19,7 +19,7 @@ namespace CodeEditor.Api.Controllers
         )
         : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("addGitRepo")]
         [ProducesResponseType<GitRepoResponse>(StatusCodes.Status201Created)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<GitRepoResponse>> AddGitRepo(GitRepoRequest request)
