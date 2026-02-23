@@ -54,18 +54,19 @@ namespace CodeEditor.Worker.Services
         public async Task SeekUpate(GitRepo gitRepo)
         {
             var root = await FetchAtomGitReleaseNote(gitRepo);
+            var ns = root.GetDefaultNamespace();
 
-            gitRepo.GitFeed.Title = root.Element("title")?.Value ?? string.Empty;
-            gitRepo.GitFeed.LastUpdateDate = root.Element("updated")?.Value != null ? DateTimeOffset.Parse(root.Element("updated")!.Value) : DateTimeOffset.MinValue;
+            gitRepo.GitFeed.Title = root.Element(ns + "title")?.Value ?? string.Empty;
+            gitRepo.GitFeed.LastUpdateDate = root.Element(ns + "updated")?.Value != null ? DateTimeOffset.Parse(root.Element(ns + "updated")!.Value) : DateTimeOffset.MinValue;
             _gitFeedRepository.Update(gitRepo.GitFeed);
 
-            var documentGitFeedEntries = root.Descendants("entry");
+            var documentGitFeedEntries = root.Descendants(ns + "entry");
             if (documentGitFeedEntries == null)
             {
                 throw new EnhancedException("git feed entries are null", [gitRepo.ToString() ?? "cannot convert"]);
             }
 
-            await RefreshFeedEntries(documentGitFeedEntries, gitRepo.GitFeed);
+            await RefreshFeedEntries(documentGitFeedEntries, gitRepo.GitFeed, ns);
 
             gitRepo.LastUpdateDate = DateTime.UtcNow;
 
@@ -108,7 +109,7 @@ namespace CodeEditor.Worker.Services
             return document!.Root!;
         }
 
-        private async Task RefreshFeedEntries(IEnumerable<XElement> documentGitFeedEntries, GitFeed gitFeed)
+        private async Task RefreshFeedEntries(IEnumerable<XElement> documentGitFeedEntries, GitFeed gitFeed, XNamespace ns)
         {
             var spec = new FindGitEntryByIdGitFeedSpecification(gitFeed.Id);
             var feedEntries = await _gitFeedEntryRepository.FindAllAsync(spec);
@@ -122,12 +123,12 @@ namespace CodeEditor.Worker.Services
             {
                 _gitFeedEntryRepository.Add(new GitFeedEntry
                 {
-                    IdTag = documentGitFeedEntry.Element("id")?.Value ?? string.Empty,
-                    AuthorName = documentGitFeedEntry.Element("author")?.Element("name")?.Value ?? string.Empty,
-                    LastUpdateDate = documentGitFeedEntry.Element("updated") != null ? DateTimeOffset.Parse(documentGitFeedEntry.Element("updated")!.Value) : DateTimeOffset.MinValue,
-                    Title = documentGitFeedEntry.Element("title")?.Value ?? string.Empty,
-                    Link = documentGitFeedEntry.Element("link")?.Value ?? string.Empty,
-                    Content = documentGitFeedEntry.Element("content")?.Value ?? string.Empty,
+                    IdTag = documentGitFeedEntry.Element(ns + "id")?.Value ?? string.Empty,
+                    AuthorName = documentGitFeedEntry.Element(ns + "author")?.Element(ns + "name")?.Value ?? string.Empty,
+                    LastUpdateDate = documentGitFeedEntry.Element(ns + "updated") != null ? DateTimeOffset.Parse(documentGitFeedEntry.Element(ns + "updated")!.Value) : DateTimeOffset.MinValue,
+                    Title = documentGitFeedEntry.Element(ns + "title")?.Value ?? string.Empty,
+                    Link = documentGitFeedEntry.Element(ns + "link")?.Value ?? string.Empty,
+                    Content = documentGitFeedEntry.Element(ns + "content")?.Value ?? string.Empty,
                     GitFeed = gitFeed,
                     GitFeedId = gitFeed.Id
                 });
