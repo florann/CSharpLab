@@ -80,7 +80,9 @@ namespace CodeEditor.Worker.Services
         public async Task<IEnumerable<GitRepo>> GetGitRepoToPull()
         {
             var spec = new FindLast10GitRepoOrderByUpdateDateDescSpecification();
-            return await _gitRepoRepository.FindAllAsync(spec) ?? [];
+            spec.AddInclude(entity => entity.GitFeed);
+
+            return await _gitRepoRepository.GetAllAsync(spec) ?? [];
         }
 
         private async Task<XElement> FetchAtomGitReleaseNote(GitRepo gitRepo)

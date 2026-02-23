@@ -1,3 +1,4 @@
+using CodeEditor.Domain.Mapper;
 using CodeEditor.Worker;
 using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Extensions;
@@ -16,6 +17,7 @@ builder.Services.AddHostedService<GitSeekerWorker>();
 
 builder.Services.AddDependencies();
 
+builder.Services.AddAutoMapper(typeof(ProfileConfiguration).Assembly);
 
 var host = builder.Build();
 host.Run();

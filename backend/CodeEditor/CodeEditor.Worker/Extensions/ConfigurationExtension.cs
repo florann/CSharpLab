@@ -1,4 +1,5 @@
-﻿using CodeEditor.Infrastructure;
+﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Infrastructure;
 using CodeEditor.Worker.Configuration;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,7 +14,10 @@ namespace CodeEditor.Worker.Extensions
         {
             public HostApplicationBuilder AddConfiguration()
             {
-                builder.Configuration.GetSection("GitSeekerConfiguration").Get<GitSeekerConfiguration>();
+                builder.Services.Configure<GitSeekerConfiguration>(
+                    builder.Configuration.GetSection("GitSeekerConfiguration")
+                );
+
 
                 builder.Services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))

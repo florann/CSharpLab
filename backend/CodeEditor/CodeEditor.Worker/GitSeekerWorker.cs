@@ -11,7 +11,7 @@ namespace CodeEditor.Worker;
 public class GitSeekerWorker(
     ILogger<GitSeekerWorker> logger,
     IOptions<GitSeekerConfiguration> configuration,
-    IGitSeekerService gitSeekerService) : BackgroundService
+    IServiceScopeFactory serviceScopeFactory) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -19,6 +19,9 @@ public class GitSeekerWorker(
         {
             try
             {
+                await using var scope = serviceScopeFactory.CreateAsyncScope();
+                var gitSeekerService = scope.ServiceProvider.GetRequiredService<IGitSeekerService>();
+
                 if (logger.IsEnabled(LogLevel.Information))
                 {
                     logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
