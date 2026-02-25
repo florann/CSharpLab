@@ -1,4 +1,6 @@
-﻿using CodeEditor.Domain.Requests.UserRequests.Validators;
+﻿using AutoMapper;
+using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Requests.UserRequests.Validators;
 using CodeEditor.Domain.Responses.UserResponses;
 using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.UserSpecification;
@@ -12,7 +14,8 @@ namespace CodeEditor.Api.Controllers
     public class UserController
         (
             GetUserBydIdValidator getUserByIdValidator,
-            IUserService userService
+            IUserService userService,
+            IMapper mapper
         ) : ControllerBase
     {
 
@@ -24,9 +27,9 @@ namespace CodeEditor.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
 
-            var result = await userService.GetUserById(id);
+            var user = await userService.GetUserById(id);
 
-            return Ok(result);
+            return Ok(mapper.Map<UserResponse>(user));
         }
     }
 }

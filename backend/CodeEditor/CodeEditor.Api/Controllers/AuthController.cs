@@ -1,4 +1,5 @@
-﻿using CodeEditor.Api.Exceptions;
+﻿using AutoMapper;
+using CodeEditor.Api.Exceptions;
 using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
@@ -22,7 +23,8 @@ namespace CodeEditor.Api.Controllers
         IUserService userService,
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
-        IOptions<JwtSettings> jwtSettings
+        IOptions<JwtSettings> jwtSettings,
+        IMapper mapper
         ) : ControllerBase
     {
         [AllowAnonymous]
@@ -53,8 +55,8 @@ namespace CodeEditor.Api.Controllers
                     Expires = DateTimeOffset.UtcNow.AddMinutes(jwtSettings.Value.RefreshTokenExpirationInMinutes)
                 });
 
-                var response = await userService.GetUserById(loginResponse.UserId);
-                return Ok(response);
+                var user = await userService.GetUserById(loginResponse.UserId);
+                return Ok(mapper.Map<UserResponse>(user));
             }
             catch (HttpResponseException ex)
             {
@@ -76,7 +78,7 @@ namespace CodeEditor.Api.Controllers
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
  
-            var response = await authService.CreateAccount(request);
+            await authService.CreateAccount(request);
             return NoContent();
         }
 
