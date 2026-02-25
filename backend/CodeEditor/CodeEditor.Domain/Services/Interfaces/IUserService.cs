@@ -1,9 +1,9 @@
-﻿using CodeEditor.Domain.Responses.UserResponses;
+﻿using CodeEditor.Domain.Entities;
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
-    public interface IUserService : IService<Entities.User>
+    public interface IUserService : IService<User>
     {
-        Task<UserResponse> GetUserById(long userId);
+        Task<User?> GetUserById(long userId);
     }
 }

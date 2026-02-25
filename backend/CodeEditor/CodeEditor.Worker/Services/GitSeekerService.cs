@@ -83,7 +83,7 @@ namespace CodeEditor.Worker.Services
             var spec = new FindLast10GitRepoOrderByUpdateDateDescSpecification();
             spec.AddInclude(entity => entity.GitFeed);
 
-            return await _gitRepoRepository.GetAllAsync(spec) ?? [];
+            return await _gitRepoRepository.FindAllAsync(spec) ?? [];
         }
 
         private async Task<XElement> FetchAtomGitReleaseNote(GitRepo gitRepo)

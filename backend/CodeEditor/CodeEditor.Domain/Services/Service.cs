@@ -8,13 +8,10 @@ namespace CodeEditor.Domain.Services
     public class Service<T> : IService<T> where T : class
     {
         protected readonly IRepository<T> _repository;
-        protected readonly IMapper _mapper;
 
-        public Service(IRepository<T> repository, 
-            IMapper mapper)
+        public Service(IRepository<T> repository)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
         public async Task<T> AddAsync(T entity)
@@ -24,22 +21,25 @@ namespace CodeEditor.Domain.Services
             return entity;
         }
 
-        public async Task DeleteAsync(T entity)
+        public async Task<bool> DeleteAsync(T entity)
         {
             _repository.Delete(entity);
-            await _repository.SaveChangesAsync();
+            return await _repository.SaveChangesAsync() > 0;
         }
 
-        public async Task<IEnumerable<T>?> GetAllAsync(ISpecification<T> spec)
+        public async Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec)
         {
-            var result = await _repository.FindAllAsync(spec);
-            return result;
+            return await _repository.FindAllAsync(spec);
         }
 
-        public async Task<T?> GetAsync(ISpecification<T> spec)
+        public async Task<T?> FindOneAsync(ISpecification<T> spec)
         {
-            var result = await _repository.FindOneAsync(spec);
-            return result;
+            return await _repository.FindOneAsync(spec);
+        }
+
+        public async Task<IEnumerable<T>?> GetAllAsync()
+        {
+            return await _repository.GetAllAsync();
         }
 
         public async Task<T> UpdateAsync(T entity)

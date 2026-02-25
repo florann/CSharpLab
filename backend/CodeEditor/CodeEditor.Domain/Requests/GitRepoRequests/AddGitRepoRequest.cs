@@ -1,6 +1,6 @@
 ﻿namespace CodeEditor.Domain.Requests.GitRepoRequests
 {
-    public class GitRepoRequest
+    public class AddGitRepoRequest
     {
         public string Url { get; set; }
         public string OwnerName { get; set; }

@@ -12,12 +12,21 @@ namespace CodeEditor.Domain.Repositories.Base
             _context = context;
         }
 
-        public async Task<IEnumerable<T>?> GetAllAsync(ISpecification<T> spec)
+        public async Task<IEnumerable<T>?> GetAllAsync()
+        {
+            return await _context.Set<T>().ToListAsync();
+        }
+
+        public async Task<T?> FindOneAsync(ISpecification<T> spec)
         {
             var query = _context
                 .Set<T>()
                 .AsQueryable();
 
+            if(spec.Criteria != null)
+            {
+                query = query.Where(spec.Criteria);
+            }
 
             if (spec.Includes != null && spec.Includes.Any())
             {
@@ -36,27 +45,9 @@ namespace CodeEditor.Domain.Repositories.Base
                 query = query.OrderBy(spec.OrderBy);
             }
 
-            if(spec.Take > 0)
+            if (spec.Take > 0)
             {
                 query = query.Take(spec.Take);
-            }
-
-            var result = query.ToList();
-            return result;
-        }
-
-        public async Task<T?> FindOneAsync(ISpecification<T> spec)
-        {
-            var query = _context
-                .Set<T>()
-                .Where(spec.Criteria);
-
-            if(spec.Includes != null && spec.Includes.Any())
-            {
-                foreach(var include in spec.Includes)
-                {
-                    query = query.Include(include);
-                }
             }
 
             return await query.FirstOrDefaultAsync();
@@ -64,8 +55,14 @@ namespace CodeEditor.Domain.Repositories.Base
 
         public async Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec)
         {
-            var query =  _context.Set<T>()
-                    .Where(spec.Criteria);
+            var query = _context
+                .Set<T>()
+                .AsQueryable();
+
+            if (spec.Criteria != null)
+            {
+                query = query.Where(spec.Criteria);
+            }
 
             if (spec.Includes != null && spec.Includes.Any())
             {
@@ -73,6 +70,20 @@ namespace CodeEditor.Domain.Repositories.Base
                 {
                     query = query.Include(include);
                 }
+            }
+
+            if (spec.IsDesc)
+            {
+                query = query.OrderByDescending(spec.OrderBy);
+            }
+            else
+            {
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if (spec.Take > 0)
+            {
+                query = query.Take(spec.Take);
             }
 
             return await query.ToListAsync();

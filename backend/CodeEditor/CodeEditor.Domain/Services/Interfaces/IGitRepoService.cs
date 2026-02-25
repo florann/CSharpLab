@@ -1,10 +1,10 @@
-﻿using CodeEditor.Domain.Requests.GitRepoRequests;
-using CodeEditor.Domain.Responses.GitRepoResponses;
+﻿using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Requests.GitRepoRequests;
 
 namespace CodeEditor.Domain.Services.Interfaces
 {
-    public interface IGitRepoService : IService<Entities.GitRepo>
+    public interface IGitRepoService : IService<GitRepo>
     {
-        Task<GitRepoResponse> HandleGitRepoCreation(GitRepoRequest request);
+        Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request);
     }
 }

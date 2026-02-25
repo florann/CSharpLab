@@ -6,9 +6,10 @@ namespace CodeEditor.Domain.Services.Interfaces
     {
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
-        Task<T?> GetAsync(ISpecification<T> spec);
-        Task<IEnumerable<T>?> GetAllAsync(ISpecification<T> spec);
-        Task DeleteAsync(T entity);
+        Task<T?> FindOneAsync(ISpecification<T> spec);
+        Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec);
+        Task<IEnumerable<T>?> GetAllAsync();
+        Task<bool> DeleteAsync(T entity);
     }
 }
 

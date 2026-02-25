@@ -6,11 +6,11 @@ using System.Text;
 
 namespace CodeEditor.Infrastructure.Services
 {
-    public class RedisStoreDocumentService : IStoreDocumentService
+    public class RedisGitRepoFeedService : IReadGitRepoFeedService
     {
         private readonly IDatabase _redis;
 
-        public RedisStoreDocumentService(IConnectionMultiplexer redis)
+        public RedisGitRepoFeedService(IConnectionMultiplexer redis)
         {
             _redis = redis.GetDatabase();
         }
@@ -29,6 +29,21 @@ namespace CodeEditor.Infrastructure.Services
         public async Task<bool> DeleteDocumentAsync(string documentId)
         {
             return await _redis.KeyDeleteAsync($"document:{documentId}");
+        }
+
+        public Task<string?> GetGitRepoFeedAsync(string gitRepoFeedId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SaveGitRepoFeedAsync(string gitRepoFeedId, string content)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeleteGitRepoFeedAsync(string gitRepoFeedId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

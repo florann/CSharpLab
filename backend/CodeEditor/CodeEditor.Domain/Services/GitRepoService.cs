@@ -9,10 +9,9 @@ namespace CodeEditor.Domain.Services
 {
     public class GitRepoService(
         IRepository<GitRepo> gitRepoRepository,
-        IRepository<GitFeed> gitFeedRepository,
-        IMapper mapper) : Service<GitRepo>(gitRepoRepository, mapper), IGitRepoService
+        IRepository<GitFeed> gitFeedRepository) : Service<GitRepo>(gitRepoRepository), IGitRepoService
     {
-        public async Task<GitRepoResponse> HandleGitRepoCreation(GitRepoRequest request)
+        public async Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request)
         {
             var gitRepo = new GitRepo
             {
@@ -36,7 +35,7 @@ namespace CodeEditor.Domain.Services
 
             await gitRepoRepository.SaveChangesAsync();
 
-            return _mapper.Map<GitRepoResponse>(gitRepo);
+            return gitRepo;
         }
     }
 }

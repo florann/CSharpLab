@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using CodeEditor.Domain.Repositories.Base;
+﻿using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services.Interfaces;
 
 namespace CodeEditor.Domain.Services
 {
     public class GitFeedService(
-        IRepository<Entities.GitFeed> repository,
-        IMapper mapper) : Service<Entities.GitFeed>(repository, mapper), IGitFeedService
+        IRepository<Entities.GitFeed> repository) 
+        : Service<Entities.GitFeed>(repository), IGitFeedService
     {
     }
 }

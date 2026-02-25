@@ -35,7 +35,7 @@ namespace CodeEditor.Domain.Services
         public async Task<LoginResponse> Login(LoginRequest loginRequest)
         {
             var spec = new FindUserByUserNameSpecification(loginRequest.UserName);
-            var user = await _userService.GetAsync(spec);
+            var user = await _userService.FindOneAsync(spec);
 
             if (!CheckPassword(loginRequest.Password, user!.Password))
             {
@@ -109,7 +109,7 @@ namespace CodeEditor.Domain.Services
             var serializedToken = tokenHandler.WriteToken(token);
 
             var spec = new FindTokenByUserIdSpecification(user.Id);
-            var tokenEntity = await _tokenService.GetAsync(spec);
+            var tokenEntity = await _tokenService.FindOneAsync(spec);
 
             if (tokenEntity != null)
             {
@@ -150,7 +150,7 @@ namespace CodeEditor.Domain.Services
 
             var spec = new FindTokenByRefreshTokenSpecification(refreshToken);
             spec.AddInclude((entity) => entity.User);
-            var token = await _tokenService.GetAsync(spec);
+            var token = await _tokenService.FindOneAsync(spec);
 
             if (token == null)
             {

@@ -18,7 +18,7 @@ namespace CodeEditor.Domain.Extensions
             {
                 try
                 {
-                    var result = await service.GetAsync(specification(property));
+                    var result = await service.FindOneAsync(specification(property));
                     return (specFindSomething) ? result != null : result == null;
                 }
                 catch(Exception ex)
