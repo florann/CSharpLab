@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CodeEditor.Domain.Repositories.Base;
+﻿using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services.Interfaces;
 
 namespace CodeEditor.Domain.Services

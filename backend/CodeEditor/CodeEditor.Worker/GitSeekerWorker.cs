@@ -1,8 +1,6 @@
-using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Helpers;
 using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Helpers;
-using CodeEditor.Worker.Services;
 using CodeEditor.Worker.Services.Interfaces;
 using Microsoft.Extensions.Options;
 
@@ -32,15 +30,15 @@ public class GitSeekerWorker(
 
                 var gitRepositories = await gitSeekerService.GetGitRepoToPull();
 
-                foreach(var gitRepo in gitRepositories)
+                foreach (var gitRepo in gitRepositories)
                 {
                     await gitSeekerService.SeekUpate(gitRepo);
                     logger.LogInformation("Success seeking repository - {GitRepo}", gitRepo.ToString());
                 }
             }
-            catch(EnhancedException enhancedEx)
+            catch (EnhancedException enhancedEx)
             {
-                logger.LogError("Error seeking repository - Exception message : {Message} - Function name : {FunctionName} - Params : {Params}", 
+                logger.LogError("Error seeking repository - Exception message : {Message} - Function name : {FunctionName} - Params : {Params}",
                     enhancedEx.Message,
                     enhancedEx.FunctionName,
                     enhancedEx.Arguments);

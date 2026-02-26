@@ -18,7 +18,7 @@ namespace CodeEditor.Api.Hubs
                 _logger.LogInformation("From {User} - Message {Message}", user, message);
                 await Clients.All.SendAsync("ReceiveMessage", message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "SendMessage ex : {Message}", ex.Message);
             }

@@ -3,7 +3,6 @@ using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
-using CodeEditor.Infrastructure.Migrations;
 using CodeEditor.Worker.Services;
 using CodeEditor.Worker.Services.Interfaces;
 

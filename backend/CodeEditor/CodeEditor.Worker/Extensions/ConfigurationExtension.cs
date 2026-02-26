@@ -1,10 +1,6 @@
-﻿using CodeEditor.Domain.Entities;
-using CodeEditor.Infrastructure;
+﻿using CodeEditor.Infrastructure;
 using CodeEditor.Worker.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Worker.Extensions
 {

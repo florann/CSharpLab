@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.UserRequests.Validators;
 using CodeEditor.Domain.Responses.UserResponses;
 using CodeEditor.Domain.Services.Interfaces;
-using CodeEditor.Domain.Specifications.UserSpecification;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeEditor.Api.Controllers

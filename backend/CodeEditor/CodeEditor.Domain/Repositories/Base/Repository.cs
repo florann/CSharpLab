@@ -23,7 +23,7 @@ namespace CodeEditor.Domain.Repositories.Base
                 .Set<T>()
                 .AsQueryable();
 
-            if(spec.Criteria != null)
+            if (spec.Criteria != null)
             {
                 query = query.Where(spec.Criteria);
             }

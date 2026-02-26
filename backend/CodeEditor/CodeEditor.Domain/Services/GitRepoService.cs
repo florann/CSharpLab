@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using CodeEditor.Domain.Entities;
+﻿using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Requests.GitRepoRequests;
-using CodeEditor.Domain.Responses.GitRepoResponses;
 using CodeEditor.Domain.Services.Interfaces;
 
 namespace CodeEditor.Domain.Services

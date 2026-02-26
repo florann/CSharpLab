@@ -1,7 +1,6 @@
 ﻿using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.Interfaces;
 using FluentValidation;
-using Microsoft.Extensions.Logging;
 
 namespace CodeEditor.Domain.Extensions
 {
@@ -21,7 +20,7 @@ namespace CodeEditor.Domain.Extensions
                     var result = await service.FindOneAsync(specification(property));
                     return (specFindSomething) ? result != null : result == null;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return false;
                 }

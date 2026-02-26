@@ -1,8 +1,5 @@
 ﻿using CodeEditor.Domain.Repositories.Base;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Domain.Repositories
 {
@@ -10,7 +7,7 @@ namespace CodeEditor.Domain.Repositories
     {
         public UserRepository(DbContext dbContext) : base(dbContext)
         {
-            
+
         }
     }
 }

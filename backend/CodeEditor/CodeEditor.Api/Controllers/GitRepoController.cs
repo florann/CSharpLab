@@ -2,12 +2,9 @@
 using CodeEditor.Domain.Requests.GitRepoRequests;
 using CodeEditor.Domain.Requests.GitRepoRequests.Validators;
 using CodeEditor.Domain.Responses.GitRepoResponses;
-using CodeEditor.Domain.Responses.UserResponses;
 using CodeEditor.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
 
 namespace CodeEditor.Api.Controllers
 {

@@ -3,9 +3,7 @@ using CodeEditor.Api.Exceptions;
 using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
-using CodeEditor.Domain.Responses.AuthResponses;
 using CodeEditor.Domain.Responses.UserResponses;
-using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +75,7 @@ namespace CodeEditor.Api.Controllers
             var validationResult = await createAccountRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
                 return BadRequest(validationResult.Errors);
- 
+
             await authService.CreateAccount(request);
             return NoContent();
         }
@@ -129,6 +127,6 @@ namespace CodeEditor.Api.Controllers
         {
             return Ok();
         }
-    
+
     }
 }

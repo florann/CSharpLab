@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace CodeEditor.Domain.Helpers
 {
@@ -15,7 +14,7 @@ namespace CodeEditor.Domain.Helpers
             string message,
             List<string>? arguments = null,
             [CallerMemberName] string functionName = ""
-            ) : base(message) 
+            ) : base(message)
         {
             FunctionName = functionName;
             Arguments = arguments;
@@ -35,11 +34,11 @@ namespace CodeEditor.Domain.Helpers
         }
 
         public EnhancedException(
-            string message, 
-            Exception innerException, 
+            string message,
+            Exception innerException,
             List<string>? arguments = null,
             [CallerMemberName] string functionName = "")
-            : base(message, innerException) 
+            : base(message, innerException)
         {
 
             FunctionName = functionName;

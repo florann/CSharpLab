@@ -10,10 +10,11 @@ namespace CodeEditor.Infrastructure.Configurations
         {
             builder.ToTable("tokens");
 
-            builder.HasKey(entity => new {
-                    entity.RefreshToken, 
-                    entity.UserId 
-                }
+            builder.HasKey(entity => new
+            {
+                entity.RefreshToken,
+                entity.UserId
+            }
             );
 
             builder.Property(entity => entity.RefreshToken)

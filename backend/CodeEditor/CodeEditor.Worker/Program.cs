@@ -1,6 +1,5 @@
 using CodeEditor.Domain.Mapper;
 using CodeEditor.Worker;
-using CodeEditor.Worker.Configuration;
 using CodeEditor.Worker.Extensions;
 using Serilog;
 

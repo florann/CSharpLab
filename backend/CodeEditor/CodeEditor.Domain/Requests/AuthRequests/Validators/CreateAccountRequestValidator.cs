@@ -2,9 +2,6 @@
 using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.UserSpecification;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CodeEditor.Domain.Requests.AuthRequests.Validators
 {
@@ -17,7 +14,7 @@ namespace CodeEditor.Domain.Requests.AuthRequests.Validators
                 .NotNull()
                 .DbCheck(
                     (IService<Entities.User>)userService,
-                    (userName) => 
+                    (userName) =>
                         {
                             return new FindUserByUserNameSpecification(userName);
                         },
