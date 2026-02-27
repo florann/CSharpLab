@@ -36,13 +36,16 @@ namespace CodeEditor.Domain.Repositories.Base
                 }
             }
 
-            if (spec.IsDesc)
+            if(spec.OrderBy != null)
             {
-                query = query.OrderByDescending(spec.OrderBy);
-            }
-            else
-            {
-                query = query.OrderBy(spec.OrderBy);
+                if (spec.IsDesc)
+                {
+                    query = query.OrderByDescending(spec.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(spec.OrderBy);
+                }
             }
 
             if (spec.Take > 0)
@@ -72,13 +75,16 @@ namespace CodeEditor.Domain.Repositories.Base
                 }
             }
 
-            if (spec.IsDesc)
+            if(spec.OrderBy != null)
             {
-                query = query.OrderByDescending(spec.OrderBy);
-            }
-            else
-            {
-                query = query.OrderBy(spec.OrderBy);
+                if (spec.IsDesc)
+                {
+                    query = query.OrderByDescending(spec.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(spec.OrderBy);
+                }
             }
 
             if (spec.Take > 0)
