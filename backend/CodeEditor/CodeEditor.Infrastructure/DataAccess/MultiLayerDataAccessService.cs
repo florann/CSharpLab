@@ -1,14 +1,13 @@
-﻿using CodeEditor.Domain.Repositories.Base;
+﻿using CodeEditor.Domain.DataAccess;
+using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Specifications;
 using MessagePack;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Redis;
-using System.Reflection.Metadata.Ecma335;
 
 namespace CodeEditor.Infrastructure.DataAccess
 {
-    public class MultiLayerDataAccess<T> where T : class
+    public class MultiLayerDataAccessService<T> where T : class, IMultiLayerDataAccessService<T>
     {
 
         private readonly IRepository<T> _repository;
@@ -18,7 +17,7 @@ namespace CodeEditor.Infrastructure.DataAccess
         private readonly TimeSpan _memoryCacheTtl = TimeSpan.FromMinutes(5);
         private readonly TimeSpan _redisCacheTtl = TimeSpan.FromMinutes(30);
 
-        public MultiLayerDataAccess(
+        public MultiLayerDataAccessService(
             IRepository<T> repository,
             IDatabase redisCache,
             IMemoryCache memoryCache)
@@ -29,19 +28,19 @@ namespace CodeEditor.Infrastructure.DataAccess
         }
 
         public async Task<T?> GetEntityValue(
-            string entityName, 
+            string entityName,
             long id,
             Specification<T> spec)
         {
             T? entity;
             var entityKey = string.Concat(entityName, ":", id);
-            if(!_memoryCache.TryGetValue(entityKey, out entity))
+            if (!_memoryCache.TryGetValue(entityKey, out entity))
             {
                 var redisObject = await _redisCache.StringGetAsync(entityKey);
-                if(redisObject == RedisValue.Null)
+                if (redisObject == RedisValue.Null)
                 {
                     entity = await _repository.FindOneAsync(spec);
-                    if(entity != null)
+                    if (entity != null)
                     {
                         await SetEntityValueInMemory(entityName, id, entity!);
                         await SetEntityValueRedis(entityName, id, entity!);
@@ -58,10 +57,10 @@ namespace CodeEditor.Infrastructure.DataAccess
 
             return entity;
         }
-    
-        
+
+
         public async Task<bool> SetEntityValueInMemory(
-            string entityName, 
+            string entityName,
             long id,
             T entity)
         {
@@ -70,7 +69,7 @@ namespace CodeEditor.Infrastructure.DataAccess
         }
 
         public async Task<bool> SetEntityValueRedis(
-            string entityName, 
+            string entityName,
             long id,
             T entity)
         {

@@ -1,7 +1,9 @@
-﻿using CodeEditor.Domain.Repositories;
+﻿using CodeEditor.Domain.DataAccess;
+using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Services;
 using CodeEditor.Domain.Services.Interfaces;
+using CodeEditor.Infrastructure.DataAccess;
 using StackExchange.Redis;
 
 namespace CodeEditor.Api.Extensions
@@ -21,12 +23,12 @@ namespace CodeEditor.Api.Extensions
 
                 // Services
                 services.AddScoped<IService<Domain.Entities.Token>, TokenService>();
-
                 services.AddScoped<IAuthService, AuthService>();
                 services.AddScoped<IUserService, UserService>();
                 services.AddScoped<IGitRepoService, GitRepoService>();
                 services.AddScoped<IGitFeedService, GitFeedService>();
                 services.AddScoped<IGitFeedEntryService, GitFeedEntryService>();
+                services.AddScoped(typeof(IMultiLayerDataAccessService<>), typeof(MultiLayerDataAccessService<>));
 
                 // Repositories
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();

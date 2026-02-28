@@ -35,5 +35,12 @@ namespace CodeEditor.Domain.Services
 
             return gitRepo;
         }
+
+        public async Task<List<GitRepo>?> GetAllGitRepoAsync()
+        {
+            var result = await GetAllAsync();
+
+            return null;
+        }
     }
 }

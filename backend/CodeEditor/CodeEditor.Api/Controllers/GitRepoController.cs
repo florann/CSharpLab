@@ -36,7 +36,7 @@ namespace CodeEditor.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("GetGitReposFeed")]
+        [HttpGet("getGitReposFeed")]
         [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<List<GitRepoResponse>>> GetGitRepo(GetGitRepoRequest request)
