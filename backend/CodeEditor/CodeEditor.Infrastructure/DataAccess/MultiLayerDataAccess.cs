@@ -1,7 +1,10 @@
 ﻿using CodeEditor.Domain.Repositories.Base;
+using CodeEditor.Domain.Specifications;
 using MessagePack;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Caching.Memory;
 using StackExchange.Redis;
+using System.Reflection.Metadata.Ecma335;
 
 namespace CodeEditor.Infrastructure.DataAccess
 {
@@ -25,26 +28,56 @@ namespace CodeEditor.Infrastructure.DataAccess
             _memoryCache = memoryCache;
         }
 
-        // Get entity 
-        // Key values per for InMemoryCache
-        // Primary Id + EntityName ? for Redis
-        public async Task<T?> GetEntityValue(string entityName, long id)
+        public async Task<T?> GetEntityValue(
+            string entityName, 
+            long id,
+            Specification<T> spec)
         {
             T? entity;
             var entityKey = string.Concat(entityName, ":", id);
             if(!_memoryCache.TryGetValue(entityKey, out entity))
             {
                 var redisObject = await _redisCache.StringGetAsync(entityKey);
-                if(redisObject != RedisValue.Null)
+                if(redisObject == RedisValue.Null)
                 {
-                    entity = MessagePackSerializer.Deserialize<T>(redisObject);
+                    entity = await _repository.FindOneAsync(spec);
+                    if(entity != null)
+                    {
+                        await SetEntityValueInMemory(entityName, id, entity!);
+                        await SetEntityValueRedis(entityName, id, entity!);
+                    }
+
                     return entity;
                 }
 
-                // database access
+                await SetEntityValueInMemory(entityName, id, entity!);
+
+                entity = MessagePackSerializer.Deserialize<T>(redisObject);
+                return entity;
             }
 
             return entity;
+        }
+    
+        
+        public async Task<bool> SetEntityValueInMemory(
+            string entityName, 
+            long id,
+            T entity)
+        {
+            var key = string.Concat(entityName, ":", id);
+            return _memoryCache.Set(key, entity, _memoryCacheTtl) != null;
+        }
+
+        public async Task<bool> SetEntityValueRedis(
+            string entityName, 
+            long id,
+            T entity)
+        {
+            var key = string.Concat(entityName, ":", id);
+            var result = await _redisCache.SetAddAsync(key, MessagePackSerializer.Serialize(entity));
+            var resultTtl = await _redisCache.KeyExpireAsync(key, _redisCacheTtl);
+            return result && resultTtl;
         }
     }
 }
