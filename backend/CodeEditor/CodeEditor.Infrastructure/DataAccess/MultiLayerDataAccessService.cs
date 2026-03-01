@@ -3,12 +3,15 @@ using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Specifications;
 using MessagePack;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using System.Runtime.CompilerServices;
 
 namespace CodeEditor.Infrastructure.DataAccess
 {
-    public class MultiLayerDataAccessService<T> where T : class, IMultiLayerDataAccessService<T>
+    public class MultiLayerDataAccessService<T> : IMultiLayerDataAccessService<T> where T : class
     {
+        private readonly ILogger<MultiLayerDataAccessService<T>> _logger;
 
         private readonly IRepository<T> _repository;
         private readonly IDatabase _redisCache;
@@ -20,11 +23,13 @@ namespace CodeEditor.Infrastructure.DataAccess
         public MultiLayerDataAccessService(
             IRepository<T> repository,
             IDatabase redisCache,
-            IMemoryCache memoryCache)
+            IMemoryCache memoryCache,
+            ILogger<MultiLayerDataAccessService<T>> logger)
         {
             _repository = repository;
             _redisCache = redisCache;
             _memoryCache = memoryCache;
+            _logger = logger;
         }
 
         public async Task<T?> GetEntityValue(
@@ -58,6 +63,54 @@ namespace CodeEditor.Infrastructure.DataAccess
             return entity;
         }
 
+        public async Task<List<T>?> GetMultipleEntityValue(
+            string entityName, 
+            List<long> ids, 
+            Specification<T> spec)
+        {
+            var listRemainingEntities = new List<long>(ids);
+            List<T> results = new List<T>();   
+
+            foreach (var id in ids)
+            {
+                if(_memoryCache.TryGetValue(entityName + ":" + id, out T? entity))
+                {
+                    results.Add(entity!);
+                    listRemainingEntities.Remove(id);
+                }
+            }
+
+            ids = new List<long>(listRemainingEntities);
+
+            foreach (var id in ids) {
+                var redisValue = await _redisCache.StringGetAsync(entityName + ":" + id);
+                if (redisValue != RedisValue.Null)
+                {
+                    T? entity = MessagePackSerializer.Deserialize<T>(redisValue);
+                    results.Add(entity!);
+                    listRemainingEntities.Remove(id);
+                }
+            }
+
+            ids = new List<long>(listRemainingEntities);
+
+            foreach (var id in ids)
+            {
+                T? entity = await _repository.FindOneAsync(spec);
+                if (entity != null)
+                {
+                    results.Add(entity!);
+                    listRemainingEntities.Remove(id);
+                }
+            }
+
+            if(listRemainingEntities.Count > 0)
+            {
+                _logger.LogWarning("GetMultipleEntityValue - Not all entities were found - Not Found {ListRemainingEntities}", listRemainingEntities.ToString());
+            }
+
+            return results;
+        }
 
         public async Task<bool> SetEntityValueInMemory(
             string entityName,

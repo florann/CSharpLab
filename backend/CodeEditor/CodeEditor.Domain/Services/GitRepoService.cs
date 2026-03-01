@@ -1,4 +1,5 @@
-﻿using CodeEditor.Domain.Entities;
+﻿using CodeEditor.Domain.DataAccess;
+using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Requests.GitRepoRequests;
 using CodeEditor.Domain.Services.Interfaces;
@@ -7,7 +8,8 @@ namespace CodeEditor.Domain.Services
 {
     public class GitRepoService(
         IRepository<GitRepo> gitRepoRepository,
-        IRepository<GitFeed> gitFeedRepository) : Service<GitRepo>(gitRepoRepository), IGitRepoService
+        IRepository<GitFeed> gitFeedRepository,
+        IMultiLayerDataAccessService<GitRepo> multiLayerDataAccessService) : Service<GitRepo>(gitRepoRepository), IGitRepoService
     {
         public async Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request)
         {
