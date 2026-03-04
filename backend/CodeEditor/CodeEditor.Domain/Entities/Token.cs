@@ -1,6 +1,8 @@
-﻿namespace CodeEditor.Domain.Entities
+﻿using CodeEditor.Domain.Entities.Base;
+
+namespace CodeEditor.Domain.Entities
 {
-    public class Token
+    public class Token : Entity
     {
         public long UserId { get; set; }
         public string RefreshToken { get; set; }

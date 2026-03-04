@@ -1,5 +1,5 @@
-﻿using CodeEditor.Domain.Entities;
-using CodeEditor.Domain.Mapper;
+﻿using CodeEditor.Domain.Mapper;
+using CodeEditor.Domain.Records;
 using CodeEditor.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

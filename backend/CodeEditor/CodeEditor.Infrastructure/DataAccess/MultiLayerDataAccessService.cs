@@ -1,4 +1,5 @@
 ﻿using CodeEditor.Domain.DataAccess;
+using CodeEditor.Domain.Entities.Base;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Specifications;
 using MessagePack;
@@ -9,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace CodeEditor.Infrastructure.DataAccess
 {
-    public class MultiLayerDataAccessService<T> : IMultiLayerDataAccessService<T> where T : class
+    public class MultiLayerDataAccessService<T> : IMultiLayerDataAccessService<T> where T : Entity
     {
         private readonly ILogger<MultiLayerDataAccessService<T>> _logger;
 
@@ -42,6 +43,7 @@ namespace CodeEditor.Infrastructure.DataAccess
             if (!_memoryCache.TryGetValue(entityKey, out entity))
             {
                 var redisObject = await _redisCache.StringGetAsync(entityKey);
+
                 if (redisObject == RedisValue.Null)
                 {
                     entity = await _repository.FindOneAsync(spec);
@@ -51,12 +53,12 @@ namespace CodeEditor.Infrastructure.DataAccess
                         await SetEntityValueRedis(entityName, id, entity!);
                     }
 
+                    entity = MessagePackSerializer.Deserialize<T>(redisObject);
                     return entity;
                 }
 
                 await SetEntityValueInMemory(entityName, id, entity!);
 
-                entity = MessagePackSerializer.Deserialize<T>(redisObject);
                 return entity;
             }
 
@@ -66,7 +68,7 @@ namespace CodeEditor.Infrastructure.DataAccess
         public async Task<List<T>?> GetMultipleEntityValue(
             string entityName, 
             List<long> ids, 
-            Specification<T> spec)
+            Func<List<long>, Specification<T>> spec)
         {
             var listRemainingEntities = new List<long>(ids);
             List<T> results = new List<T>();   
@@ -80,27 +82,34 @@ namespace CodeEditor.Infrastructure.DataAccess
                 }
             }
 
-            ids = new List<long>(listRemainingEntities);
+            ids = [.. listRemainingEntities];
 
             foreach (var id in ids) {
                 var redisValue = await _redisCache.StringGetAsync(entityName + ":" + id);
                 if (redisValue != RedisValue.Null)
                 {
-                    T? entity = MessagePackSerializer.Deserialize<T>(redisValue);
+                    T entity = MessagePackSerializer.Deserialize<T>(redisValue);
+                    
                     results.Add(entity!);
                     listRemainingEntities.Remove(id);
+
+                    await SetEntityValueInMemory(entityName, id, entity);
                 }
             }
 
-            ids = new List<long>(listRemainingEntities);
+            ids = [.. listRemainingEntities];
 
-            foreach (var id in ids)
+            List<T>? entites = await _repository.FindAllAsync(spec(ids)) as List<T>;
+            if (entites != null 
+                && entites.Count != 0)
             {
-                T? entity = await _repository.FindOneAsync(spec);
-                if (entity != null)
+                foreach (T entity in entites)
                 {
                     results.Add(entity!);
-                    listRemainingEntities.Remove(id);
+                    listRemainingEntities.Remove(entity.Id);
+
+                    await SetEntityValueInMemory(entityName, entity.Id, entity);
+                    await SetEntityValueRedis(entityName, entity.Id, entity);
                 }
             }
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CodeEditor.Api.Exceptions;
-using CodeEditor.Domain.Entities;
+using CodeEditor.Domain.Records;
 using CodeEditor.Domain.Requests.AuthRequests;
 using CodeEditor.Domain.Requests.AuthRequests.Validators;
 using CodeEditor.Domain.Responses.UserResponses;

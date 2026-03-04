@@ -1,8 +1,9 @@
-﻿namespace CodeEditor.Domain.Entities
+﻿using CodeEditor.Domain.Entities.Base;
+
+namespace CodeEditor.Domain.Entities
 {
-    public class GitFeedEntry
+    public class GitFeedEntry : Entity
     {
-        public long Id { get; set; }
 
         public long GitFeedId { get; set; }
 

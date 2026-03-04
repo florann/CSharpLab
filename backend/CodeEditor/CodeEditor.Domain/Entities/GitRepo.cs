@@ -1,9 +1,9 @@
-﻿namespace CodeEditor.Domain.Entities
-{
-    public class GitRepo
-    {
-        public long Id { get; set; }
+﻿using CodeEditor.Domain.Entities.Base;
 
+namespace CodeEditor.Domain.Entities
+{
+    public class GitRepo : Entity
+    {
         public long IdGitFeed { get; set; }
 
         public string OwnerName { get; set; }

@@ -1,6 +1,6 @@
-﻿namespace CodeEditor.Domain.Entities
+﻿namespace CodeEditor.Domain.Records
 {
-    public class JwtSettings
+    public record JwtSettings
     {
         public string Secret { get; set; } = string.Empty;
         public string Issuer { get; set; } = string.Empty;
