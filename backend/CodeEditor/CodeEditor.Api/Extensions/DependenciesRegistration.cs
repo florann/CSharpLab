@@ -36,6 +36,7 @@ namespace CodeEditor.Api.Extensions
                 services.AddScoped<IRepository<Domain.Entities.GitFeed>, GitFeedRepository>();
                 services.AddScoped<IRepository<Domain.Entities.GitFeedEntry>, GitFeedEntryRepository>();
                 services.AddScoped<IRepository<Domain.Entities.GitRepo>, GitRepoRepository>();
+                services.AddScoped<IRepository<Domain.Entities.UserGitRepo>, UserGitRepoRepository>();
 
                 return services;
             }

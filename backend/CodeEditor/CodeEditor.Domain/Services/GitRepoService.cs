@@ -1,8 +1,5 @@
-﻿using CodeEditor.Domain.DataAccess;
-using CodeEditor.Domain.Entities;
-using CodeEditor.Domain.Repositories.Base;
+﻿using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Requests.GitRepoRequests;
-using CodeEditor.Domain.Services.Interfaces;
 using CodeEditor.Domain.Specifications.GitRepoSpecification;
 using CodeEditor.Domain.Specifications.UserSpecification;
 
@@ -12,7 +9,8 @@ namespace CodeEditor.Domain.Services
         IRepository<GitRepo> gitRepoRepository,
         IRepository<GitFeed> gitFeedRepository,
         IMultiLayerDataAccessService<GitRepo> multiLayerDataAccessService,
-        IRepository<User> userRepository
+        IRepository<User> userRepository,
+        IRepository<UserGitRepo> userGitRepoRepository 
         ) : Service<GitRepo>(gitRepoRepository), IGitRepoService
     {
         public async Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request)
@@ -63,6 +61,32 @@ namespace CodeEditor.Domain.Services
                 );
 
             return gitRepos;
+        }
+
+        public async Task SetUserAllGitRepo(long userId)
+        {
+            var spec = new FindUserByIdSpecification(userId);
+            spec.AddInclude(entity => entity.UserGitRepos);
+            var user = await userRepository.FindOneAsync(spec) ?? throw new EnhancedException("user is null");
+
+            var userGitRepos = user.UserGitRepos;
+
+            userGitRepos.ForEach(userGitRepoRepository.Delete);
+
+            var gitRepos = await gitRepoRepository.GetAllAsync() ?? throw new EnhancedException("list git repos is null");
+
+            gitRepos.ToList().ForEach(gitRepo =>
+            {
+                userGitRepoRepository.Add(new UserGitRepo
+                {
+                    UserId = userId,
+                    User = user,
+                    GitRepoId = gitRepo.Id,
+                    GitRepo = gitRepo
+                });
+            });
+
+            await userGitRepoRepository.SaveChangesAsync();
         }
     }
 }

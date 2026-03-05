@@ -36,6 +36,19 @@ namespace CodeEditor.Api.Controllers
             return Ok();
         }
 
+        [HttpPost("setUserAllGitRepo/[long]")]
+        [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
+        [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> SetUserAllGitRepo(long userId)
+        {
+            if (userId <= 0)
+                return BadRequest();
+
+
+
+            return Ok();
+        }    
+    
         [HttpGet("getUserGitRepo")]
         [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]

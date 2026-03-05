@@ -7,5 +7,6 @@ namespace CodeEditor.Domain.Services.Interfaces
     {
         Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request);
         Task<List<GitRepo>?> GetAllGitRepoAsync(GetUserGitRepoRequest request);
+        Task SetUserAllGitRepo(long userId);
     }
 }

@@ -1,5 +1,4 @@
-﻿using CodeEditor.Domain.Repositories.Base;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace CodeEditor.Domain.Repositories
 {
