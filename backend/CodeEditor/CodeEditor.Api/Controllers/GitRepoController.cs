@@ -17,7 +17,7 @@ namespace CodeEditor.Api.Controllers
             ILogger<GitRepoController> logger,
             IGitRepoService gitRepoService,
             GitRepoRequestValidator addGitRepoRequestValidator,
-            GetGitRepoRequestValidator getGitRepoRequestValidator,
+            GetUserGitRepoRequestValidator getUserGitRepoRequestValidator,
             IMapper mapper
         )
         : ControllerBase
@@ -36,16 +36,16 @@ namespace CodeEditor.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("getGitReposFeed")]
+        [HttpGet("getUserGitRepo")]
         [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<GitRepoResponse>>> GetGitRepo(GetGitRepoRequest request)
+        public async Task<ActionResult<List<GitRepoResponse>>> GetUserGitRepo(GetUserGitRepoRequest request)
         {
-            var result = getGitRepoRequestValidator.Validate(request);
+            var result = getUserGitRepoRequestValidator.Validate(request);
             if (!result.IsValid)
                 return BadRequest(result.Errors);
 
-            var gitRepos = await gitRepoService.GetAllAsync();
+            var gitRepos = await gitRepoService.GetAllGitRepoAsync(request);
 
             return Ok(mapper.Map<List<GitRepoResponse>>(gitRepos));
         }

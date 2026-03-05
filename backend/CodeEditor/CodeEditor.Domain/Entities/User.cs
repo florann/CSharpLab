@@ -8,5 +8,6 @@ namespace CodeEditor.Domain.Entities
         public string Password { get; set; }
         public Guid Guid { get; set; }
         public Token Token { get; set; }
+        public List<UserGitRepo> UserGitRepos { get; set; }
     }
 }

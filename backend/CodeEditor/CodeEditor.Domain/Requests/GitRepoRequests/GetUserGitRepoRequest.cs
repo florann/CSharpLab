@@ -1,6 +1,6 @@
 ﻿namespace CodeEditor.Domain.Requests.GitRepoRequests
 {
-    public class GetGitRepoRequest
+    public class GetUserGitRepoRequest
     {
         public long UserId { get; set; }
     }

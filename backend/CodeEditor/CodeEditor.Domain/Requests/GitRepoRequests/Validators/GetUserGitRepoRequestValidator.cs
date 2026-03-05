@@ -2,7 +2,7 @@
 
 namespace CodeEditor.Domain.Requests.GitRepoRequests.Validators
 {
-    public class GetGitRepoRequestValidator : AbstractValidator<GetGitRepoRequest>
+    public class GetUserGitRepoRequestValidator : AbstractValidator<GetUserGitRepoRequest>
     {
         // Implement
     }

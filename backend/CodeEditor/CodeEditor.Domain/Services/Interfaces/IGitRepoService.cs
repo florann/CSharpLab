@@ -6,6 +6,6 @@ namespace CodeEditor.Domain.Services.Interfaces
     public interface IGitRepoService : IService<GitRepo>
     {
         Task<GitRepo> HandleGitRepoCreation(AddGitRepoRequest request);
-        Task<List<GitRepo>?> GetAllGitRepoAsync();
+        Task<List<GitRepo>?> GetAllGitRepoAsync(GetUserGitRepoRequest request);
     }
 }
