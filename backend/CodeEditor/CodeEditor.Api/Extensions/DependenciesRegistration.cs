@@ -20,6 +20,11 @@ namespace CodeEditor.Api.Extensions
                     configuration.AbortOnConnectFail = false;
                     return ConnectionMultiplexer.Connect(configuration);
                 });
+                services.AddScoped(sp =>
+                    sp.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
+
+                services.AddMemoryCache();
+
 
                 // Services
                 services.AddScoped<IService<Domain.Entities.Token>, TokenService>();
@@ -29,7 +34,6 @@ namespace CodeEditor.Api.Extensions
                 services.AddScoped<IGitFeedService, GitFeedService>();
                 services.AddScoped<IGitFeedEntryService, GitFeedEntryService>();
                 services.AddScoped(typeof(IMultiLayerDataAccessService<>), typeof(MultiLayerDataAccessService<>));
-
                 // Repositories
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();
                 services.AddScoped<IRepository<Domain.Entities.Token>, TokenRepository>();

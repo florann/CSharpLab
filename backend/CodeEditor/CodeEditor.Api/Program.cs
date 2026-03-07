@@ -47,7 +47,6 @@ builder.Services.AddOpenApi((options) =>
     options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_0;
     options.AddSchemaTransformer((schema, context, cancellationToken) =>
     {
-        // Map long to int64
         if (context.JsonTypeInfo.Type == typeof(long) ||
             context.JsonTypeInfo.Type == typeof(long?))
         {
