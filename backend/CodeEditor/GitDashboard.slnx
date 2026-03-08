@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="CodeEditor.Api/GitDashboard.Api.csproj" />
+  <Project Path="CodeEditor.Domain/GitDashboard.Domain.csproj" />
+  <Project Path="CodeEditor.Infrastructure/GitDashboard.Infrastructure.csproj" Id="74744ce7-5755-4e5f-9b01-34eb313fde79" />
+  <Project Path="CodeEditor.Worker/GitDashboard.Worker.csproj" />
+</Solution>

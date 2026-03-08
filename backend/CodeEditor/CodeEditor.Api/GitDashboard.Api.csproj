@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeEditor.Domain\CodeEditor.Domain.csproj" />
-    <ProjectReference Include="..\CodeEditor.Infrastructure\CodeEditor.Infrastructure.csproj" />
+    <ProjectReference Include="..\CodeEditor.Domain\GitDashboard.Domain.csproj" />
+    <ProjectReference Include="..\CodeEditor.Infrastructure\GitDashboard.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
