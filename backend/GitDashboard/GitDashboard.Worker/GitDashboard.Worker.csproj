@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CodeEditor.Domain\GitDashboard.Domain.csproj" />
-    <ProjectReference Include="..\CodeEditor.Infrastructure\GitDashboard.Infrastructure.csproj" />
+    <ProjectReference Include="..\GitDashboard.Domain\GitDashboard.Domain.csproj" />
+    <ProjectReference Include="..\GitDashboard.Infrastructure\GitDashboard.Infrastructure.csproj" />
   </ItemGroup>
 </Project>
