@@ -3,7 +3,6 @@ using CodeEditor.Domain.Entities.Base;
 using CodeEditor.Domain.Repositories.Base;
 using CodeEditor.Domain.Specifications;
 using MessagePack;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 

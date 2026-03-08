@@ -25,8 +25,10 @@ namespace CodeEditor.Api.Extensions
 
                 services.AddMemoryCache();
 
+                // Services singleton
+                services.AddSingleton<IInMemoryCache, InMemoryCache>();
 
-                // Services
+                // Services scoped
                 services.AddScoped<IService<Domain.Entities.Token>, TokenService>();
                 services.AddScoped<IAuthService, AuthService>();
                 services.AddScoped<IUserService, UserService>();
@@ -34,7 +36,8 @@ namespace CodeEditor.Api.Extensions
                 services.AddScoped<IGitFeedService, GitFeedService>();
                 services.AddScoped<IGitFeedEntryService, GitFeedEntryService>();
                 services.AddScoped(typeof(IMultiLayerDataAccessService<>), typeof(MultiLayerDataAccessService<>));
-                // Repositories
+
+                // Repositories scoped
                 services.AddScoped<IRepository<Domain.Entities.User>, UserRepository>();
                 services.AddScoped<IRepository<Domain.Entities.Token>, TokenRepository>();
                 services.AddScoped<IRepository<Domain.Entities.GitFeed>, GitFeedRepository>();
