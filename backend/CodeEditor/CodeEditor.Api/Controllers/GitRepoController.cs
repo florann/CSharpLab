@@ -18,7 +18,6 @@ namespace CodeEditor.Api.Controllers
             IGitRepoService gitRepoService,
             GitRepoRequestValidator addGitRepoRequestValidator,
             GetUserGitRepoRequestValidator getUserGitRepoRequestValidator,
-            SearchGitRepoByNameValidator searchGitRepoByNameValidator,
             IMapper mapper
         )
         : ControllerBase
@@ -37,15 +36,11 @@ namespace CodeEditor.Api.Controllers
             return Ok();
         }
 
-        [HttpGet("searchGitRepoByName/{searchString}")]
-        [ProducesResponseType<GitRepoResponse>(StatusCodes.Status201Created)]
+        [HttpGet("getAllGitRepoTittle")]
+        [ProducesResponseType<List<GitRepoTitleResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GitRepoResponse>> AddGitRepo(string searchString)
+        public async Task<ActionResult<List<GitRepoTitleResponse>>> GetAllGitRepoTittle()
         {
-            var result = await searchGitRepoByNameValidator.ValidateAsync(searchString);
-            if (!result.IsValid)
-                return BadRequest(result.Errors);
-
             //await gitRepoService.HandleGitRepoCreation(request);
 
             return Ok();

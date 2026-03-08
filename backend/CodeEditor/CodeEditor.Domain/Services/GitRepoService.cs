@@ -1,4 +1,5 @@
-﻿using CodeEditor.Domain.Repositories;
+﻿using CodeEditor.Domain.Records;
+using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Requests.GitRepoRequests;
 using CodeEditor.Domain.Specifications.GitRepoSpecification;
 using CodeEditor.Domain.Specifications.UserSpecification;
@@ -89,6 +90,16 @@ namespace CodeEditor.Domain.Services
             await userGitRepoRepository.SaveChangesAsync();
 
             return [.. gitRepos];
+        }
+
+        public async Task<List<GitRepoSummary>?> GetAllGitRepoNameAsync()
+        {
+            var result = await _repository.GetAllTransformedAsync<GitRepoSummary>(e => new GitRepoSummary
+            {
+                Id = e.Id,
+                Name = e.Name
+            });
+            return (result != null) ? [..result] : null;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace CodeEditor.Infrastructure.DataAccess
 
         private readonly IRepository<T> _repository;
         private readonly IDatabase _redisCache;
-        private readonly IMemoryCache _memoryCache;
+        private readonly IInMemoryCache _memoryCache;
 
         private readonly TimeSpan _memoryCacheTtl = TimeSpan.FromMinutes(15);
         private readonly TimeSpan _redisCacheTtl = TimeSpan.FromHours(1);
@@ -23,7 +23,7 @@ namespace CodeEditor.Infrastructure.DataAccess
         public MultiLayerDataAccessService(
             IRepository<T> repository,
             IDatabase redisCache,
-            IMemoryCache memoryCache,
+            IInMemoryCache memoryCache,
             ILogger<MultiLayerDataAccessService<T>> logger)
         {
             _repository = repository;
@@ -39,7 +39,9 @@ namespace CodeEditor.Infrastructure.DataAccess
         {
             T? entity;
             var entityKey = string.Concat(entityName, ":", id);
-            if (!_memoryCache.TryGetValue(entityKey, out entity))
+
+            entity = _memoryCache.GetEntity<T>(entityKey);
+            if (entity == null)
             {
                 var redisObject = await _redisCache.StringGetAsync(entityKey);
 
@@ -74,11 +76,12 @@ namespace CodeEditor.Infrastructure.DataAccess
 
             foreach (var id in ids)
             {
-                if (_memoryCache.TryGetValue(entityName + ":" + id, out T? entity))
-                {
-                    results.Add(entity!);
-                    listRemainingEntities.Remove(id);
-                }
+                T? entity = _memoryCache.GetEntity<T>(entityName + ":" + id);
+                if (entity == null)
+                    continue;
+
+                results.Add(entity!);
+                listRemainingEntities.Remove(id);
             }
 
             ids = [.. listRemainingEntities];
@@ -127,7 +130,7 @@ namespace CodeEditor.Infrastructure.DataAccess
             T entity)
         {
             var key = string.Concat(entityName, ":", id);
-            return _memoryCache.Set(key, entity, _memoryCacheTtl) != null;
+            return _memoryCache.SetEntity(key, entity, _memoryCacheTtl);
         }
 
         public async Task<bool> SetEntityValueRedis(

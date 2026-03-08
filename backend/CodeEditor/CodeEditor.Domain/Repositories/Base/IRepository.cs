@@ -1,9 +1,11 @@
 ﻿using CodeEditor.Domain.Specifications.Interfaces;
+using System.Linq.Expressions;
 
 namespace CodeEditor.Domain.Repositories.Base
 {
     public interface IRepository<T>
     {
+        Task<IEnumerable<TResult>?> GetAllTransformedAsync<TResult>(Expression<Func<T, TResult>> transformer);
         Task<IEnumerable<T>?> GetAllAsync();
         Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec);
         Task<T?> FindOneAsync(ISpecification<T> spec);

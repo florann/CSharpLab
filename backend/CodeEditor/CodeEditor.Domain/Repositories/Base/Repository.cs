@@ -1,5 +1,6 @@
 ﻿using CodeEditor.Domain.Specifications.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace CodeEditor.Domain.Repositories.Base
 {
@@ -12,9 +13,19 @@ namespace CodeEditor.Domain.Repositories.Base
             _context = context;
         }
 
+        public async Task<IEnumerable<TResult>> GetAllTransformedAsync<TResult>(Expression<Func<T, TResult>> transformer)
+        {
+            return await _context
+                .Set<T>()
+                .Select(transformer)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<T>?> GetAllAsync()
         {
-            return await _context.Set<T>().ToListAsync();
+            return await _context
+                .Set<T>()
+                .ToListAsync();
         }
 
         public async Task<T?> FindOneAsync(ISpecification<T> spec)
