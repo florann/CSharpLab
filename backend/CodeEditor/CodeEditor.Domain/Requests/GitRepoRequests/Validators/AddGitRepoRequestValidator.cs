@@ -3,11 +3,11 @@ using System.Text.RegularExpressions;
 
 namespace CodeEditor.Domain.Requests.GitRepoRequests.Validators
 {
-    public class GitRepoRequestValidator : AbstractValidator<AddGitRepoRequest>
+    public class AddGitRepoRequestValidator : AbstractValidator<AddGitRepoRequest>
     {
         private const string GitHubUrlPattern = @"^https://github\.com/([\w-]+)/([\w.-]+)$";
 
-        public GitRepoRequestValidator()
+        public AddGitRepoRequestValidator()
         {
             RuleFor(request => request.Url)
                 .NotEmpty()

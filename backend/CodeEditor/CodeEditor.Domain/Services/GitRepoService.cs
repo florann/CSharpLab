@@ -92,14 +92,20 @@ namespace CodeEditor.Domain.Services
             return [.. gitRepos];
         }
 
-        public async Task<List<GitRepoSummary>?> GetAllGitRepoNameAsync()
+        public async Task<List<GitRepoSummary>?> GetAllGitRepSummaryAsync()
         {
-            var result = await _repository.GetAllTransformedAsync<GitRepoSummary>(e => new GitRepoSummary
+            var result = await _repository.GetAllTransformedAsync(e => new GitRepoSummary
             {
                 Id = e.Id,
                 Name = e.Name
             });
             return (result != null) ? [..result] : null;
+        }
+
+        public async Task<GitRepo?> GetGitRepo(long gitRepoId)
+        {
+            var spec = new FindGitRepoByIdSpecification(gitRepoId);
+            return await _repository.FindOneAsync(spec);
         }
     }
 }
