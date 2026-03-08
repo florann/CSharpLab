@@ -18,6 +18,7 @@ namespace CodeEditor.Api.Controllers
             IGitRepoService gitRepoService,
             GitRepoRequestValidator addGitRepoRequestValidator,
             GetUserGitRepoRequestValidator getUserGitRepoRequestValidator,
+            SearchGitRepoByNameValidator searchGitRepoByNameValidator,
             IMapper mapper
         )
         : ControllerBase
@@ -36,23 +37,40 @@ namespace CodeEditor.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("searchGitRepoByName/{searchString}")]
+        [ProducesResponseType<GitRepoResponse>(StatusCodes.Status201Created)]
+        [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<GitRepoResponse>> AddGitRepo(string searchString)
+        {
+            var result = await searchGitRepoByNameValidator.ValidateAsync(searchString);
+            if (!result.IsValid)
+                return BadRequest(result.Errors);
+
+            //await gitRepoService.HandleGitRepoCreation(request);
+
+            return Ok();
+        }
+
+
         [HttpPost("setUserAllGitRepo/{userId}")]
         [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> SetUserAllGitRepo(long userId)
+        public async Task<ActionResult<List<GitRepoResponse>>> SetUserAllGitRepo(long userId)
         {
             if (userId <= 0)
                 return BadRequest();
 
-
-
-            return Ok();
+            var result = await gitRepoService.SetUserAllGitRepo(userId);
+            if (result.Count <= 0)
+                return NoContent();
+            
+            return Ok(mapper.Map<GitRepoResponse>(result));
         }    
     
-        [HttpGet("getUserGitRepo")]
+        [HttpGet("getUserGitRepos")]
         [ProducesResponseType<List<GitRepoResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<GitRepoResponse>>> GetUserGitRepo(GetUserGitRepoRequest request)
+        public async Task<ActionResult<List<GitRepoResponse>>> GetUserGitRepos(GetUserGitRepoRequest request)
         {
             var result = getUserGitRepoRequestValidator.Validate(request);
             if (!result.IsValid)

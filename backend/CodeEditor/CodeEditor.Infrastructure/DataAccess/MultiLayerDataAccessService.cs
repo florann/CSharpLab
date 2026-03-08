@@ -6,7 +6,6 @@ using MessagePack;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using System.Runtime.CompilerServices;
 
 namespace CodeEditor.Infrastructure.DataAccess
 {
@@ -18,8 +17,8 @@ namespace CodeEditor.Infrastructure.DataAccess
         private readonly IDatabase _redisCache;
         private readonly IMemoryCache _memoryCache;
 
-        private readonly TimeSpan _memoryCacheTtl = TimeSpan.FromMinutes(5);
-        private readonly TimeSpan _redisCacheTtl = TimeSpan.FromMinutes(30);
+        private readonly TimeSpan _memoryCacheTtl = TimeSpan.FromMinutes(15);
+        private readonly TimeSpan _redisCacheTtl = TimeSpan.FromHours(1);
 
         public MultiLayerDataAccessService(
             IRepository<T> repository,
@@ -66,16 +65,16 @@ namespace CodeEditor.Infrastructure.DataAccess
         }
 
         public async Task<List<T>?> GetMultipleEntityValue(
-            string entityName, 
-            List<long> ids, 
+            string entityName,
+            List<long> ids,
             Func<List<long>, Specification<T>> spec)
         {
             var listRemainingEntities = new List<long>(ids);
-            List<T> results = new List<T>();   
+            List<T> results = new List<T>();
 
             foreach (var id in ids)
             {
-                if(_memoryCache.TryGetValue(entityName + ":" + id, out T? entity))
+                if (_memoryCache.TryGetValue(entityName + ":" + id, out T? entity))
                 {
                     results.Add(entity!);
                     listRemainingEntities.Remove(id);
@@ -84,12 +83,13 @@ namespace CodeEditor.Infrastructure.DataAccess
 
             ids = [.. listRemainingEntities];
 
-            foreach (var id in ids) {
+            foreach (var id in ids)
+            {
                 var redisValue = await _redisCache.StringGetAsync(entityName + ":" + id);
                 if (redisValue != RedisValue.Null)
                 {
                     T entity = MessagePackSerializer.Deserialize<T>(redisValue);
-                    
+
                     results.Add(entity!);
                     listRemainingEntities.Remove(id);
 
@@ -100,7 +100,7 @@ namespace CodeEditor.Infrastructure.DataAccess
             ids = [.. listRemainingEntities];
 
             List<T>? entites = await _repository.FindAllAsync(spec(ids)) as List<T>;
-            if (entites != null 
+            if (entites != null
                 && entites.Count != 0)
             {
                 foreach (T entity in entites)
@@ -113,7 +113,7 @@ namespace CodeEditor.Infrastructure.DataAccess
                 }
             }
 
-            if(listRemainingEntities.Count > 0)
+            if (listRemainingEntities.Count > 0)
             {
                 _logger.LogWarning("GetMultipleEntityValue - Not all entities were found - Not Found {ListRemainingEntities}", listRemainingEntities.ToString());
             }

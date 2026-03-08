@@ -63,7 +63,7 @@ namespace CodeEditor.Domain.Services
             return gitRepos;
         }
 
-        public async Task SetUserAllGitRepo(long userId)
+        public async Task<List<GitRepo>> SetUserAllGitRepo(long userId)
         {
             var spec = new FindUserByIdSpecification(userId);
             spec.AddInclude(entity => entity.UserGitRepos);
@@ -87,6 +87,8 @@ namespace CodeEditor.Domain.Services
             });
 
             await userGitRepoRepository.SaveChangesAsync();
+
+            return [.. gitRepos];
         }
     }
 }
