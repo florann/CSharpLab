@@ -3,6 +3,7 @@ using CodeEditor.Domain.Repositories;
 using CodeEditor.Domain.Requests.GitRepoRequests;
 using CodeEditor.Domain.Specifications.GitRepoSpecification;
 using CodeEditor.Domain.Specifications.UserSpecification;
+using GitDashboard.Domain.Specifications.UserSpecification;
 
 namespace CodeEditor.Domain.Services
 {
@@ -41,9 +42,9 @@ namespace CodeEditor.Domain.Services
             return gitRepo;
         }
 
-        public async Task<List<GitRepo>?> GetAllGitRepoAsync(GetUserGitRepoRequest request)
+        public async Task<List<GitRepo>?> GetAllGitRepoAsync(Guid userGuid)
         {
-            var spec = new FindUserByIdSpecification(request.UserId);
+            var spec = new FindUserByGuidSpecification(userGuid);
             spec.AddInclude(entity => entity.UserGitRepos);
             var user = await userRepository.FindOneAsync(spec);
 
@@ -57,16 +58,16 @@ namespace CodeEditor.Domain.Services
             var gitRepos = await multiLayerDataAccessService
                 .GetMultipleEntityValue("GitRepo", 
                 userGitRepoIds, 
-                (userGitRepoIds) 
-                    => new FindGitRepoByListIdSpecification(userGitRepoIds)
+                (ids) 
+                    => new FindGitRepoByListIdSpecification(ids)
                 );
 
             return gitRepos;
         }
 
-        public async Task<List<GitRepo>> SetUserAllGitRepo(long userId)
+        public async Task<List<GitRepo>> SetUserAllGitRepo(Guid userGuid)
         {
-            var spec = new FindUserByIdSpecification(userId);
+            var spec = new FindUserByGuidSpecification(userGuid);
             spec.AddInclude(entity => entity.UserGitRepos);
             var user = await userRepository.FindOneAsync(spec) ?? throw new EnhancedException("user is null");
 
@@ -80,7 +81,7 @@ namespace CodeEditor.Domain.Services
             {
                 userGitRepoRepository.Add(new UserGitRepo
                 {
-                    UserId = userId,
+                    UserId = user.Id,
                     User = user,
                     GitRepoId = gitRepo.Id,
                     GitRepo = gitRepo
@@ -104,8 +105,10 @@ namespace CodeEditor.Domain.Services
 
         public async Task<GitRepo?> GetGitRepo(long gitRepoId)
         {
-            var spec = new FindGitRepoByIdSpecification(gitRepoId);
-            return await _repository.FindOneAsync(spec);
+            return await multiLayerDataAccessService.GetEntityValue(
+                "GitRepo",
+                gitRepoId,
+                new FindGitRepoByIdSpecification(gitRepoId));
         }
     }
 }

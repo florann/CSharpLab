@@ -2,8 +2,13 @@
 
 namespace CodeEditor.Domain.Requests.GitRepoRequests.Validators
 {
-    public class GetUserGitRepoRequestValidator : AbstractValidator<GetUserGitRepoRequest>
+    public class GetUserGitRepoRequestValidator : AbstractValidator<Guid>
     {
-        // Implement
+        public GetUserGitRepoRequestValidator()
+        {
+            RuleFor(userGuid => userGuid)
+                .NotEmpty()
+                .NotNull();
+        }
     }
 }

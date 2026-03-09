@@ -64,7 +64,7 @@ app.UseCors("AllowAngular");
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
+    app.MapScalarApiReference("");
 }
 else if (app.Environment.IsProduction())
 {
