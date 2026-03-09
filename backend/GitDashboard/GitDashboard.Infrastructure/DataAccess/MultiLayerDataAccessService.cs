@@ -76,43 +76,46 @@ namespace CodeEditor.Infrastructure.DataAccess
             foreach (var id in ids)
             {
                 T? entity = _memoryCache.GetEntity<T>(entityName + ":" + id);
-                if (entity == null)
-                    continue;
-
-                results.Add(entity!);
-                listRemainingEntities.Remove(id);
-            }
-
-            ids = [.. listRemainingEntities];
-
-            foreach (var id in ids)
-            {
-                var redisValue = await _redisCache.StringGetAsync(entityName + ":" + id);
-                if (redisValue != RedisValue.Null)
+                if (entity != null)
                 {
-                    T entity = MessagePackSerializer.Deserialize<T>(redisValue);
-
                     results.Add(entity!);
                     listRemainingEntities.Remove(id);
-
-                    await SetEntityValueInMemory(entityName, id, entity);
+                    continue;
                 }
-            }
 
-            ids = [.. listRemainingEntities];
-
-            List<T>? entites = await _repository.FindAllAsync(spec(ids)) as List<T>;
-            if (entites != null
-                && entites.Count != 0)
-            {
-                foreach (T entity in entites)
+                try
                 {
-                    results.Add(entity!);
-                    listRemainingEntities.Remove(entity.Id);
+                    RedisValue redisValue = RedisValue.Null;
+                    redisValue = await _redisCache.StringGetAsync(entityName + ":" + id);
+                    if (redisValue != RedisValue.Null)
+                    {
+                        entity = MessagePackSerializer.Deserialize<T>(redisValue);
 
-                    await SetEntityValueInMemory(entityName, entity.Id, entity);
-                    await SetEntityValueRedis(entityName, entity.Id, entity);
+                        results.Add(entity!);
+                        listRemainingEntities.Remove(id);
+
+                        await SetEntityValueInMemory(entityName, id, entity);
+                        continue;
+                    }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError("Error during StringGetAsync with message {Message}", ex.Message);
+                }
+
+                if (await _repository.FindAllAsync(spec(ids)) is List<T> entites
+                    && entites.Count != 0)
+                {
+                    foreach (T foundEntity in entites)
+                    {
+                        results.Add(foundEntity!);
+                        listRemainingEntities.Remove(foundEntity.Id);
+
+                        await SetEntityValueInMemory(entityName, foundEntity.Id, foundEntity);
+                        await SetEntityValueRedis(entityName, foundEntity.Id, foundEntity);
+                    }
+                }
+
             }
 
             if (listRemainingEntities.Count > 0)
@@ -137,10 +140,18 @@ namespace CodeEditor.Infrastructure.DataAccess
             long id,
             T entity)
         {
-            var key = string.Concat(entityName, ":", id);
-            var result = await _redisCache.SetAddAsync(key, MessagePackSerializer.Serialize(entity));
-            var resultTtl = await _redisCache.KeyExpireAsync(key, _redisCacheTtl);
-            return result && resultTtl;
+            try
+            {
+                var key = string.Concat(entityName, ":", id);
+                var result = await _redisCache.SetAddAsync(key, MessagePackSerializer.Serialize(entity));
+                var resultTtl = await _redisCache.KeyExpireAsync(key, _redisCacheTtl);
+                return result && resultTtl;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError("Error during SetEntityValueRedis with message : {Message}", ex.Message);
+                return false;
+            }
         }
     }
 }
