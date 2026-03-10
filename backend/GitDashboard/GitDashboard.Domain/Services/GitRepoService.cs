@@ -59,7 +59,12 @@ namespace CodeEditor.Domain.Services
                 .GetMultipleEntityValue("GitRepo", 
                 userGitRepoIds, 
                 (ids) 
-                    => new FindGitRepoByListIdSpecification(ids)
+                    =>
+                    {
+                        var s = new FindGitRepoByListIdSpecification(ids);
+                        s.AddInclude(gitRepo => gitRepo.GitFeed);
+                        return s;
+                    }
                 );
 
             return gitRepos;
