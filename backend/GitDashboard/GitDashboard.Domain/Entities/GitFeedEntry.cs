@@ -18,7 +18,5 @@ namespace CodeEditor.Domain.Entities
         public string Content { get; set; }
 
         public string AuthorName { get; set; }
-
-        public GitFeed GitFeed { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace CodeEditor.Infrastructure.Configurations
                 .HasForeignKey(entity => entity.UserId);
 
             builder.HasOne(entity => entity.GitRepo)
-                .WithMany(gitRepoEntity => gitRepoEntity.UserGitRepos)
+                .WithMany()
                 .HasForeignKey(entity => entity.GitRepoId);
         }
     }

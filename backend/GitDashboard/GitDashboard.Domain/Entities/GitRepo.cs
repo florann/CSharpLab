@@ -15,7 +15,5 @@ namespace CodeEditor.Domain.Entities
         public DateTimeOffset LastUpdateDate { get; set; }
 
         public GitFeed GitFeed { get; set; }
-
-        public List<UserGitRepo> UserGitRepos { get; set; }
     }
 }

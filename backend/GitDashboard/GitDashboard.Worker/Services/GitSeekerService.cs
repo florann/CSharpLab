@@ -129,7 +129,6 @@ namespace CodeEditor.Worker.Services
                     Title = documentGitFeedEntry.Element(ns + "title")?.Value ?? string.Empty,
                     Link = documentGitFeedEntry.Element(ns + "link")?.Value ?? string.Empty,
                     Content = documentGitFeedEntry.Element(ns + "content")?.Value ?? string.Empty,
-                    GitFeed = gitFeed,
                     GitFeedId = gitFeed.Id
                 });
             }

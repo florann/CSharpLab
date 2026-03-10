@@ -10,6 +10,6 @@ namespace CodeEditor.Domain.Entities
 
         public IEnumerable<GitFeedEntry> GitFeedEntries { get; set; }
 
-        public GitRepo GitRepository { get; set; }
+        public long GitRepoId { get; set; }
     }
 }

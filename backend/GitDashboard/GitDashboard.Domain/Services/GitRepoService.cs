@@ -29,7 +29,7 @@ namespace CodeEditor.Domain.Services
             {
                 LastUpdateDate = DateTime.UtcNow,
                 Title = "",
-                GitRepository = gitRepo
+                GitRepoId = gitRepo.Id
             };
 
             gitRepo.GitFeed = gitFeed;

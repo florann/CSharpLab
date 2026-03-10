@@ -41,7 +41,7 @@ namespace CodeEditor.Infrastructure.Configurations
                 .HasColumnName("id_git_feed");
 
             builder.HasOne(entity => entity.GitFeed)
-                .WithOne(gitFeedEntity => gitFeedEntity.GitRepository)
+                .WithOne()
                 .HasForeignKey<GitRepo>(entity => entity.IdGitFeed);
         }
     }

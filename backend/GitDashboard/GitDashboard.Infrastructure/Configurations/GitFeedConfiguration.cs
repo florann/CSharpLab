@@ -27,7 +27,7 @@ namespace CodeEditor.Infrastructure.Configurations
              .HasColumnName("last_update_date");
 
             builder.HasMany(entity => entity.GitFeedEntries)
-                .WithOne(gitFeedEntriesEntity => gitFeedEntriesEntity.GitFeed)
+                .WithOne()
                 .HasForeignKey(gitFeedEntry => gitFeedEntry.GitFeedId);
         }
     }
