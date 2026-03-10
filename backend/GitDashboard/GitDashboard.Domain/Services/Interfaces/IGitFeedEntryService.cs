@@ -2,5 +2,6 @@
 {
     public interface IGitFeedEntryService : IService<Entities.GitFeedEntry>
     {
+        public Task<List<GitFeedEntry>?> GetListEntriesByGitIdFeed(long gitIdFeed);
     }
 }

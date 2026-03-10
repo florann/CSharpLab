@@ -8,6 +8,7 @@ namespace CodeEditor.Domain.Repositories.Base
         Task<IEnumerable<TResult>?> GetAllTransformedAsync<TResult>(Expression<Func<T, TResult>> transformer);
         Task<IEnumerable<T>?> GetAllAsync();
         Task<IEnumerable<T>?> FindAllAsync(ISpecification<T> spec);
+        Task<IEnumerable<TResult>?> FindAllAsync<TResult>(ISpecification<T> spec, Expression<Func<T, TResult>> transformer);
         Task<T?> FindOneAsync(ISpecification<T> spec);
         void Delete(T entity);
         void Update(T entity);

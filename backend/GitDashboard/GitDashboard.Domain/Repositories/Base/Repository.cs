@@ -1,6 +1,7 @@
 ﻿using CodeEditor.Domain.Specifications.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CodeEditor.Domain.Repositories.Base
 {
@@ -105,6 +106,50 @@ namespace CodeEditor.Domain.Repositories.Base
 
             return await query.ToListAsync();
         }
+
+        public async Task<IEnumerable<TResult>?> FindAllAsync<TResult>(
+          ISpecification<T> spec,
+          Expression<Func<T, TResult>> transformer
+          )
+        {
+            var query = _context
+                .Set<T>()
+                .AsQueryable();
+
+            if (spec.Criteria != null)
+            {
+                query = query.Where(spec.Criteria);
+            }
+
+            if (spec.Includes != null && spec.Includes.Any())
+            {
+                foreach (var include in spec.Includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            if (spec.OrderBy != null)
+            {
+                if (spec.IsDesc)
+                {
+                    query = query.OrderByDescending(spec.OrderBy);
+                }
+                else
+                {
+                    query = query.OrderBy(spec.OrderBy);
+                }
+            }
+
+            if (spec.Take > 0)
+            {
+                query = query.Take(spec.Take);
+            }
+
+            var transformedQuery = query.Select(transformer);
+            return await transformedQuery.ToListAsync();
+        }
+
 
         public void Delete(T entity)
         {
