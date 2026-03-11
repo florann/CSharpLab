@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthStatusData, GetApiAuthStatusResponses, GetApiUserByIdData, GetApiUserByIdResponses, PostApiAuthCreateAccountData, PostApiAuthCreateAccountResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses } from './types.gen';
+import type { GetApiAuthStatusData, GetApiAuthStatusResponses, GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdData, GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdErrors, GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdResponses, GetApiGitRepoByGitRepoIdData, GetApiGitRepoByGitRepoIdErrors, GetApiGitRepoByGitRepoIdResponses, GetApiGitRepoGetAllGitRepoSummaryData, GetApiGitRepoGetAllGitRepoSummaryErrors, GetApiGitRepoGetAllGitRepoSummaryResponses, GetApiGitRepoGetUserGitReposByUserGuidData, GetApiGitRepoGetUserGitReposByUserGuidErrors, GetApiGitRepoGetUserGitReposByUserGuidResponses, GetApiUserByIdData, GetApiUserByIdResponses, PostApiAuthCreateAccountData, PostApiAuthCreateAccountResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses, PostApiGitRepoData, PostApiGitRepoErrors, PostApiGitRepoResponses, PostApiGitRepoSetUserAllGitRepoByUserGuidData, PostApiGitRepoSetUserAllGitRepoByUserGuidErrors, PostApiGitRepoSetUserAllGitRepoByUserGuidResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -17,6 +17,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+export class GitFeedEntry {
+    public static getApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedId<ThrowOnError extends boolean = false>(options: Options<GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdData, ThrowOnError>) {
+        return (options.client ?? client).get<GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdResponses, GetApiGitFeedEntryGetEntriesByGitFeedIdByGitFeedIdErrors, ThrowOnError>({ url: '/api/GitFeedEntry/getEntriesByGitFeedId/{gitFeedId}', ...options });
+    }
+}
 
 export class Auth {
     public static postApiAuthLogin<ThrowOnError extends boolean = false>(options: Options<PostApiAuthLoginData, ThrowOnError>) {
@@ -47,6 +53,50 @@ export class Auth {
     
     public static getApiAuthStatus<ThrowOnError extends boolean = false>(options?: Options<GetApiAuthStatusData, ThrowOnError>) {
         return (options?.client ?? client).get<GetApiAuthStatusResponses, unknown, ThrowOnError>({ url: '/api/Auth/status', ...options });
+    }
+}
+
+export class GitRepo {
+    /**
+     * Get the GitRepo thank to the given id
+     */
+    public static getApiGitRepoByGitRepoId<ThrowOnError extends boolean = false>(options: Options<GetApiGitRepoByGitRepoIdData, ThrowOnError>) {
+        return (options.client ?? client).get<GetApiGitRepoByGitRepoIdResponses, GetApiGitRepoByGitRepoIdErrors, ThrowOnError>({ url: '/api/GitRepo/{gitRepoId}', ...options });
+    }
+    
+    /**
+     * Add a GitRepo
+     */
+    public static postApiGitRepo<ThrowOnError extends boolean = false>(options: Options<PostApiGitRepoData, ThrowOnError>) {
+        return (options.client ?? client).post<PostApiGitRepoResponses, PostApiGitRepoErrors, ThrowOnError>({
+            url: '/api/GitRepo',
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+    }
+    
+    /**
+     * Get all GitRepoSummary stored in database
+     */
+    public static getApiGitRepoGetAllGitRepoSummary<ThrowOnError extends boolean = false>(options?: Options<GetApiGitRepoGetAllGitRepoSummaryData, ThrowOnError>) {
+        return (options?.client ?? client).get<GetApiGitRepoGetAllGitRepoSummaryResponses, GetApiGitRepoGetAllGitRepoSummaryErrors, ThrowOnError>({ url: '/api/GitRepo/getAllGitRepoSummary', ...options });
+    }
+    
+    /**
+     * Set all GitRepo linked to the given userId
+     */
+    public static postApiGitRepoSetUserAllGitRepoByUserGuid<ThrowOnError extends boolean = false>(options: Options<PostApiGitRepoSetUserAllGitRepoByUserGuidData, ThrowOnError>) {
+        return (options.client ?? client).post<PostApiGitRepoSetUserAllGitRepoByUserGuidResponses, PostApiGitRepoSetUserAllGitRepoByUserGuidErrors, ThrowOnError>({ url: '/api/GitRepo/setUserAllGitRepo/{userGuid}', ...options });
+    }
+    
+    /**
+     * Used to retrieve all GitRepos entities link to the specified user
+     */
+    public static getApiGitRepoGetUserGitReposByUserGuid<ThrowOnError extends boolean = false>(options: Options<GetApiGitRepoGetUserGitReposByUserGuidData, ThrowOnError>) {
+        return (options.client ?? client).get<GetApiGitRepoGetUserGitReposByUserGuidResponses, GetApiGitRepoGetUserGitReposByUserGuidErrors, ThrowOnError>({ url: '/api/GitRepo/getUserGitRepos/{userGuid}', ...options });
     }
 }
 
