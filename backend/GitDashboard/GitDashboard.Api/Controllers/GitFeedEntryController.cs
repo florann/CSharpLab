@@ -31,5 +31,6 @@ namespace GitDashboard.Api.Controllers
             var gitFeedEntries = await gitFeedEntryService.GetListEntriesByGitIdFeed(gitFeedId);
 
             return Ok(mapper.Map<List<GitFeedEntryResponse>>(gitFeedEntries));
+        }
     }
 }
