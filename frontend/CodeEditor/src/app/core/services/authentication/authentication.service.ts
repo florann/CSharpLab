@@ -19,7 +19,7 @@ export class AuthenticationService {
         })).pipe(
         map(response => {
           if(!response.data)
-            throw new Error("UserResponse is empty");
+            throw response.response;
 
           return response.data; 
         }),
@@ -83,19 +83,9 @@ export class AuthenticationService {
   /**
    * Handle HTTP errors
    */
-  private handleError(error: any): Observable<never> {
+  private handleError(error: Response): Observable<never> {
     console.error('API Error:', error);
-    
-    let errorMessage = 'An error occurred';
-    
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    
-    return throwError(() => new Error(errorMessage));
+
+    return throwError(() => error);
   }
 }

@@ -1,4 +1,5 @@
 <div class="app-content">
+    <app-toast [message]="toastService.message()"></app-toast>
     <app-header></app-header>
     <main class="main-content">
         <router-outlet></router-outlet>
