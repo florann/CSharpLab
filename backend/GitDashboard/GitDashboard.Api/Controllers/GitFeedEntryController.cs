@@ -22,7 +22,7 @@ namespace GitDashboard.Api.Controllers
         [HttpGet("getEntriesByGitFeedId/{gitFeedId:long}")]
         [ProducesResponseType<List<GitFeedEntryResponse>>(StatusCodes.Status200OK)]
         [ProducesResponseType<ValidationProblemDetails>(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<GitFeedEntryResponse>>> GetEntriesByGitFeedId(long gitFeedId)
+        public async Task<ActionResult<List<GitFeedEntryResponse>>> GetEntriesByGitFeedId([FromRoute] long gitFeedId)
         {
             var result = getEntriesByGitFeedIdRequestValidator.Validate(gitFeedId);
             if (!result.IsValid)
@@ -31,5 +31,6 @@ namespace GitDashboard.Api.Controllers
             var gitFeedEntries = await gitFeedEntryService.GetListEntriesByGitIdFeed(gitFeedId);
 
             return Ok(mapper.Map<List<GitFeedEntryResponse>>(gitFeedEntries));
+        }
     }
 }
