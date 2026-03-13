@@ -1,0 +1,18 @@
+.toast-container{
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+
+    background-color: var(--mat-button-filled-container-color, var(--mat-sys-primary));
+    color:var(--mat-button-filled-label-text-color, var(--mat-sys-on-primary));
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.toast-container-error {
+    border-bottom: 4px solid var(--my-error);
+}
+
+.toast-container-success {
+    border-bottom: 4px solid var(--my-success-container);
+}

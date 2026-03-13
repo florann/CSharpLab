@@ -32,7 +32,7 @@ namespace CodeEditor.Api.Controllers
         {
             var validationResult = await loginRequestValidator.ValidateAsync(request);
             if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
+                return Unauthorized("Login or password incorrect");
 
             try
             {

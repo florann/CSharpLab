@@ -13,6 +13,21 @@ html {
     typography: Roboto,
     density: 0,
   ));
+
+  --my-success: #2e7d32;
+  --my-on-success: #ffffff;
+  --my-success-container: #c8e6c9;
+  --my-on-success-container: #1b5e20;
+
+  --my-error: #c62828;
+  --my-on-error: #ffffff;
+  --my-error-container: #ffcdd2;
+  --my-on-error-container: #b71c1c;
+
+    --my-warning: #e65100;
+  --my-on-warning: #ffffff;
+  --my-warning-container: #ffe0b2;
+  --my-on-warning-container: #bf360c;
 }
 
 // Dark theme
@@ -26,6 +41,21 @@ html.dark-theme {
     typography: Roboto,
     density: 0,
   ));
+
+  --my-success: #81c784;
+  --my-on-success: #1b5e20;
+  --my-success-container: #2e7d32;
+  --my-on-success-container: #c8e6c9;
+
+    --my-error: #ef9a9a;
+  --my-on-error: #b71c1c;
+  --my-error-container: #c62828;
+  --my-on-error-container: #ffcdd2;
+
+    --my-warning: #ffcc80;
+  --my-on-warning: #bf360c;
+  --my-warning-container: #e65100;
+  --my-on-warning-container: #ffe0b2;
 }
 
 body {
