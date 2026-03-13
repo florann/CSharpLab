@@ -5,12 +5,16 @@ import { Injectable, signal } from '@angular/core';
 })
 export class ToastService {
   message = signal<string>('');
+  type = signal<'success' | 'error' | 'warning'>('success');
 
-  show(message: string) {
+
+  show(message: string, type: 'success' | 'error' | 'warning') {
+    console.log("Set values");
     this.message.set(message);
-    setTimeout(() => {
-      this.clear();
-    }, 1500)
+    this.type.set(type);
+    // setTimeout(() => {
+    //   this.clear();
+    // }, 1500)
   }
 
   clear(){

@@ -63,7 +63,7 @@ export class Login {
       },
       error: (error) => {
         if(error.status === 401) {
-          this.toastService.show("Invalid username or password")
+          this.toastService.show("Invalid username or password", 'success')
         } 
       }
     });

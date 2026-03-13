@@ -1,5 +1,8 @@
 <div class="app-content">
-    <app-toast [message]="toastService.message()"></app-toast>
+    @if(toastService.message().length > 0)
+    {
+        <app-toast [message]="toastService.message()" [type]="toastService.type()"></app-toast>
+    }
     <app-header></app-header>
     <main class="main-content">
         <router-outlet></router-outlet>
