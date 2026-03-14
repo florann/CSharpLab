@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { debounceTime, fromEvent, interval, merge, switchMap, takeUntil, timer } from 'rxjs';
-import { AuthenticationService } from '../authentication/authentication.service';
+import { AuthenticationService } from '../api/authentication/authentication.service';
 
 @Injectable({
   providedIn: 'root',

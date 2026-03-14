@@ -176,8 +176,10 @@ export type GetApiAuthStatusResponses = {
     /**
      * OK
      */
-    200: unknown;
+    200: UserResponse;
 };
+
+export type GetApiAuthStatusResponse = GetApiAuthStatusResponses[keyof GetApiAuthStatusResponses];
 
 export type GetApiGitRepoByGitRepoIdData = {
     body?: never;

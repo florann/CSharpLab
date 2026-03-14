@@ -8,7 +8,8 @@ export class ToastService {
   private appRef = inject(ApplicationRef);
   private injector = inject(EnvironmentInjector);
   
-  message = signal<string>('');
+  private message = signal<string>('');
+  
   type = signal<'success' | 'error' | 'warning'>('success');
 
 

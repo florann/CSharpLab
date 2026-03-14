@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../../core/services/authentication/authentication.service';
+import { AuthenticationService } from '../../../core/services/api/authentication/authentication.service';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../../core/api/types.gen';
 import {MatInputModule} from '@angular/material/input';

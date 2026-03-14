@@ -8,6 +8,7 @@ using CodeEditor.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace CodeEditor.Api.Controllers
 {
@@ -22,7 +23,8 @@ namespace CodeEditor.Api.Controllers
         LoginRequestValidator loginRequestValidator,
         CreateAccountRequestValidator createAccountRequestValidator,
         IOptions<JwtSettings> jwtSettings,
-        IMapper mapper
+        IMapper mapper,
+        IWebHostEnvironment env
         ) : ControllerBase
     {
         [AllowAnonymous]
@@ -123,9 +125,12 @@ namespace CodeEditor.Api.Controllers
 
         [HttpGet]
         [Route("status")]
-        public async Task<IActionResult> CheckStatus()
+        public async Task<ActionResult<UserResponse>> CheckStatus()
         {
-            return Ok();
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            return Ok(new UserResponse { Id = 0, UserName = "", Guid = new Guid() }); 
         }
 
     }

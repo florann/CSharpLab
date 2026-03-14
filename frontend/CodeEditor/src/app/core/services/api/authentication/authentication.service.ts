@@ -1,12 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, map, catchError, throwError, tap, from } from 'rxjs';
-import { Auth, CreateAccountRequest, LoginRequest, UserResponse } from '../../api/index';
+import { Auth, CreateAccountRequest, LoginRequest, UserResponse } from '../../../api/index';
 import { Router } from '@angular/router';
+import { BaseServiceApi } from '../base.servce';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService extends BaseServiceApi {
   
   private router = inject(Router);
   isAuthenticated = signal<boolean>(false);
@@ -78,14 +79,5 @@ export class AuthenticationService {
    */
   logout(): void {
     this.isAuthenticated.set(false);
-  }
-
-  /**
-   * Handle HTTP errors
-   */
-  private handleError(error: Response): Observable<never> {
-    console.error('API Error:', error);
-
-    return throwError(() => error);
   }
 }

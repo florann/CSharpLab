@@ -53,8 +53,6 @@ namespace CodeEditor.Api.Extensions
                         OnMessageReceived = context =>
                         {
                             var token = context.Request.Cookies["accessToken"];
-                            Console.WriteLine($"Cookie 'accessToken' found: {!string.IsNullOrEmpty(token)}");
-                            Console.WriteLine($"Token value: {token?.Substring(0, Math.Min(20, token?.Length ?? 0))}...");
                             context.Token = token;
                             return Task.CompletedTask;
                         },
@@ -65,6 +63,8 @@ namespace CodeEditor.Api.Extensions
                         }
                     };
                 });
+
+                builder.Services.AddSingleton(builder.Environment);
 
                 builder.Services.AddAutoMapper(typeof(ProfileConfiguration).Assembly);
 

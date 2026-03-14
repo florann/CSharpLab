@@ -73,6 +73,12 @@
             "development": {
               "buildTarget": "CodeEditor:build:development"
             }
+          }, 
+          "options": {
+            "ssl": true,
+            "hmr": true,
+            "sslCert": "localhost.pem",
+            "sslKey": "localhost-key.pem"
           },
           "defaultConfiguration": "development"
         },

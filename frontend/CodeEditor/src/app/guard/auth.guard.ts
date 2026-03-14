@@ -5,7 +5,7 @@ import { UserService } from '../features/services/user/user.service';
 export const authGuard: CanActivateFn = (route, state) => {
   const userService = inject(UserService);
   const router = inject(Router);
-  
+
   if (userService.user() != null) {
     return true;
   }
