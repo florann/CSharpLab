@@ -1,3 +1,9 @@
-<div class="toast-container" [ngClass]="toast_class()">
-{{  message() }}
-</div>  
+@if(isVisible())
+{
+    <div class="toast-container" 
+        [ngClass]="toast_class()" 
+        animate.enter="enter-toast-container" 
+        animate.leave="leave-toast-container">
+            {{  message() }}
+    </div>  
+}
