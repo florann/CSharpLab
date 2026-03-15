@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { Landing } from './features/components/landing/landing';
 import { NotFound } from './features/components/not-found/not-found';
 import { Login } from './features/components/login/login';
-import { CodeEditor } from './features/components/code-editor/code-editor';
 import { CreateAccount } from './features/components/create-account/create-account';
 import { authGuard } from './guard/auth.guard';
 import { Dashboard } from './features/components/dashboard/dashboard';
@@ -29,11 +28,6 @@ export const routes: Routes = [
   { 
     path: 'dashboard', 
     component: Dashboard,
-    canActivate: [authGuard]
-  },
-  { 
-    path: 'codeeditor', 
-    component: CodeEditor,
     canActivate: [authGuard]
   },
   { 
