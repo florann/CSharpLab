@@ -103,3 +103,7 @@ Thumbs.db
 *.p12
 *.key
 *.pem
+frontend/CodeEditor/ca.crt
+frontend/CodeEditor/cert.crt
+frontend/CodeEditor/angular.json
+frontend/CodeEditor/angular.json
