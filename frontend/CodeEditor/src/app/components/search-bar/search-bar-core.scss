@@ -1,17 +1,20 @@
 .search-bar-container {
     min-height: 100vh;
     min-width: 100%;
+    top: -20%;
     z-index: 100;
     position: fixed;
-    padding-top: 15%;
     justify-content: center;
+    align-items: center;
     display: flex;
+    flex-direction: column;
     background: rgba(24, 24, 24, 0.15); 
     backdrop-filter: blur(4px);             
     -webkit-backdrop-filter: blur(4px);     
 }
 
 #search-bar {
+    box-sizing: border-box;
     max-height: 50px;
     width: clamp(280px, 50%, 600px);
     padding: 0.75em 1.25em;
@@ -50,5 +53,44 @@
         inset 0 0 0 1px var(--mat-sys-primary-container),
         0 4px 24px color-mix(in srgb, var(--mat-sys-shadow) 40%, transparent),
         0 0 0 3px color-mix(in srgb, var(--mat-sys-primary) 15%, transparent); // outer glow
+    }
+}
+
+ .search-results {
+    box-sizing: border-box;
+    width: clamp(280px, 50%, 600px);
+    position: relative;
+    left: 0;
+    right: 0;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    z-index: 100;
+
+    // Same look as the input
+    background-color: var(--mat-sys-surface-container);
+    border: 1.5px solid var(--mat-sys-outline);
+    border-radius: 8px;
+    box-shadow:
+      inset 0 0 0 1px var(--mat-sys-outline-variant),
+      0 4px 20px color-mix(in srgb, var(--mat-sys-shadow) 30%, transparent),
+      0 1px 4px color-mix(in srgb, var(--mat-sys-shadow) 20%, transparent);
+
+    .search-result-item {
+      padding: 0.75em 1.25em;       // same padding as input
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--mat-sys-on-surface);
+      font-size: 1rem;
+      font-family: Roboto, sans-serif;
+      transition: background 0.15s ease;
+
+      &:hover {
+        background-color: var(--mat-sys-surface-container-high);
+      }
+
+      &:active {
+        background-color: var(--mat-sys-surface-container-highest);
+      }
     }
 }

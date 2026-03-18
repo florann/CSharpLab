@@ -63,7 +63,7 @@ export type GitRepoResponse = {
 
 export type GitRepoTitleResponse = {
     id?: number;
-    title?: string;
+    name?: string;
 };
 
 export type IActionResult = {

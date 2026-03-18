@@ -72,7 +72,7 @@ namespace CodeEditor.Api.Controllers
             if (result == null || result.Count == 0)
                 return NoContent();
 
-            return Ok(result);
+            return Ok(mapper.Map<List<GitRepoTitleResponse>>(result));
         }
 
 

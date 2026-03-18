@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { GitRepoResponse, GitRepoTitleResponse } from '../../../core/api';
 import { GitRepoService } from '../../../core/services/api/git-repo/git-repo.service';
 import { ToastService } from '../../../core/services/toast/toast.service';
+import { STORAGE_KEYS } from '../../../core/constants/storage-keys.constants';
+import { LocalStorageService } from '../../../core/services/localstorage/localstorage';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,7 @@ export class Dashboard implements OnInit {
     this.GetAllGitSummary();
   }
 
+  private localStorageService = inject(LocalStorageService);
   private toastService = inject(ToastService);
   private gitRepoService = inject(GitRepoService);
 
@@ -24,7 +26,7 @@ export class Dashboard implements OnInit {
           if(response == null){
             this.toastService.show("No git repos summary to retrieve", "warning");
           }
-
+          this.localStorageService.set(STORAGE_KEYS.ALL_GIT_SUMMARY, response);
           this.toastService.show("Git repos summary retrieved", "success");
       },
       error: (error) => {

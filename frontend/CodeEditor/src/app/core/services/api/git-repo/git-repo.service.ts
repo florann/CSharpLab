@@ -18,6 +18,10 @@ export class GitRepoService extends BaseServiceApi {
     ))
     .pipe(
       map(response => {
+
+        console.log("Dump raw response");
+        console.log(response);
+
         if(!response.data)
           throw response.response;
 
