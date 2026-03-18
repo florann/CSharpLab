@@ -1,11 +1,16 @@
 @if(isVisible()) {
     <div class="search-bar-container">
-        <input id="search-bar" type="text" placeholder="Search for Git repository.."  (input)="onSearch($event)" >
+        <input id="search-bar" type="text" 
+            placeholder="Search for Git repository.." 
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off" 
+            (input)="onSearch($event)" >
 
         @if(listDisplayedElement().length > 0) {
         <ul class="search-results">
             @for(repo of listDisplayedElement(); track repo.id) {
-            <li class="search-result-item" >
+            <li class="search-result-item" (click)="clickLoadGitRepo(repo.id!)" >
                 {{ repo.name }}
             </li>
             }

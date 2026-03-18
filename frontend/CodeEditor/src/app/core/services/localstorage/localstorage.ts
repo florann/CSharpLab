@@ -5,7 +5,7 @@ import { StorageKey } from '../../constants/storage-keys.constants';
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {
 
-  set<T>(key: StorageKey, value: T): void {
+  set<T>(key: StorageKey | string, value: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
@@ -13,7 +13,7 @@ export class LocalStorageService {
     }
   }
 
-  get<T>(key: StorageKey): T | null {
+  get<T>(key: StorageKey | string): T | null {
     try {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) as T : null;
@@ -23,11 +23,11 @@ export class LocalStorageService {
     }
   }
 
-  remove(key: StorageKey): void {
+  remove(key: StorageKey | string): void {
     localStorage.removeItem(key);
   }
 
-  has(key: StorageKey): boolean {
+  has(key: StorageKey | string): boolean {
     return localStorage.getItem(key) !== null;
   }
 }

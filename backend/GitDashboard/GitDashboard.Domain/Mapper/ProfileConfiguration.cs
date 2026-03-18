@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CodeEditor.Domain.Entities;
 using CodeEditor.Domain.Records;
 using CodeEditor.Domain.Responses.GitRepoResponses;
 using CodeEditor.Domain.Responses.UserResponses;

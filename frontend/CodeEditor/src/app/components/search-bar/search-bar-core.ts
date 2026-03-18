@@ -4,6 +4,8 @@ import { LocalStorageService } from '../../core/services/localstorage/localstora
 import { STORAGE_KEYS } from '../../core/constants/storage-keys.constants';
 import { GitRepoTitle } from '../../features/services/git-repo-title/git-repo-title';
 import { GitRepoTitleResponse } from '../../core/api';
+import { GitRepoService } from '../../core/services/api/git-repo/git-repo.service';
+import { ToastService } from '../../core/services/toast/toast.service';
 
 @Component({
   selector: 'app-search-bar-core',
@@ -12,8 +14,11 @@ import { GitRepoTitleResponse } from '../../core/api';
   styleUrl: './search-bar-core.scss',
 })
 export class SearchBarCore implements OnInit, OnDestroy {
-
+  
+  private sub!: Subscription;
   private localStorageService = inject(LocalStorageService);
+  private toastService = inject(ToastService);
+  private gitRepoService = inject(GitRepoService);
   private listElement: GitRepoTitleResponse[] | null = this.localStorageService.get(STORAGE_KEYS.ALL_GIT_SUMMARY);
 
   isVisible = signal(false);
@@ -35,18 +40,28 @@ export class SearchBarCore implements OnInit, OnDestroy {
     return filtered; 
   });
 
+  clickLoadGitRepo(gitRepoId: number): void {
+    this.gitRepoService.ApiGetGitRepoById(gitRepoId).subscribe({
+      next: (gitRepoResponse) => {
+        this.localStorageService.set(STORAGE_KEYS.GIT_REPO + "_" + gitRepoId, gitRepoResponse);
+        this.toastService.show("Git repository informations retrieved", "success");
+      },
+      error: (error) => {
+        console.log(error);
+        this.toastService.show("Error retrieving Git repository information", "error");
+      }
+    });
+  }
+
   onSearch(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchText.set(input.value);  // triggers computed automatically ✅
   }
 
-  private sub!: Subscription;
-
   ngOnInit(): void {
     this.sub = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
       filter(e => e.ctrlKey && e.key === 'k') 
     ).subscribe(e => {
-      console.log("Event fired");
       e.preventDefault();
       this.isVisible.set(!this.isVisible());
     })
