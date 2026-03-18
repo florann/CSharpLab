@@ -13,7 +13,7 @@ export class SearchBarCore implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.sub = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
-      filter(e => e.altKey && e.key === 'r') 
+      filter(e => e.ctrlKey && e.key === 'k') 
     ).subscribe(e => {
       console.log("Event fired");
       e.preventDefault();
