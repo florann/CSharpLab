@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { Landing } from './features/components/landing/landing';
 import { NotFound } from './features/components/not-found/not-found';
 import { Login } from './features/components/login/login';
 import { CreateAccount } from './features/components/create-account/create-account';
@@ -10,12 +9,8 @@ import { UserAccount } from './features/components/user-account/user-account';
 export const routes: Routes = [
   { 
     path: '', 
-    redirectTo: '/landing', 
+    redirectTo: '/dashboard', 
     pathMatch: 'full' 
-  },
-  { 
-    path: 'landing', 
-    component: Landing 
   },
   { 
     path: 'login', 
