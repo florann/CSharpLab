@@ -12,6 +12,8 @@ A full-stack Git repository monitoring dashboard built with **ASP.NET Core 10** 
 
 Users can register, link their Git repositories by URL, and track activity feeds from those repositories. A background worker periodically polls repositories for updates on a cron schedule.
 
+Tests are ommited.
+
 **Backend**
 - ASP.NET Core 10 REST API with Clean Architecture (Api / Domain / Infrastructure / Worker layers)
 - PostgreSQL via Entity Framework Core, with a multi-layer cache (in-memory → Redis → DB)
