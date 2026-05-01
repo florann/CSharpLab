@@ -1,13 +1,12 @@
 using Microservice.Alpha.Worker;
 using RabbitMQ.Client;
-using System.Numerics;
 
 var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddHostedService<Worker>();
 
 var rabbitMqConfiguration = builder.Configuration.GetSection("RabbitMQ");
 
-if (rabbitMqConfiguration == null 
+if (rabbitMqConfiguration == null
     && !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Host"]!)
     && !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Port"]!)
     && !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["UserName"]!)
@@ -32,7 +31,7 @@ builder.Services.AddSingleton(_ =>
 
 builder.Services.AddSingleton(sp =>
 {
-    var factory =  sp.GetRequiredService<IConnection>();
+    var factory = sp.GetRequiredService<IConnection>();
     return factory.CreateChannelAsync().GetAwaiter().GetResult();
 });
 

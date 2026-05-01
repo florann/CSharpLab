@@ -22,7 +22,7 @@ namespace Microservice.Alpha.Worker
                     logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 }
 
-                var message = System.Text.Encoding.UTF8.GetBytes("JEMANGECACA");
+                var message = System.Text.Encoding.UTF8.GetBytes("test_string");
 
                 await channel.BasicPublishAsync("", "alpha", message, cancellationToken: stoppingToken); 
 
