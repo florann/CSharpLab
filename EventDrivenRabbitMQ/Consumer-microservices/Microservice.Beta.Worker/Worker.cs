@@ -38,7 +38,7 @@ namespace Microservice.Beta.Worker
 
                 Console.WriteLine($"Result: {result}");
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(2000, stoppingToken);
             }
         }
 
