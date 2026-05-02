@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-alpha-worker
+  namespace: microservice-alpha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microservice-alpha-worker
+  template:
+    metadata:
+      labels:
+        app: microservice-alpha-worker
+  spec:
+    containers:
+      - name: microservice-alpha-worker
+        image: alpha-worker:1.0
+        env: 
+          - name: RabbitMQ__Host
+            value: "rabbitmq-service"
+          - name: RabbitMQ__Port
+            value: "5672"
+          - name: RabbitMQ__VirtualHost
+            value: "/"
+          - name: RabbitMQ__UserName
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secret
+                key: username
+          - name: RabbitMQ__Password
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq-secret
+                key: password
+
