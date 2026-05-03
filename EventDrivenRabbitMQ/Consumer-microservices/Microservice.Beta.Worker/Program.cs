@@ -7,11 +7,11 @@ builder.Services.AddHostedService<Worker>();
 var rabbitMqConfiguration = builder.Configuration.GetSection("RabbitMQ");
 
 if (rabbitMqConfiguration == null
-    || !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Host"]!)
-    || !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Port"]!)
-    || !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["UserName"]!)
-    || !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Password"]!)
-    || !string.IsNullOrWhiteSpace(rabbitMqConfiguration!["VirtualHost"]!)
+    || string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Host"]!)
+    || string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Port"]!)
+    || string.IsNullOrWhiteSpace(rabbitMqConfiguration!["UserName"]!)
+    || string.IsNullOrWhiteSpace(rabbitMqConfiguration!["Password"]!)
+    || string.IsNullOrWhiteSpace(rabbitMqConfiguration!["VirtualHost"]!)
     )
     throw new ApplicationException("RabbitMQ configuration must be initialized");
 
