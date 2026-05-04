@@ -27,3 +27,21 @@ Tests are ommited.
 - Angular Material for UI
 - OpenAPI-generated TypeScript client (`@hey-api/openapi-ts`)
 - Real-time updates via `@microsoft/signalr`
+
+### EventDrivenRabbitMQ (ongo)
+
+A backend Git repository experimenting RabbitMQ event broker as well as Devops stack ( Containerd, Kubernetes, Docker...) built with **ASP.NET Core 10**.
+
+Basic concept, the Kubernetes's cluster run then some workers are message producers, some others are consumers. Automatic scaling will be implemented using KEDA.
+
+Tests are ommited.
+
+**Backend**
+- ASP.NET Core 10 worker services
+- RabbitMQ message broker
+
+**Devops**
+- Kubernetes (K3s) using Rancher Desktop
+- nerdctl containerd CLI 
+- Docker
+
