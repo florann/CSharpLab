@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beta-worker
+  namespace: rabbitmq-workerservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beta-worker
+  template:
+    metadata:
+      labels:
+        app: beta-worker
+    spec:
+      containers:
+        - name: beta-worker
+          image: beta-worker:latest
+          imagePullPolicy: Never
+          env: 
+            - name: RabbitMQ__Host
+              value: "rabbitmq-service" 
+            - name: RabbitMQ__Port
+              value: "5672"
+            - name: RabbitMQ__Username
+              value: "admin"
+            - name: RabbitMQ__Password
+              value: "admin123"
+            - name: RabbitMQ__VirtualHost
+              value: "/"

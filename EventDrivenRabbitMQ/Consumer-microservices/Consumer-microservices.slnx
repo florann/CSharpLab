@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Microservice.Alpha.Worker/Microservice.Alpha.Worker.csproj" />
+  <Project Path="Microservice.Beta.Worker/Microservice.Beta.Worker.csproj" />
+</Solution>
