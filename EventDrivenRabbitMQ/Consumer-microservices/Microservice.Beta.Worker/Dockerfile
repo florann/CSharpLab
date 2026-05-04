@@ -8,17 +8,17 @@ WORKDIR /app
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
-COPY ["Microservice.Beta.Worker/Microservice.Beta.Worker.csproj", "Microservice.Beta.Worker/"]
-RUN dotnet restore "./Microservice.Beta.Worker/Microservice.Beta.Worker.csproj"
+COPY [".", "Microservice.Beta.Worker/"]
+RUN dotnet restore "Microservice.Beta.Worker/Microservice.Beta.Worker.csproj"
 COPY . .
 WORKDIR "/src/Microservice.Beta.Worker"
 RUN dotnet build "./Microservice.Beta.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
+ARG BUILD_CONFIGURATION=Debug
 RUN dotnet publish "./Microservice.Beta.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)

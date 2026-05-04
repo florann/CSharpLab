@@ -1,0 +1,9 @@
+triggers:
+- type: rabbitmq
+  metadata:
+    host: amqp://rabbitmq-service:5672/ # Optional. If not specified, it must be done by using TriggerAuthentication.
+    protocol: auto # Optional. Specifies protocol to use, either `amqp`, `http`, or `auto` for auto-detection based on the `host` value. Default value is `auto`.
+    mode: QueueLength # Supported modes are `QueueLength`, `MessageRate`, `DeliverGetRate`, `PublishedToDeliveredRatio` or `ExpectedQueueConsumptionTime`
+    value: "100.50" # A value defining the threshold (per instance) that, when exceeded, triggers the scaling.
+    queueName: alpha # Name of the queue.
+    timeout: 1000 # Optional. Custom timeout for the HTTP client used in this scaler.
