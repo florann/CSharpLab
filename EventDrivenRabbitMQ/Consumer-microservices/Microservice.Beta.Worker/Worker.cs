@@ -25,8 +25,9 @@ namespace Microservice.Beta.Worker
                 var message = Encoding.UTF8.GetString(body);
                 Console.WriteLine($"Received: {message}");
 
-                var dummy = Task.Delay(2000);
-                await dummy;    
+                await Task.Delay(2000);
+
+                await channel.BasicAckAsync(ea.DeliveryTag, false);                
             };
 
 
