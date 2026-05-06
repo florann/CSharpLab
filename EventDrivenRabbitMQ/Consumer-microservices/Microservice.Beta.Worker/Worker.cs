@@ -19,20 +19,20 @@ namespace Microservice.Beta.Worker
         {
             var consumer = new AsyncEventingBasicConsumer(channel);
 
-            consumer.ReceivedAsync += (model, ea) =>
+            consumer.ReceivedAsync += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
                 Console.WriteLine($"Received: {message}");
 
-                Task.Delay(2000);
-
-                return Task.CompletedTask;    
+                var dummy = Task.Delay(2000);
+                await dummy;    
             };
+
 
             await channel.BasicQosAsync(0, 1, false, stoppingToken);
 
-            await channel.BasicConsumeAsync("alpha", true, consumer, cancellationToken: stoppingToken);
+            await channel.BasicConsumeAsync("alpha", false, consumer, cancellationToken: stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
