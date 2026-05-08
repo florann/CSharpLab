@@ -5,7 +5,7 @@ metadata:
   name: rabbitmq-credentials
   namespace: rabbitmq-workerservices
 stringData:
-  host: "amqp://admin:admin123@rabbitmq-service:5672/"
+  host: "amqp://admin:admin123@rabbitmq-service.rabbitmq-workerservices.svc.cluster.local:5672/"
 
 ---
 # Running authentication process
