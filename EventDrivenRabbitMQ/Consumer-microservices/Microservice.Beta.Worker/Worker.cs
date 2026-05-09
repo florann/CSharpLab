@@ -17,6 +17,24 @@ namespace Microservice.Beta.Worker
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var consumer = new AsyncEventingBasicConsumer(channel);
+
+            consumer.ReceivedAsync += async (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+                Console.WriteLine($"Received: {message}");
+
+                await Task.Delay(2000);
+
+                await channel.BasicAckAsync(ea.DeliveryTag, false);                
+            };
+
+
+            await channel.BasicQosAsync(0, 1, false, stoppingToken);
+
+            await channel.BasicConsumeAsync("alpha", false, consumer, cancellationToken: stoppingToken);
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 if (logger.IsEnabled(LogLevel.Information))
@@ -24,21 +42,7 @@ namespace Microservice.Beta.Worker
                     logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 }
 
-                var consumer = new AsyncEventingBasicConsumer(channel);
-
-                consumer.ReceivedAsync += (model, ea) =>
-                {
-                    var body = ea.Body.ToArray();
-                    var message = Encoding.UTF8.GetString(body);
-                    Console.WriteLine($"Received: {message}");
-                    return Task.CompletedTask;    
-                };
-
-                var result = await channel.BasicConsumeAsync("alpha", true, consumer);
-
-                Console.WriteLine($"Result: {result}");
-
-                await Task.Delay(2000, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
 

@@ -1,0 +1,44 @@
+# Declaring credentials 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: rabbitmq-credentials
+  namespace: rabbitmq-workerservices
+stringData:
+  host: "amqp://admin:admin123@rabbitmq-service.rabbitmq-workerservices.svc.cluster.local:5672/"
+
+---
+# Running authentication process
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: rabbitmq-auth
+  namespace: rabbitmq-workerservices
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: rabbitmq-credentials
+      key: host
+
+---
+# Scaling statement
+# Scale beta-worker to 10 ? if the number of message in the queue is above hundred
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: beta-worker-scaler
+  namespace: rabbitmq-workerservices
+spec:
+  scaleTargetRef:
+    name: beta-worker
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+    - type: rabbitmq
+      metadata:
+        protocol: amqp
+        queueName: alpha
+        mode: QueueLength
+        value: "100"
+      authenticationRef:
+        name: rabbitmq-auth
