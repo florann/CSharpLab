@@ -1,3 +1,24 @@
+# RabbitMQ
+
+## Overview
+RabbitMQ is a message broker service. 
+Message are store in **queues** and are either broadcast or pulled by consumers depending on broker configuration.
+
+Most of the time message are read, acknowledge then delete from queue. Also RabbitMQ is not resilient, so if the server crashes, all messages in queues a the time are lost.
+
+## Queues 
+**Queues** are used to share messages between producers ( the one who's producing message ) and consumer ( the one who's consuming message ).
+
+### Queue types 
+- `Classic` : is the standard queue type with non replicated FIFO. 
+- `Quorum` : is a queue type used for high availability and data integrity ( because data are store on disk and replicated ), using the **Raft consensus algorithm**. ( for data decision across servers, either for data thruthness or server election..) 
+- `Stream` : is a type a queue type where data are stored and disk and replicated ( as well as Quorum ), the major difference is the dogme `non-destructive consumer semantic`. Meaning that produced messages are available for consumers in the stream until they expire. 
+
+## Channels
+`Channels` are a small virtual connection inside a TCP connection. Mostly created because TCP socket connection are slow and limited on machine. It allow to have multiple clients ( consumer / producer ) using the same TCP connection. 
+
+---
+
 # containerd
 ## Overview
 
