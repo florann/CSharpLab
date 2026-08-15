@@ -42,7 +42,7 @@ namespace WebApp.Extensions
                 switch(provider)
                 {
                     case Providers.Postgre:
-                        webApplicationBuilder.Services.AddDbContext<SqlAppDbContext>(options =>
+                        webApplicationBuilder.Services.AddDbContext<SqlServerAppDbContext>(options =>
                         {
                             options.UseSqlServer();
                         });

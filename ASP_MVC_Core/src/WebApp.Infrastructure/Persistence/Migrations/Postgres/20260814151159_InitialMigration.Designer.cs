@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WebApp.Infrastructure.Persistence;
+using WebApp.Infrastructure.Persistence.Providers;
 
 #nullable disable
 
-namespace WebApp.Infrastructure.Migrations
+namespace WebApp.Infrastructure.Migrations.Postgres
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(PostgreAppDbContext))]
     [Migration("20260814151159_InitialMigration")]
     partial class InitialMigration
     {

@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebApp.Domain.Entities;
+using WebApp.Infrastructure.Interfaces;
 
-namespace WebApp.Infrastructure.Persistence.Configurations
+namespace WebApp.Infrastructure.Persistence.Configurations.DummyConfiguration
 {
-    public class DummyConfiguration : IEntityTypeConfiguration<Dummy>
+    public class DummyConfiguration : IEntityTypeConfiguration<Dummy>, IBaseEntityConfiguration
     {
-        public void Configure(EntityTypeBuilder<Dummy> builder)
+        public virtual void Configure(EntityTypeBuilder<Dummy> builder)
         {
             builder.ToTable("dummyTable");
 

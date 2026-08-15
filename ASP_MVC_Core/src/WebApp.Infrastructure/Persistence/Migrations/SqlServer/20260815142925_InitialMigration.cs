@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace WebApp.Infrastructure.Migrations
+namespace WebApp.Infrastructure.Persistence.Migrations.SqlServer
 {
     /// <inheritdoc />
-    public partial class AddDummyEntity : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,8 +16,9 @@ namespace WebApp.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Field = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Field = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
                 {

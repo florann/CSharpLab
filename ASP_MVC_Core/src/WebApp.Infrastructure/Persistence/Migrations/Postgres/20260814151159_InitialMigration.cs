@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace WebApp.Infrastructure.Migrations
+namespace WebApp.Infrastructure.Persistence.Migrations.Postgres
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

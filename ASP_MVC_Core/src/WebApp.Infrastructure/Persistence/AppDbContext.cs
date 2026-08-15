@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebApp.Infrastructure.Interfaces;
 
 namespace WebApp.Infrastructure.Persistence
 {
@@ -6,7 +7,9 @@ namespace WebApp.Infrastructure.Persistence
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                GetType().Assembly,
+                type => typeof(IBaseEntityConfiguration).IsAssignableFrom(type));
         }
     }
 }

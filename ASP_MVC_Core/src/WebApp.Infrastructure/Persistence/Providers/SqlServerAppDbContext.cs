@@ -3,15 +3,15 @@ using WebApp.Infrastructure.Interfaces;
 
 namespace WebApp.Infrastructure.Persistence.Providers
 {
-    public class PostgreAppDbContext(DbContextOptions<PostgreAppDbContext> options) : AppDbContext(options)
+    public class SqlServerAppDbContext(DbContextOptions<SqlServerAppDbContext> options) : AppDbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(PostgreAppDbContext).Assembly,
-                type => typeof(IPostgresEntityConfiguration).IsAssignableFrom(type));
+                 typeof(SqlServerAppDbContext).Assembly,
+                 type => typeof(ISqlServerEntityConfiguration).IsAssignableFrom(type));
         }
     }
 }
