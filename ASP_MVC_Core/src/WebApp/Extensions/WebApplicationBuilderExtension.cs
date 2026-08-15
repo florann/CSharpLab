@@ -1,48 +1,64 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
+using System.Reflection.Metadata.Ecma335;
 using WebApp.Enum;
 using WebApp.Infrastructure.Persistence;
+using WebApp.Infrastructure.Persistence.Providers;
 
 namespace WebApp.Extensions
 {
     public static class WebApplicationBuilderExtension
     {
         extension(WebApplicationBuilder webApplicationBuilder) {
+
+            private Providers GetProvider()
+            {
+                var providerName = webApplicationBuilder.Configuration["DatabaseProvider"];
+
+                return providerName switch
+                {
+                    "Postgre" => Providers.Postgre,
+                    "SqlServer" => Providers.SqlServer,
+                    _ => throw new ApplicationException("No provider was configured")
+                };
+            }
+
+            private string GetConnectionString(Providers provider)
+            {
+                var connectionString = webApplicationBuilder.Configuration.GetSection("ConnectionStrings")[provider.ToString()];
+
+                if (string.IsNullOrEmpty(connectionString))
+                    throw new ApplicationException("Connection string is invalid");
+
+                return connectionString;
+            }
+
             public WebApplicationBuilder ConfigureDatabaseContext()
             {
-                var provider = webApplicationBuilder.Configuration["DatabaseProvider"];
-                if (string.IsNullOrEmpty(provider))
-                    throw new ApplicationException("No provider was configured");
+                var provider =  GetProvider(webApplicationBuilder);
+                var connectionString = GetConnectionString(webApplicationBuilder, provider);
 
-                var connectionString = webApplicationBuilder.Configuration.GetSection("ConnectionStrings")[provider];
-                if (string.IsNullOrEmpty(connectionString))
-                    throw new ApplicationException("No connection string for provider : " + provider );
-
-                var providerEnum = GetProvider(provider);
-
-                webApplicationBuilder.Services.AddDbContext<AppDbContext>(options =>
+                switch(provider)
                 {
-                    switch (providerEnum)
-                    {
-                        case Providers.Postgre:
-                            options.UseNpgsql(connectionString);
-                            return;
-                        case Providers.SqlServer:
-                            options.UseSqlServer(connectionString);
-                            return;
-                        default:
-                            throw new ApplicationException("Provider not found");
-                    }
-                });
+                    case Providers.Postgre:
+                        webApplicationBuilder.Services.AddDbContext<SqlAppDbContext>(options =>
+                        {
+                            options.UseSqlServer();
+                        });
+                        break;
+                    case Providers.SqlServer:
+                        webApplicationBuilder.Services.AddDbContext<PostgreAppDbContext>(options =>
+                        {
+                            options.UseNpgsql();
+                        });
+                        break;
+                    default:
+                        throw new ApplicationException("Provider not found");
+                }
 
                 return webApplicationBuilder;
             }
-
-            private static Providers GetProvider(string provider) => provider switch
-            {
-                "Postgre" => Providers.Postgre,
-                "SqlServer" => Providers.SqlServer,
-                _ => throw new ApplicationException("Could not deduce provider enum value")
-            };
         }
     }
 }
