@@ -9,7 +9,7 @@ namespace WebApp.Infrastructure.Persistence
         {
             modelBuilder.ApplyConfigurationsFromAssembly(
                 GetType().Assembly,
-                type => typeof(IBaseEntityConfiguration).IsAssignableFrom(type));
+                type => typeof(IEntityConfiguration).IsAssignableFrom(type));
         }
     }
 }
