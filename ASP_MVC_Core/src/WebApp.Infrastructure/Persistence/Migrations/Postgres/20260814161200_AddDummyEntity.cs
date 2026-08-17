@@ -3,7 +3,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace WebApp.Infrastructure.Migrations.Postgres
+namespace WebApp.Infrastructure.Persistence.Migrations.Postgres
 {
     /// <inheritdoc />
     public partial class AddDummyEntity : Migration

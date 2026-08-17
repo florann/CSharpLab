@@ -3,14 +3,14 @@ using WebApp.Infrastructure.Interfaces;
 
 namespace WebApp.Infrastructure.Persistence.Providers
 {
-    public class PostgreAppDbContext(DbContextOptions<PostgreAppDbContext> options) : AppDbContext(options)
+    public class PostgresAppDbContext(DbContextOptions<PostgresAppDbContext> options) : AppDbContext(options)
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(
-                typeof(PostgreAppDbContext).Assembly,
+                typeof(PostgresAppDbContext).Assembly,
                 type => typeof(IPostgresEntityConfiguration).IsAssignableFrom(type));
         }
     }

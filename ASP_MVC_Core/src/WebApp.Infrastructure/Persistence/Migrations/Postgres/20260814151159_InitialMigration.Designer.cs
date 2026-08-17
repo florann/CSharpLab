@@ -8,9 +8,9 @@ using WebApp.Infrastructure.Persistence.Providers;
 
 #nullable disable
 
-namespace WebApp.Infrastructure.Migrations.Postgres
+namespace WebApp.Infrastructure.Persistence.Migrations.Postgres
 {
-    [DbContext(typeof(PostgreAppDbContext))]
+    [DbContext(typeof(PostgresAppDbContext))]
     [Migration("20260814151159_InitialMigration")]
     partial class InitialMigration
     {

@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
-using System.Reflection.Metadata.Ecma335;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApp.Enum;
-using WebApp.Infrastructure.Persistence;
 using WebApp.Infrastructure.Persistence.Providers;
 
 namespace WebApp.Extensions
 {
     public static class WebApplicationBuilderExtension
     {
-        extension(WebApplicationBuilder webApplicationBuilder) {
+        extension(WebApplicationBuilder webApplicationBuilder)
+        {
 
             private Providers GetProvider()
             {
@@ -36,21 +33,21 @@ namespace WebApp.Extensions
 
             public WebApplicationBuilder ConfigureDatabaseContext()
             {
-                var provider =  GetProvider(webApplicationBuilder);
+                var provider = GetProvider(webApplicationBuilder);
                 var connectionString = GetConnectionString(webApplicationBuilder, provider);
 
-                switch(provider)
+                switch (provider)
                 {
-                    case Providers.Postgre:
+                    case Providers.SqlServer:
                         webApplicationBuilder.Services.AddDbContext<SqlServerAppDbContext>(options =>
                         {
-                            options.UseSqlServer();
+                            options.UseSqlServer(connectionString);
                         });
                         break;
-                    case Providers.SqlServer:
-                        webApplicationBuilder.Services.AddDbContext<PostgreAppDbContext>(options =>
+                    case Providers.Postgre:
+                        webApplicationBuilder.Services.AddDbContext<PostgresAppDbContext>(options =>
                         {
-                            options.UseNpgsql();
+                            options.UseNpgsql(connectionString);
                         });
                         break;
                     default:
