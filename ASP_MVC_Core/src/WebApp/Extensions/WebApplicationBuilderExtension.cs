@@ -15,7 +15,7 @@ namespace WebApp.Extensions
 
                 return providerName switch
                 {
-                    "Postgre" => Providers.Postgre,
+                    "Postgres" => Providers.Postgres,
                     "SqlServer" => Providers.SqlServer,
                     _ => throw new ApplicationException("No provider was configured")
                 };
@@ -44,7 +44,7 @@ namespace WebApp.Extensions
                             options.UseSqlServer(connectionString);
                         });
                         break;
-                    case Providers.Postgre:
+                    case Providers.Postgres:
                         webApplicationBuilder.Services.AddDbContext<PostgresAppDbContext>(options =>
                         {
                             options.UseNpgsql(connectionString);

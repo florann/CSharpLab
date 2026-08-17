@@ -15,7 +15,7 @@ namespace WebApp.Extensions
 
                 return providerName switch
                 {
-                    "Postgre" => Providers.Postgre,
+                    "Postgres" => Providers.Postgres,
                     "SqlServer" => Providers.SqlServer,
                     _ => throw new ApplicationException("No provider was configured")
                 };
@@ -29,7 +29,7 @@ namespace WebApp.Extensions
                 AppDbContext db = provider switch
                 {
                     Providers.SqlServer => scopeServices.ServiceProvider.GetRequiredService<SqlServerAppDbContext>() ?? throw new ApplicationException("Unable to instanciate db service"),
-                    Providers.Postgre => scopeServices.ServiceProvider.GetRequiredService<PostgresAppDbContext>() ?? throw new ApplicationException("Unable to instanciate db service"),
+                    Providers.Postgres => scopeServices.ServiceProvider.GetRequiredService<PostgresAppDbContext>() ?? throw new ApplicationException("Unable to instanciate db service"),
                     _ => throw new ApplicationException("No provider found for UpdateDatabase"),
                 };
                 db.Database.Migrate();

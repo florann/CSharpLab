@@ -2,7 +2,7 @@
 {
     public enum Providers
     {
-        Postgre = 1,
+        Postgres = 1,
         SqlServer = 2
     }
 }

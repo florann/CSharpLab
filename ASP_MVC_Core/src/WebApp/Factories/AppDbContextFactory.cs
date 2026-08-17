@@ -10,7 +10,7 @@ public static class AppDbContextOptionsFactory
 
         switch (providerEnum)
         {
-            case Providers.Postgre:
+            case Providers.Postgres:
                 optionsBuilder.UseNpgsql(connectionString);
                 break;
             case Providers.SqlServer:
