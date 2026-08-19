@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using WebApp.Domain.Entities.Base;
 using WebApp.Infrastructure.Generators;
-using WebApp.Infrastructure.Interfaces;
+using WebApp.Infrastructure.Persistence.Interfaces;
 
 namespace WebApp.Infrastructure.Persistence.Configurations.DummyConfiguration
 {

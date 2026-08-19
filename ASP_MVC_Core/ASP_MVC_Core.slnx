@@ -3,6 +3,7 @@
     <Project Path="src/WebApp.Domain/WebApp.Domain.csproj" />
     <Project Path="src/WebApp.Infrastructure/WebApp.Infrastructure.csproj" />
     <Project Path="src/WebApp/WebApp.csproj" />
+    <Project Path="WebApp.Worker/WebApp.Worker.csproj" Id="a46d4177-f3ba-477d-90f0-c75c3f8db537" />
   </Folder>
   <Folder Name="/tests/" />
 </Solution>

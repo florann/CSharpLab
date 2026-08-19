@@ -1,4 +1,4 @@
-﻿namespace WebApp.Infrastructure.Interfaces
+﻿namespace WebApp.Infrastructure.Persistence.Interfaces
 {
     internal interface ISqlServerEntityConfiguration
     {

@@ -56,6 +56,11 @@ namespace WebApp.Extensions
 
                 return webApplicationBuilder;
             }
+        
+            public WebApplicationBuilder LoadConfiguration()
+            {
+                 webApplicationBuilder.Configuration.Get()
+            }
         }
     }
 }

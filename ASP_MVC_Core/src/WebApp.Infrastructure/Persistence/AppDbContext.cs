@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApp.Infrastructure.Interfaces;
+using WebApp.Infrastructure.Persistence.Interfaces;
 
 namespace WebApp.Infrastructure.Persistence
 {
