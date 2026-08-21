@@ -1,11 +1,12 @@
 ﻿using Cronos;
 using Microsoft.Extensions.Options;
+using WebApp.Worker.Configurations;
 
-namespace WebApp.Worker.Base
+namespace WebApp.Worker.HostedService
 {
-    public abstract class HostedService(
+    public abstract class BaseHostedService(
         IOptions<BaseConfiguration> optionConfiguration,
-        ILogger<HostedService> logger) : BackgroundService
+        ILogger<BaseHostedService> logger) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

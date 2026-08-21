@@ -1,6 +1,6 @@
 ﻿using Cronos;
 
-namespace WebApp.Worker.Base
+namespace WebApp.Worker.Configurations
 {
     public class BaseConfiguration
     {
