@@ -11,4 +11,8 @@
     <Folder Include="Requests\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentFTP" Version="54.2.0" />
+  </ItemGroup>
+
 </Project>
