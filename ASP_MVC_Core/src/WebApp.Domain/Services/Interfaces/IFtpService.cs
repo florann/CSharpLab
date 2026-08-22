@@ -8,12 +8,14 @@ namespace WebApp.Domain.Services.Interfaces
 
         Task<bool> DisconnectAsync(CancellationToken cancellationToken = default);
 
-        Task<bool> ChangeDirAsync(string? remotePath = null, CancellationToken cancellationToken = default);
+        Task<bool> ChangeDirAsync(string remotePath, CancellationToken cancellationToken = default);
 
-        Task<List<FtpListItem>> ListDirAsync(string? remotePath = null, CancellationToken cancellationToken = default);
+        Task<List<FtpListItem>> ListDirAsync(string remotePath, CancellationToken cancellationToken = default);
 
-        Task<List<string>> ListFilesAsync(string? remotePath = null, CancellationToken cancellationToken = default);
+        Task<List<FtpListItem>> ListFilesAsync(string remotePath, int batch, CancellationToken cancellationToken = default);
 
-        Task<List<string>> PullFilesAsync(string? remoteDir = null, string? localDir = null, CancellationToken cancellationToken = default);
+        Task<List<string>> PullFilesAsync(string remoteDir, string localDir, CancellationToken cancellationToken = default);
+
+        Task<T?> ReadFileAsync<T>(string fullName, CancellationToken cancellationToken = default);
     }
 }

@@ -1,12 +1,15 @@
 ﻿using FluentFTP;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using WebApp.Domain.Entities;
 using WebApp.Domain.Services.Interfaces;
 using WebApp.Infrastructure.Configuration;
 
-namespace YourApp.Ftp
+namespace WebApp.Infrastructure.Services.Ftp
 {
-    public class FtpService : IFtpService, IAsyncDisposable
+    public abstract class FtpService : IFtpService, IAsyncDisposable
     {
         private readonly FtpConfiguration _config;
         private readonly ILogger<FtpService> _logger;
@@ -89,17 +92,47 @@ namespace YourApp.Ftp
             var path = remotePath;
 
             var items = await _client!.GetListing(path, cancellationToken);
-            return items.ToList();
+            return [.. items];
         }
 
-        public async Task<List<string>> ListFilesAsync(string? remotePath = null, CancellationToken cancellationToken = default)
+        public async Task<List<FtpListItem>> ListFilesAsync(string remotePath, int batch, CancellationToken cancellationToken = default)
         {
             var items = await ListDirAsync(remotePath, cancellationToken);
-            return items
+            return [.. items
                 .Where(i => i.Type == FtpObjectType.File)
-                .Select(i => i.FullName)
-                .ToList();
+                .Take(batch)];
         }
+
+        public async Task<T?> ReadFileAsync<T>(string fullName, CancellationToken cancellationToken = default)
+        {
+            if (_client is null)
+                return default;
+
+
+            if (!await _client.FileExists(fullName))
+            {
+                _logger.LogWarning("File does not exist - {Name}", fullName);
+                return default;
+            }
+
+            using var stream = await _client.OpenRead(fullName, token: cancellationToken);
+            if(stream == null)
+            {
+                _logger.LogWarning("Not bytes read for file - {Name}", fullName);
+                return default;
+            }
+
+            Sensor? sensor = await JsonSerializer.DeserializeAsync<Sensor>(stream, cancellationToken: cancellationToken);
+            if(sensor == null)
+            {
+                _logger.LogWarning("Unable to convert stream to Sensor object for file - {Name}", fullName);
+                return default;
+            }
+
+            return await ProcessFileData<T>(stream, cancellationToken);
+        }
+
+        protected abstract Task<T> ProcessFileData<T>(Stream stream, CancellationToken cancellationToken);
 
         public async Task<List<string>> PullFilesAsync(string remoteDir, string localDir, CancellationToken cancellationToken = default)
         {

@@ -7,7 +7,7 @@ namespace WebApp.Worker.HostedService
     public class FtpIntegratorHostedService(
         IOptions<FtpIntegratorHostedServiceConfiguration> optionConfiguration,
         ILogger<FtpIntegratorHostedService> logger,
-        IFtpIntegratorService ftpIntegratorService) : BaseHostedService(optionConfiguration, logger)
+        IIntegratorService ftpIntegratorService) : BaseHostedService(optionConfiguration, logger)
     {
         protected override async Task RunAsync(CancellationToken stoppingToken)
         {

@@ -1,6 +1,6 @@
 ﻿namespace WebApp.Domain.Services.Interfaces
 {
-    public interface IFtpIntegratorService
+    public interface IIntegratorService
     {
         public Task<bool> ProcessFileIntegrationAsync();
     }
