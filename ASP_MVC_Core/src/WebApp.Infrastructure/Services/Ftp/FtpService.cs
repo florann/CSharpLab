@@ -1,21 +1,18 @@
 ﻿using FluentFTP;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using WebApp.Domain.Entities;
 using WebApp.Domain.Services.Interfaces;
 using WebApp.Infrastructure.Configuration;
 
 namespace WebApp.Infrastructure.Services.Ftp
 {
-    public abstract class FtpService : IFtpService, IAsyncDisposable
+    public abstract class FtpService<TData> : IFtpService<TData>, IAsyncDisposable
     {
         private readonly FtpConfiguration _config;
-        private readonly ILogger<FtpService> _logger;
+        private readonly ILogger<FtpService<TData>> _logger;
         private AsyncFtpClient? _client;
 
-        public FtpService(IOptions<FtpConfiguration> options, ILogger<FtpService> logger)
+        public FtpService(IOptions<FtpConfiguration> options, ILogger<FtpService<TData>> logger)
         {
             _config = options.Value;
             _logger = logger;
@@ -103,7 +100,7 @@ namespace WebApp.Infrastructure.Services.Ftp
                 .Take(batch)];
         }
 
-        public async Task<T?> ReadFileAsync<T>(string fullName, CancellationToken cancellationToken = default)
+        public async Task<TData?> ReadFileAsync(string fullName, CancellationToken cancellationToken = default)
         {
             if (_client is null)
                 return default;
@@ -116,23 +113,16 @@ namespace WebApp.Infrastructure.Services.Ftp
             }
 
             using var stream = await _client.OpenRead(fullName, token: cancellationToken);
-            if(stream == null)
+            if (stream == null)
             {
                 _logger.LogWarning("Not bytes read for file - {Name}", fullName);
                 return default;
             }
 
-            Sensor? sensor = await JsonSerializer.DeserializeAsync<Sensor>(stream, cancellationToken: cancellationToken);
-            if(sensor == null)
-            {
-                _logger.LogWarning("Unable to convert stream to Sensor object for file - {Name}", fullName);
-                return default;
-            }
-
-            return await ProcessFileData<T>(stream, cancellationToken);
+            return await ProcessFileData(fullName, stream, cancellationToken);
         }
 
-        protected abstract Task<T> ProcessFileData<T>(Stream stream, CancellationToken cancellationToken);
+        protected abstract Task<TData?> ProcessFileData(string fullName, Stream stream, CancellationToken cancellationToken);
 
         public async Task<List<string>> PullFilesAsync(string remoteDir, string localDir, CancellationToken cancellationToken = default)
         {

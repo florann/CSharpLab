@@ -2,7 +2,7 @@
 
 namespace WebApp.Domain.Services.Interfaces
 {
-    public interface IFtpService
+    public interface IFtpService<TData>
     {
         Task<bool> ConnectAsync(CancellationToken cancellationToken = default);
 
@@ -16,6 +16,6 @@ namespace WebApp.Domain.Services.Interfaces
 
         Task<List<string>> PullFilesAsync(string remoteDir, string localDir, CancellationToken cancellationToken = default);
 
-        Task<T?> ReadFileAsync<T>(string fullName, CancellationToken cancellationToken = default);
+        Task<TData> ReadFileAsync(string fullName, CancellationToken cancellationToken = default);
     }
 }

@@ -1,8 +1,9 @@
-﻿using WebApp.Domain.Services.Interfaces;
+﻿using WebApp.Domain.Entities;
+using WebApp.Domain.Services.Interfaces;
 
 namespace WebApp.Domain.Services
 {
-    public class IntegratorService(IFtpService ftpService) : IIntegratorService
+    public class IntegratorService(IFtpService<Sensor> ftpService) : IIntegratorService
     {
         public Task<bool> ProcessFileIntegrationAsync()
         {
